@@ -1,0 +1,37 @@
+<script lang="ts" setup>
+const { id } = useRoute().params;
+const counter = useState("counter", () => Math.round(Math.random() * 1000));
+
+/**
+ * Beutiful acrticle transition: https://michalkuncio.com/how-to-create-beautiful-page-transitons-in-nuxt-with-view-transitions-api
+ */
+
+const { data, error } = await useAsyncData(`user:${id}`, () => {
+  return $fetch("/test.json");
+});
+
+const json = computed(() => {
+  return JSON.stringify(data.value, null, 2);
+});
+</script>
+
+<template>
+  <div>
+    {{ id }}
+
+    <pre>{{ json }}</pre>
+
+    <div>
+      Counter: {{ counter }}
+      <button @click="counter++">+</button>
+      <button @click="counter--">-</button>
+    </div>
+    <p
+      class="first-letter:float-left first-letter:mr-3 first-letter:text-7xl first-letter:font-bold first-letter:text-slate-900 first-line:uppercase first-line:tracking-widest"
+    >
+      Well, let me tell you something, funny boy. Y'know that little stamp, the
+      one that says "New York Public Library"? Well that may not mean anything
+      to you, but that means a lot to me. One whole hell of a lot.
+    </p>
+  </div>
+</template>
