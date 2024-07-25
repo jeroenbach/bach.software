@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "george-alisson.html-preview-vscode",
+    "esbenp.prettier-vscode",
+    "vue.volar"
+  ]
+}
