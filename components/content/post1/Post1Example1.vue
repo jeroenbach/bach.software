@@ -1,0 +1,4 @@
+<script lang="ts" setup>
+import Parent from "~/examples/post1/example1/Parent.vue";
+</script>
+<template><Parent /></template>

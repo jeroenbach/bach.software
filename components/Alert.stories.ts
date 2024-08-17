@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
+import { createDefaultStory } from "~/utils/createDefaultStory";
 
 import Alert from "./Alert.vue";
-import { createDefaultStory } from "~/utils/createDefaultStory";
 
 const meta = {
   title: "Components/Alert",
   component: Alert,
-  args: {},
+  args: { onClose: fn() },
 } satisfies Meta<typeof Alert>;
 
 export default meta;

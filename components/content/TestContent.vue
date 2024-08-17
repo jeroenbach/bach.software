@@ -1,5 +1,3 @@
-<script lang="ts" setup></script>
-
 <template>
   <div>My component</div>
   <ContentSlot :use="$slots.default" unwrap="p" />

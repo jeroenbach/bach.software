@@ -1,13 +1,14 @@
-import type { WatchSource } from 'vue-demi'
-import { watch } from 'vue-demi'
-import { cloneFnJSON, extendRef, useCloned } from '@vueuse/core'
+import type { WatchSource } from "vue";
+import { watch } from "vue";
+import { cloneFnJSON, extendRef, useCloned } from "@vueuse/core";
 
 export function cloneFnJSONExtended<T>(source: T): T {
   // In the following cases it doesn't make sense to clone the object
-  if (source == null || typeof source !== 'object') // object & array
-    return source
+  if (source == null || typeof source !== "object")
+    // object & array
+    return source;
 
-  return cloneFnJSON(source)
+  return cloneFnJSON(source);
 }
 
 export interface RefReactiveDefaultOptions<T = any> {
@@ -16,7 +17,7 @@ export interface RefReactiveDefaultOptions<T = any> {
    *
    * By default, it uses `JSON.parse(JSON.stringify(value))` to clone.
    */
-  clone?: (source: T) => T
+  clone?: (source: T) => T;
 
   /**
    * Watch nested properties inside the object for changes. This is turned on by default.
@@ -39,13 +40,13 @@ export interface RefReactiveDefaultOptions<T = any> {
    * internalValue.value = { details: 'updated value, sync with props.defaultValue is removed' };
    *
    */
-  deep?: boolean
+  deep?: boolean;
 
   /**
    * if resetOnDefaultChange is true the value will be reset when the default value changes
    * otherwise it ignores the update on the default value
    */
-  resetOnDefaultChange?: boolean
+  resetOnDefaultChange?: boolean;
 }
 
 /**
@@ -53,70 +54,73 @@ export interface RefReactiveDefaultOptions<T = any> {
  * When the initial value changes, the ref is reset to this value.
  * When you update this ref you're working with a clone of the default value automatically.
  */
-export function refReactiveDefault<T>(reactiveDefault: WatchSource<T>, options: RefReactiveDefaultOptions<T> = {}) {
+export function refReactiveDefault<T>(
+  reactiveDefault: WatchSource<T>,
+  options: RefReactiveDefaultOptions<T> = {},
+) {
   const {
     clone = cloneFnJSONExtended,
     deep = true,
     resetOnDefaultChange = true,
-  } = options
+  } = options;
 
   const { cloned, sync: syncDefault } = useCloned(reactiveDefault, {
     manual: true,
-    clone: deep ? clone : d => d, // Only clone when the deep flag is true, otherwise we use the same value/object as the default
-    flush: 'sync',
-  })
+    clone: deep ? clone : (d) => d, // Only clone when the deep flag is true, otherwise we use the same value/object as the default
+    flush: "sync",
+  });
 
-  let isWatching = false
-  let isInternalModification = false
+  let isWatching = false;
+  let isInternalModification = false;
 
   const syncDefaultInternal = () => {
-    isInternalModification = true
-    syncDefault()
-    isInternalModification = false
-  }
+    isInternalModification = true;
+    syncDefault();
+    isInternalModification = false;
+  };
 
   const addWatchers = () => {
-    isWatching = true
+    isWatching = true;
 
     const unlinkFromDefault = watch(
       reactiveDefault,
       () => {
-        syncDefaultInternal()
+        syncDefaultInternal();
       },
       {
-        flush: 'sync',
+        flush: "sync",
         deep,
       },
-    )
+    );
 
     const unlinkFromClone = watch(
       cloned,
       () => {
-        if (isInternalModification)
-          return // ignore internal modifications
+        if (isInternalModification) return; // ignore internal modifications
 
         if (!resetOnDefaultChange) {
-          unlinkFromDefault()
-          unlinkFromClone()
-          isWatching = false
+          unlinkFromDefault();
+          unlinkFromClone();
+          isWatching = false;
         }
       },
       {
-        flush: 'sync',
+        flush: "sync",
         deep,
       },
-    )
-  }
+    );
+  };
 
   const clonedExtended = extendRef(cloned, {
     reset: () => {
-      syncDefaultInternal()
-      if (!isWatching) // add watchers again on manual reset
-        addWatchers()
+      syncDefaultInternal();
+      if (!isWatching)
+        // add watchers again on manual reset
+        addWatchers();
     },
-  })
+  });
 
-  addWatchers()
+  addWatchers();
 
-  return clonedExtended
+  return clonedExtended;
 }

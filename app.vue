@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-import "@fontsource/inter"; // Defaults to weight 400
+import NotificationContainer from "~/components/NotificationContainer.vue";
+import Notification from "~/components/Notification.vue";
+import { useNotification } from "~/composables/useNotification";
+
+const { notifications } = useNotification();
 
 useHeadSafe({
   titleTemplate: (titleChunk) => {
@@ -22,6 +26,8 @@ useSeoMeta({
 });
 </script>
 <template>
+  <NotificationContainer />
+  <Notification v-for="notification in notifications" v-bind="notification" />
   <NuxtLoadingIndicator />
   <NuxtLayout>
     <NuxtPage />

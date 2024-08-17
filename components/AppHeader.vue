@@ -8,13 +8,29 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  MoonIcon,
+  SunIcon,
+  ComputerDesktopIcon,
+} from "@heroicons/vue/24/outline";
 import { Dialog, DialogPanel } from "@headlessui/vue";
 const navigation = [
   { label: "Blog", to: "/posts" },
   { label: "Articles", to: "/articles" },
+  { label: "Open source", to: "/open-source" },
+  { label: "Projects", to: "/projects" },
   { label: "About", to: "/pages/about" },
 ];
+
+//https://srwiez.com/projects
+
+// - sofia-vera.com
+// - travelbags
+// - pavo
+// - hbb24
 
 const mobileMenuOpen = ref(false);
 </script>
@@ -25,7 +41,7 @@ const mobileMenuOpen = ref(false);
       class="flex items-center justify-between p-6 lg:px-8"
       aria-label="Global"
     >
-      <div class="flex lg:flex-1">
+      <div class="dark: dark:text-gray-300 flex lg:flex-1">
         <NuxtLink to="/" class="-m-1.5 p-1.5">
           <span class="sr-only">Bach.Software</span>
           <img
@@ -34,11 +50,20 @@ const mobileMenuOpen = ref(false);
             alt=""
           />
         </NuxtLink>
+        <button @click="$colorMode.preference = 'system'">
+          <ComputerDesktopIcon class="size-6" />
+        </button>
+        <button @click="$colorMode.preference = 'light'">
+          <SunIcon class="size-6" />
+        </button>
+        <button @click="$colorMode.preference = 'dark'">
+          <MoonIcon class="size-6" />
+        </button>
       </div>
       <div class="flex lg:hidden">
         <button
           type="button"
-          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+          class="text-gray-700 -m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
           @click="mobileMenuOpen = true"
         >
           <span class="sr-only">Open main menu</span>
@@ -50,7 +75,7 @@ const mobileMenuOpen = ref(false);
           v-for="item in navigation"
           :key="item.label"
           :to="item.to"
-          class="text-sm font-semibold leading-6 text-gray-900"
+          class="text-gray-900 dark:text-gray-300 text-sm font-semibold leading-6"
         >
           {{ item.label }}
         </NuxtLink>
@@ -63,7 +88,7 @@ const mobileMenuOpen = ref(false);
     >
       <div class="fixed inset-0 z-50" />
       <DialogPanel
-        class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+        class="sm:ring-gray-900/10 fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1"
       >
         <div class="flex items-center justify-between">
           <a href="#" class="-m-1.5 p-1.5">
@@ -76,7 +101,7 @@ const mobileMenuOpen = ref(false);
           </a>
           <button
             type="button"
-            class="-m-2.5 rounded-md p-2.5 text-gray-700"
+            class="text-gray-700 -m-2.5 rounded-md p-2.5"
             @click="mobileMenuOpen = false"
           >
             <span class="sr-only">Close menu</span>
@@ -84,13 +109,13 @@ const mobileMenuOpen = ref(false);
           </button>
         </div>
         <div class="mt-6 flow-root">
-          <div class="-my-6 divide-y divide-gray-500/10">
+          <div class="divide-gray-500/10 -my-6 divide-y">
             <div class="space-y-2 py-6">
               <NuxtLink
                 v-for="item in navigation"
                 :key="item.label"
                 :href="item.to"
-                class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                class="text-gray-900 dark:text-gray-300 hover:bg-gray-50 -mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7"
               >
                 {{ item.label }}
               </NuxtLink>

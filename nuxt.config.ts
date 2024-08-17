@@ -7,13 +7,30 @@ export default defineNuxtConfig({
     "@nuxtjs/storybook",
     "@nuxt/content",
     "@nuxt/image",
+    "@nuxtjs/color-mode",
+    "@pinia/nuxt",
+    "@nuxtjs/i18n",
+    "@nuxt/test-utils/module",
   ],
+  colorMode: {
+    classSuffix: "",
+  },
   css: ["animate.css"],
   app: {
     head: {
       // Used in Sofia Vera
       viewport:
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+    },
+  },
+  content: {
+    highlight: {
+      theme: {
+        // Default theme (same as single string)
+        default: "github-light",
+        // Theme used if `html.dark`
+        dark: "github-dark",
+      },
     },
   },
   image: {
@@ -48,5 +65,10 @@ export default defineNuxtConfig({
     prerender: {
       routes: ["/sitemap.xml"],
     },
+  },
+  i18n: {
+    locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
+    defaultLocale: "en",
+    strategy: "prefix_except_default",
   },
 });
