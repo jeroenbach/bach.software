@@ -1,0 +1,135 @@
+<script lang="ts" setup>
+import {
+  CheckCircleIcon,
+  XMarkIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/vue/24/outline";
+import { useAnimate, useTimeoutFn } from "@vueuse/core";
+import type { Notification } from "~/composables/useNotification";
+
+interface Props extends Omit<Notification, "notificationId" | "title"> {
+  title?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  severity: "error",
+});
+
+const progress = ref();
+const dismissed = ref(false);
+
+const { currentTime } = useAnimate(
+  progress,
+  { width: "100%" },
+  {
+    duration: props.options?.closeIn,
+    persist: true,
+    immediate: !!props.options?.closeIn,
+  },
+);
+const percentageComplete = computed(() =>
+  props.options?.closeIn
+    ? ((currentTime.value as number) / props.options?.closeIn) * 100
+    : 0,
+);
+useTimeoutFn(
+  () => {
+    dismissed.value = true;
+  },
+  props.options?.closeIn ?? 0,
+  { immediate: !!props.options?.closeIn },
+);
+</script>
+
+<template>
+  <ClientOnly>
+    <Teleport to="[notification='main']">
+      <div
+        v-if="!dismissed"
+        role="alert"
+        class="pointer-events-auto w-full max-w-96 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+        :class="{
+          'border-l-4 border-green-300 dark:border-green-400 dark:bg-green-400':
+            severity === 'success',
+          'border-l-4 border-red-400 bg-red-50': severity === 'error',
+          'border-l-4 border-yellow-400 bg-yellow-50': severity === 'warning',
+          'border-l-4 border-blue-400 bg-blue-50': severity === 'info',
+        }"
+      >
+        <div class="p-4">
+          <div class="flex items-start gap-4">
+            <CheckCircleIcon
+              v-if="severity === 'success'"
+              class="size-6 text-green-400"
+            />
+            <XCircleIcon
+              v-if="severity === 'error'"
+              class="size-6 text-red-400"
+            />
+            <ExclamationTriangleIcon
+              v-if="severity === 'warning'"
+              class="size-6 text-yellow-400"
+            />
+            <InformationCircleIcon
+              v-if="severity === 'info'"
+              class="size-6 text-blue-400"
+            />
+            <div class="my-auto flex grow flex-col gap-1 text-sm">
+              <p
+                v-if="title"
+                class="font-medium"
+                :class="{
+                  'text-gray-800 dark:text-green-800': severity === 'success',
+                  'text-red-800': severity === 'error',
+                  'text-yellow-800': severity === 'warning',
+                  'text-blue-800': severity === 'info',
+                }"
+              >
+                {{ title }}
+              </p>
+              <slot>
+                <p
+                  v-if="description"
+                  :class="{
+                    'text-gray-500 dark:text-green-500': severity === 'success',
+                    'text-red-500': severity === 'error',
+                    'text-yellow-500': severity === 'warning',
+                    'text-blue-500': severity === 'info',
+                  }"
+                >
+                  {{ description }}
+                </p>
+              </slot>
+            </div>
+            <div class="flex">
+              <span class="sr-only">Close</span>
+              <button
+                class="flex size-6 rounded-lg text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
+                @click="dismissed = true"
+              >
+                <XMarkIcon class="m-auto size-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          ref="progress"
+          role="progressbar"
+          class="h-0.5"
+          :class="{
+            'bg-green-400 dark:bg-green-800': severity === 'success',
+            'bg-red-400': severity === 'error',
+            'bg-yellow-400': severity === 'warning',
+            'bg-blue-400': severity === 'info',
+          }"
+          :aria-valuenow="percentageComplete"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          style="width: 0%"
+        ></div>
+      </div>
+    </Teleport>
+  </ClientOnly>
+</template>
