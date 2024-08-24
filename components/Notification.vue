@@ -49,13 +49,16 @@ useTimeoutFn(
       <div
         v-if="!dismissed"
         role="alert"
-        class="pointer-events-auto w-full max-w-96 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+        class="pointer-events-auto w-full max-w-96 overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
         :class="{
-          'border-l-4 border-green-300 dark:border-green-400 dark:bg-green-400':
+          'border-l-4 border-green-300 bg-white dark:bg-gray-800 dark:text-green-400':
             severity === 'success',
-          'border-l-4 border-red-400 bg-red-50': severity === 'error',
-          'border-l-4 border-yellow-400 bg-yellow-50': severity === 'warning',
-          'border-l-4 border-blue-400 bg-blue-50': severity === 'info',
+          'border-l-4 border-red-400 bg-red-50 dark:bg-gray-800 dark:text-red-400':
+            severity === 'error',
+          'border-l-4 border-yellow-400 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300':
+            severity === 'warning',
+          'border-l-4 border-blue-400 bg-blue-50 dark:bg-gray-800 dark:text-blue-400':
+            severity === 'info',
         }"
       >
         <div class="p-4">
@@ -81,10 +84,11 @@ useTimeoutFn(
                 v-if="title"
                 class="font-medium"
                 :class="{
-                  'text-gray-800 dark:text-green-800': severity === 'success',
-                  'text-red-800': severity === 'error',
-                  'text-yellow-800': severity === 'warning',
-                  'text-blue-800': severity === 'info',
+                  'text-green-800 dark:text-green-500': severity === 'success',
+                  'text-red-800 dark:text-red-500': severity === 'error',
+                  'text-yellow-800 dark:text-yellow-500':
+                    severity === 'warning',
+                  'text-blue-800 dark:text-blue-500': severity === 'info',
                 }"
               >
                 {{ title }}
@@ -93,10 +97,11 @@ useTimeoutFn(
                 <p
                   v-if="description"
                   :class="{
-                    'text-gray-500 dark:text-green-500': severity === 'success',
-                    'text-red-500': severity === 'error',
-                    'text-yellow-500': severity === 'warning',
-                    'text-blue-500': severity === 'info',
+                    'text-gray-500 dark:text-green-800': severity === 'success',
+                    'text-red-500 dark:text-red-800': severity === 'error',
+                    'text-yellow-500 dark:text-yellow-800':
+                      severity === 'warning',
+                    'text-blue-500 dark:text-blue-800': severity === 'info',
                   }"
                 >
                   {{ description }}
