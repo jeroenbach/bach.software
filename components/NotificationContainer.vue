@@ -6,7 +6,7 @@
 <template>
   <div
     aria-live="assertive"
-    class="pointer-events-none fixed inset-0 flex items-end p-6"
+    class="pointer-events-none fixed inset-0 flex items-start p-6"
   >
     <div notification="main" class="flex w-full flex-col items-end gap-5"></div>
   </div>
