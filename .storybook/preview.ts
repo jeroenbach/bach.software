@@ -22,6 +22,22 @@ const preview: Preview = {
         },
       ],
     },
+    rootAttributes: [
+      {
+        root: "html",
+        attribute: "class",
+        defaultState: {
+          name: "Light",
+          value: "light",
+        },
+        states: [
+          {
+            name: "Dark",
+            value: "dark",
+          },
+        ],
+      },
+    ],
   },
 };
 
