@@ -32,6 +32,9 @@ export default defineNuxtConfig({
         dark: "github-dark",
       },
     },
+    experimental: {
+      search: {},
+    },
   },
   image: {
     dir: "assets/images",

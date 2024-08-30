@@ -38,7 +38,7 @@ const hasMultipleTabs = computed(() => tabs.value?.length > 1);
   <div
     role="tablist"
     aria-orientation="horizontal"
-    class="flex items-center overflow-hidden rounded-t-md border border-b-0 border-gray-200 pe-4 dark:border-gray-700"
+    class="flex items-center overflow-hidden overflow-x-auto rounded-t-md border border-b-0 border-gray-200 pe-4 dark:border-gray-700"
   >
     <button
       v-if="hasMultipleTabs"
@@ -72,8 +72,11 @@ const hasMultipleTabs = computed(() => tabs.value?.length > 1);
     </ClientOnly>
   </div>
   <div
-    class="code-group rounded-b border border-gray-200 bg-stone-50 dark:border-gray-700 dark:bg-slate-700"
-    :class="{ 'p-8': !activeTab?.code, 'px-4 py-6': activeTab?.code }"
+    class="code-group rounded-b border border-gray-200 bg-stone-50 text-xs dark:border-gray-700 dark:bg-slate-700 sm:text-sm"
+    :class="{
+      'p-8': !activeTab?.code,
+      'not-prose overflow-auto px-4 py-6': activeTab?.code,
+    }"
   >
     <component ref="source" :is="activeTab?.component" />
   </div>

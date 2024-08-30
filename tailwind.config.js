@@ -9,7 +9,7 @@ export default {
           css: {
             '--tw-prose-pre-bg': theme('colors.stone[50]'),
             '--tw-prose-invert-pre-bg': theme('colors.slate[700]'),
-            ".code-group pre": {
+            "div.code-group pre": {
               margin: "0",
               padding: "0",
               '--tw-prose-pre-bg': 'transparent',
@@ -22,7 +22,6 @@ export default {
               border: '1px solid #e2e2e3',
               borderRadius: '4px',
               outline: 'none',
-              minWidth: '20rem',
               margin: '.5rem 0',
             },
             "input:focus": {    

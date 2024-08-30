@@ -2,7 +2,11 @@
 import NotificationContainer from "~/components/NotificationContainer.vue";
 import Notification from "~/components/Notification.vue";
 import { useNotification } from "~/composables/useNotification";
+import type { Config } from "./types/Config";
 
+useState<Config>("config", () => ({
+  baseUrl: "https://bach.software",
+}));
 const { notifications } = useNotification();
 
 useHeadSafe({
