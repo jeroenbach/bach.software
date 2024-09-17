@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { Article } from "~/types/Article";
+import PostsContext from "~/contexts/PostsContext.vue";
+import AuthorsContext from "~/contexts/AuthorsContext.vue";
 
-const { data: posts } = await useAsyncData("posts", () =>
-  queryContent<Article>("posts")
-    // .only(["title", "description", "_path", "slug"])
-    .find(),
-);
+// const { data: posts } = await useAsyncData("posts", async () => {
+//   const posts = await queryContent("posts").find();
+//   return posts;
+// });
 // const search = ref("");
 // const results = await searchContent(search);
 
@@ -65,8 +65,6 @@ const { data: posts } = await useAsyncData("posts", () =>
 // ];
 </script>
 <template>
-  <pre>{{ posts }}</pre>
-
   <div class="bg-white py-6 sm:py-12">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl lg:mx-0">
@@ -80,51 +78,63 @@ const { data: posts } = await useAsyncData("posts", () =>
       <div
         class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none"
       >
-        <article
-          v-for="post in posts"
-          :key="post.id"
-          class="flex max-w-xl flex-col items-start justify-between"
-        >
-          <div class="flex items-center gap-x-4 text-xs">
-            <time :datetime="post.datetime" class="text-gray-500">{{
-              post.date
-            }}</time>
-            <a
-              :href="post.category.href"
-              class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-              >{{ post.category.title }}</a
-            >
-          </div>
-          <div class="group relative">
-            <h3
-              class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
-            >
-              <a :href="post.href">
-                <span class="absolute inset-0" />
-                {{ post.title }}
-              </a>
-            </h3>
-            <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-              {{ post.description }}
-            </p>
-          </div>
-          <div class="relative mt-8 flex items-center gap-x-4">
-            <img
-              :src="post.author.imageUrl"
-              alt=""
-              class="h-10 w-10 rounded-full bg-gray-50"
-            />
-            <div class="text-sm leading-6">
-              <p class="font-semibold text-gray-900">
-                <a :href="post.author.href">
-                  <span class="absolute inset-0" />
-                  {{ post.author.name }}
-                </a>
-              </p>
-              <p class="text-gray-600">{{ post.author.role }}</p>
-            </div>
-          </div>
-        </article>
+        <PostsContext summary>
+          <template #post="{ post }">
+            <AuthorsContext :userName="post.author">
+              <template #author="{ author }">
+                <article
+                  class="flex max-w-xl flex-col items-start justify-between"
+                >
+                  <div class="flex items-center gap-x-4 text-xs">
+                    <time :datetime="post.date" class="text-gray-500">{{
+                      post.date
+                    }}</time>
+                    <NuxtLink
+                      :to="'post.category.href'"
+                      class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+                      >{{ "post.category.title" }}</NuxtLink
+                    >
+                  </div>
+                  <div class="group relative">
+                    <h3
+                      class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
+                    >
+                      <NuxtLink :to="post.url">
+                        <span class="absolute inset-0" />
+                        {{ post.title }}
+                      </NuxtLink>
+                    </h3>
+                    <ContentRenderer
+                      :value="post"
+                      :excerpt="true"
+                      class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
+                    />
+                  </div>
+                  <div class="relative mt-8 flex items-center gap-x-4">
+                    <NuxtPicture
+                      :src="author.imageUrl"
+                      sizes="50px"
+                      :alt="author.fullName"
+                      :imgAttrs="{ class: 'h-10 w-10 rounded-full bg-gray-50' }"
+                    />
+                    <div class="text-sm leading-6">
+                      <p class="font-semibold text-gray-900">
+                        <NuxtLink
+                          class="text-sky-600 hover:text-sky-800 dark:text-sky-500 dark:hover:text-sky-300"
+                          :to="author.linkedin"
+                        >
+                          <span class="absolute inset-0" />
+                          {{ author.fullName }}
+                        </NuxtLink>
+                      </p>
+                      <p class="text-gray-600">{{ author.role }}</p>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </AuthorsContext>
+          </template>
+        </PostsContext>
       </div>
     </div>
   </div>

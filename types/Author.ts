@@ -1,6 +1,7 @@
 export interface Author {
   userName: string;
   fullName: string;
-  image: string;
+  role: string;
+  imageUrl: string;
   linkedin: string;
 }
