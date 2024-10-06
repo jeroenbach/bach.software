@@ -1,16 +1,13 @@
 <script lang="ts" setup>
 import { EyeIcon } from "@heroicons/vue/24/outline";
-import PostsContext, { type Post } from "~/contexts/PostsContext.vue";
-import AuthorsContext from "~/contexts/AuthorsContext.vue";
 import type { Config } from "~/types/Config";
 
 const config = useState<Config>("config");
-const { id, slug } = useRoute().params as { id: string; slug: string };
-const post = ref<Post>();
+const { id } = useRoute().params as { id: string; slug: string };
 </script>
 <template>
   <div class="prose mx-auto">
-    <PostsContext :id="id" @load="(p) => (post = p)">
+    <PostsContext :id="id">
       <template #post="{ post }">
         <AuthorsContext :userName="post.author">
           <template #author="{ author }">
@@ -40,7 +37,7 @@ const post = ref<Post>();
                     <p class="text-gray-500 dark:text-gray-400">
                       <span>{{ post.readTime }} {{ $t("read") }}</span>
                       <span> · </span>
-                      <time>{{ post.date }}</time>
+                      <time>{{ formatDate(post.date) }}</time>
                     </p>
                   </div>
                 </div>

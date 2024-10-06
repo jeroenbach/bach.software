@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // ssr: false,
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   modules: [
@@ -11,6 +12,12 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/i18n",
     "@nuxt/test-utils/module",
+    "dayjs-nuxt",
+  ],
+  components: [
+    // ~/contexts/account/UserDeleteDialog.vue => <UserDeleteDialog />
+    { path: "~/contexts", pathPrefix: false },
+    "~/components",
   ],
   colorMode: {
     classSuffix: "",
