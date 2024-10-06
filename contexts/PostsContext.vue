@@ -19,8 +19,8 @@ export interface PostSummary extends Omit<_PostSummary, "_path"> {
 type TPost = undefined extends TSummary
   ? Post
   : TSummary extends true
-    ? _PostSummary
-    : _Post;
+    ? PostSummary
+    : Post;
 type TPostSingleOrMultiple = undefined extends TSingle ? TPost[] : TPost;
 
 interface Props {
@@ -35,18 +35,20 @@ const emit = defineEmits<{
 }>();
 
 const { data: posts } = await useAsyncData<TPost[]>("posts", async () => {
-  const query = props.summary
-    ? queryContent<_PostSummary>("posts").only([
-        "title",
+  const query = isFalseOrUndefined(props.summary)
+    ? queryContent<_Post>("posts")
+    : queryContent<_PostSummary>("posts").only([
         "slug",
-        "readTime",
+        "title",
+        "description",
+        "category",
         "author",
         "date",
-        "imgCover",
-        "excerpt",
+        "imgCoverUrl",
+        "readTime",
         "_path",
-      ])
-    : queryContent<_Post>("posts");
+        "excerpt",
+      ]);
 
   if (props.id) {
     query.where({ _path: { $eq: `/posts/${props.id}` } });
@@ -62,6 +64,8 @@ const { data: posts } = await useAsyncData<TPost[]>("posts", async () => {
 });
 </script>
 <template>
-  <slot :posts="posts" />
-  <slot name="post" v-for="post in posts" :key="post.slug" :post="post" />
+  <slot :posts="posts"> </slot>
+  <slot name="post" v-for="post in posts" :key="post.slug" :post="post">
+    <pre>{{ post }}</pre>
+  </slot>
 </template>

@@ -2,5 +2,7 @@
 
 # Up next
 
-- Style blog page as Medium article page
+- Move html code to components
+- Fix darkmode for posts page
+-
 - move all other code to a different branche

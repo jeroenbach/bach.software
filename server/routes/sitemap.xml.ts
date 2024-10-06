@@ -10,8 +10,10 @@ export default defineEventHandler(async (event) => {
   });
 
   for (const doc of docs) {
+    // Append any slugs if available
+    const url = doc.slug ? `${doc._path}-${doc.slug}` : doc._path;
     sitemap.write({
-      url: doc._path,
+      url,
       changefreq: "monthly",
     });
   }
