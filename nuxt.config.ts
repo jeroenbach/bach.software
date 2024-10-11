@@ -1,11 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
-  // ssr: false,
+  ssr: false,
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/storybook",
+    "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/color-mode",
@@ -13,16 +15,31 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/test-utils/module",
     "dayjs-nuxt",
+    "@primevue/nuxt-module",
   ],
   components: [
     // ~/contexts/account/UserDeleteDialog.vue => <UserDeleteDialog />
     { path: "~/contexts", pathPrefix: false },
     "~/components",
   ],
+  primevue: {
+    autoImport: false,
+    options: {
+      theme: {
+        preset: Aura,
+        // options: {
+        //   cssLayer: {
+        //     name: "primevue",
+        //     order: "tailwind-base, primevue, tailwind-utilities",
+        //   },
+        // },
+      },
+    },
+  },
   colorMode: {
     classSuffix: "",
   },
-  css: ["animate.css"],
+  css: ["~/assets/css/main.scss", "animate.css"],
   app: {
     head: {
       // Used in Sofia Vera
@@ -42,6 +59,9 @@ export default defineNuxtConfig({
     experimental: {
       search: {},
     },
+  },
+  twoslash: {
+    enableInDev: true,
   },
   image: {
     dir: "assets/images",

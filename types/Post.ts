@@ -2,6 +2,9 @@ import type { MarkdownParsedContent } from "@nuxt/content";
 
 export interface PostSummary
   extends Pick<MarkdownParsedContent, "_path" | "excerpt"> {
+  /**
+   * In case you want to override the automatically generated slug
+   */
   slug?: string;
   title?: string;
   description: string;

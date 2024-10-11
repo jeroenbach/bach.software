@@ -22,15 +22,17 @@ import AuthorsContext from "~/contexts/AuthorsContext.vue";
               <template #author="{ author }">
                 <article class="flex flex-col items-start gap-8 lg:flex-row">
                   <div class="w-full lg:w-64">
-                    <NuxtPicture
-                      :src="post.imgCoverUrl"
-                      :alt="post.title"
-                      sizes="sm:640px, lg:256px"
-                      :imgAttrs="{
-                        class:
-                          'aspect-16/9 sm:aspect-2/1 lg:aspect-1/1 w-full rounded-2xl bg-slate-200 object-cover',
-                      }"
-                    />
+                    <NuxtLink :to="post.url">
+                      <NuxtPicture
+                        :src="post.imgCoverUrl"
+                        :alt="post.title"
+                        sizes="sm:640px, lg:256px"
+                        :imgAttrs="{
+                          class:
+                            'aspect-16/9 sm:aspect-2/1 lg:aspect-1/1 w-full rounded-2xl bg-slate-200 object-cover',
+                        }"
+                      />
+                    </NuxtLink>
                   </div>
                   <div
                     class="flex max-w-xl flex-col items-start justify-between"
@@ -46,19 +48,19 @@ import AuthorsContext from "~/contexts/AuthorsContext.vue";
                       >
                     </div>
                     <div class="group relative max-w-xl">
-                      <h3
-                        class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
-                      >
-                        <NuxtLink :to="post.url">
+                      <NuxtLink :to="post.url">
+                        <h3
+                          class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
+                        >
                           <span class="absolute inset-0" />
                           {{ post.title }}
-                        </NuxtLink>
-                      </h3>
-                      <ContentRenderer
-                        :value="post"
-                        :excerpt="true"
-                        class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
-                      />
+                        </h3>
+                        <ContentRenderer
+                          :value="post"
+                          :excerpt="true"
+                          class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
+                        />
+                      </NuxtLink>
                     </div>
                     <div class="relative mt-8 flex items-center gap-x-4">
                       <NuxtPicture

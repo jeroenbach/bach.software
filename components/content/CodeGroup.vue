@@ -8,7 +8,6 @@ import { useClipboard } from "@vueuse/core";
 const { t } = useI18n();
 const { addSimple } = useNotification();
 const slots = useSlots();
-const source = ref();
 const { copy: copyInternal, isSupported, copied } = useClipboard();
 
 const copy = (code: string) => {
@@ -78,6 +77,17 @@ const hasMultipleTabs = computed(() => tabs.value?.length > 1);
       'not-prose overflow-auto px-4 py-6': activeTab?.code,
     }"
   >
-    <component ref="source" :is="activeTab?.component" />
+    <div class="flex">
+      <div
+        v-for="(tab, index) in tabs"
+        :key="tab.label"
+        :class="{
+          'w-0 overflow-hidden': activeTabIndex !== index,
+          'block w-full': activeTabIndex === index,
+        }"
+      >
+        <component :is="tab?.component" />
+      </div>
+    </div>
   </div>
 </template>
