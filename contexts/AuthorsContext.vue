@@ -1,14 +1,16 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="TSingle extends string | undefined">
 import type { Author } from "~/types/Author";
 
+type TSingleOrMultiple = undefined extends TSingle ? Author[] : Author;
+
 interface Props {
-  userName?: string;
+  userName?: TSingle;
 }
 
 const props = defineProps<Props>();
 
-defineEmits<{
-  (e: "load", authors: Author[]): void;
+const emit = defineEmits<{
+  (e: "load", authors: TSingleOrMultiple): void;
 }>();
 
 const { data: authors } = await useAsyncData("authors", async () => {
@@ -18,7 +20,11 @@ const { data: authors } = await useAsyncData("authors", async () => {
     query.where({ userName: { $eq: props.userName } });
   }
 
-  return await query.find();
+  const results = await query.find();
+
+  emit("load", (props.userName ? results?.[0] : results) as TSingleOrMultiple);
+
+  return results;
 });
 </script>
 <template>

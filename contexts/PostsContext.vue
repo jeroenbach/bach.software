@@ -7,6 +7,7 @@
   "
 >
 import type { PostSummary as _PostSummary, Post as _Post } from "~/types/Post";
+import slugify from "slugify";
 
 export interface Post extends _Post {
   url: string;
@@ -55,7 +56,12 @@ const { data: posts } = await useAsyncData<TPost[]>("posts", async () => {
   }
 
   const raw = await query.find();
-  const posts = raw.map((p) => ({ ...p, url: `${p._path}-${p.slug}` }));
+  const createSlug = (slug?: string, title?: string) =>
+    slug ?? slugify(title ?? "", { lower: true });
+  const posts = raw.map((p) => ({
+    ...p,
+    url: `${p._path}-${createSlug(p.slug, p.title)}`,
+  }));
 
   if (props.id) emit("load", posts[0] as TPostSingleOrMultiple);
   else emit("load", posts as TPostSingleOrMultiple);
