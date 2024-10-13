@@ -7,7 +7,7 @@
   "
 >
 import type { PostSummary as _PostSummary, Post as _Post } from "~/types/Post";
-import slugify from "slugify";
+import { createSlug } from "~/utils/slug";
 
 export interface Post extends _Post {
   url: string;
@@ -35,39 +35,51 @@ const emit = defineEmits<{
   (e: "load", posts: TPostSingleOrMultiple): void;
 }>();
 
-const { data: posts } = await useAsyncData<TPost[]>("posts", async () => {
-  const query = isFalseOrUndefined(props.summary)
-    ? queryContent<_Post>("posts")
-    : queryContent<_PostSummary>("posts").only([
-        "slug",
-        "title",
-        "description",
-        "category",
-        "author",
-        "date",
-        "imgCoverUrl",
-        "readTime",
-        "_path",
-        "excerpt",
-      ]);
+const uniqueId = computed(() => `postsContext-${props.id}-${props.summary}`);
 
-  if (props.id) {
-    query.where({ _path: { $eq: `/posts/${props.id}` } });
-  }
+const { data: posts } = await useAsyncData<TPost[]>(
+  uniqueId.value,
+  async () => {
+    const query = isFalseOrUndefined(props.summary)
+      ? queryContent<_Post>("posts")
+      : queryContent<_PostSummary>("posts").only([
+          "slug",
+          "title",
+          "description",
+          "category",
+          "author",
+          "date",
+          "imgCoverUrl",
+          "readTime",
+          "_path",
+          "excerpt",
+        ]);
 
-  const raw = await query.find();
-  const createSlug = (slug?: string, title?: string) =>
-    slug ?? slugify(title ?? "", { lower: true });
-  const posts = raw.map((p) => ({
-    ...p,
-    url: `${p._path}-${createSlug(p.slug, p.title)}`,
-  }));
+    if (props.id) {
+      query.where({ _path: { $eq: `/posts/${props.id}` } });
+    }
 
-  if (props.id) emit("load", posts[0] as TPostSingleOrMultiple);
-  else emit("load", posts as TPostSingleOrMultiple);
+    const raw = await query.find();
+    const createPostSlug = (slug?: string, title?: string) =>
+      slug ?? createSlug(title);
+    const posts = raw.map((p) => ({
+      ...p,
+      url: `${p._path}-${createPostSlug(p.slug, p.title)}`,
+    }));
 
-  return posts as TPost[];
-});
+    return posts as TPost[];
+  },
+);
+
+// Added a watch, to make sure SSR also works
+watch(
+  posts,
+  (p) =>
+    p && props.id
+      ? emit("load", p[0] as TPostSingleOrMultiple)
+      : emit("load", p as TPostSingleOrMultiple),
+  { immediate: true },
+);
 </script>
 <template>
   <slot :posts="posts"> </slot>

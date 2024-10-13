@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
 import { createDefaultStory } from "~/utils/createDefaultStory";
 
-import Alert from "./Alert.vue";
+import Alert from "./AlertMessage.vue";
 
 const variations = () =>
   h("div", { class: "p-5" }, [
@@ -32,7 +32,7 @@ const variations = () =>
     }),
   ]);
 
-/** Unfortunatly decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
+/** Unfortunately decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
 function render() {
   return h("div", [
     "Light mode",
