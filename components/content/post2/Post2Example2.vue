@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import Parent from "~/examples/post2/example2/Parent.vue";
+import Example from "~/examples/post2/example2/Parent.vue";
+import type { PostExampleProps } from "~/components/content/PostExampleProps";
+defineProps<PostExampleProps>();
+defineOptions({ inheritAttrs: false });
 </script>
-<template>
-  <Parent />
-</template>
+<template><Example /></template>

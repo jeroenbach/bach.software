@@ -2,5 +2,5 @@
 <template>
   <AppHeader />
   <slot />
-  <AppFooter />
+  <Footer />
 </template>

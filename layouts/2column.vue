@@ -12,6 +12,6 @@
         <slot name="side" />
       </div>
     </div>
-    <AppFooter />
+    <Footer />
   </div>
 </template>

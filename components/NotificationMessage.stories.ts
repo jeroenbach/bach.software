@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
 import { createDefaultStory } from "~/utils/createDefaultStory";
 
-import Notification from "./Notification.vue";
+import Notification from "./NotificationMessage.vue";
 import NotificationContainer from "./NotificationContainer.vue";
 
-/** Unfortunatly decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
+/** Unfortunately decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
 const render = () =>
   h("div", { class: "p-5" }, [
     h(NotificationContainer),

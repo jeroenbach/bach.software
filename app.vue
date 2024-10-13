@@ -1,36 +1,34 @@
 <script lang="ts" setup>
 import NotificationContainer from "~/components/NotificationContainer.vue";
-import Notification from "~/components/Notification.vue";
+import NotificationMessage from "~/components/NotificationMessage.vue";
 import { useNotification } from "~/composables/useNotification";
 import appConfig from "~/appConfig.json";
 import type { Config } from "./types/Config";
 
 useState<Config>("config", () => appConfig);
 const { notifications } = useNotification();
+const { t } = useI18n();
 
-useHeadSafe({
-  titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} - Bach.Software` : "Bach.Software";
-  },
-  meta: [
-    {
-      name: "description",
-      content: "Full stack software development services",
-    },
-  ],
-});
 useSeoMeta({
-  title: "My Amazing Site",
-  ogTitle: "My Amazing Site",
-  description: "This is my amazing site, let me tell you all about it.",
-  ogDescription: "This is my amazing site, let me tell you all about it.",
-  ogImage: "https://example.com/image.png",
+  title: t("_metadata.title"),
+  titleTemplate: (titleChunk) => {
+    return titleChunk
+      ? t("_metadata.titleTemplate", { titleChunk })
+      : t("_metadata.titleTemplate_empty");
+  },
+  ogTitle: t("_metadata.title"),
+  description: t("_metadata.description"),
+  ogDescription: t("_metadata.description"),
+  ogImage: "https://bach.software/JEROEN-4238-SQUARE.jpeg",
   twitterCard: "summary_large_image",
 });
 </script>
 <template>
   <NotificationContainer />
-  <Notification v-for="notification in notifications" v-bind="notification" />
+  <NotificationMessage
+    v-for="notification in notifications"
+    v-bind="notification"
+  />
   <NuxtLoadingIndicator />
   <NuxtLayout>
     <NuxtPage />

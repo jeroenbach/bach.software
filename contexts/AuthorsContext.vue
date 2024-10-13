@@ -9,23 +9,28 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const uniqueId = computed(() => `authorsContext-${props.userName}`);
+
 const emit = defineEmits<{
   (e: "load", authors: TSingleOrMultiple): void;
 }>();
 
-const { data: authors } = await useAsyncData("authors", async () => {
+const { data: authors } = await useAsyncData(uniqueId.value, async () => {
   const query = queryContent<Author>("authors");
 
   if (props.userName) {
     query.where({ userName: { $eq: props.userName } });
   }
 
-  const results = await query.find();
-
-  emit("load", (props.userName ? results?.[0] : results) as TSingleOrMultiple);
-
-  return results;
+  return await query.find();
 });
+
+// Added a watch, to make sure SSR also works
+watch(
+  authors,
+  (a) => emit("load", (props.userName ? a?.[0] : a) as TSingleOrMultiple),
+  { immediate: true },
+);
 </script>
 <template>
   <slot :authors="authors" />
