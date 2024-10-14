@@ -9,13 +9,9 @@
 import type { PostSummary as _PostSummary, Post as _Post } from "~/types/Post";
 import { createSlug } from "~/utils/slug";
 
-export interface Post extends _Post {
-  url: string;
-}
+export interface Post extends _Post {}
 
-export interface PostSummary extends Omit<_PostSummary, "_path"> {
-  url: string;
-}
+export interface PostSummary extends Omit<_PostSummary, "_path"> {}
 
 type TPost = undefined extends TSummary
   ? Post

@@ -1,7 +1,8 @@
 export interface Author {
   userName: string;
-  fullName: string;
-  role: string;
-  imageUrl: string;
-  linkedin: string;
+  fullName?: string;
+  role?: string;
+  imageUrl?: string;
+  homePage?: string;
+  linkedIn?: string;
 }

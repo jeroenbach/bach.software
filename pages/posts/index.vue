@@ -20,72 +20,7 @@ import AuthorsContext from "~/contexts/AuthorsContext.vue";
           <template #post="{ post }">
             <AuthorsContext :userName="post.author">
               <template #author="{ author }">
-                <article class="flex flex-col items-start gap-8 lg:flex-row">
-                  <div class="w-full lg:w-64">
-                    <NuxtLink :to="post.url">
-                      <NuxtPicture
-                        :src="post.imgCoverUrl"
-                        :alt="post.title"
-                        sizes="sm:640px, lg:256px"
-                        :imgAttrs="{
-                          class:
-                            'aspect-16/9 sm:aspect-2/1 lg:aspect-1/1 w-full rounded-2xl bg-slate-200 object-cover',
-                        }"
-                      />
-                    </NuxtLink>
-                  </div>
-                  <div
-                    class="flex max-w-xl flex-col items-start justify-between"
-                  >
-                    <div class="flex items-center gap-x-4 text-xs">
-                      <time :datetime="post.date" class="text-gray-500"
-                        >{{ formatDate(post.date) }}
-                      </time>
-                      <NuxtLink
-                        :to="`/posts?category=${post.category}`"
-                        class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-                        >{{ post.category }}</NuxtLink
-                      >
-                    </div>
-                    <div class="group relative max-w-xl">
-                      <NuxtLink :to="post.url">
-                        <h3
-                          class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
-                        >
-                          <span class="absolute inset-0" />
-                          {{ post.title }}
-                        </h3>
-                        <ContentRenderer
-                          :value="post"
-                          :excerpt="true"
-                          class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
-                        />
-                      </NuxtLink>
-                    </div>
-                    <div class="relative mt-8 flex items-center gap-x-4">
-                      <NuxtPicture
-                        :src="author.imageUrl"
-                        sizes="50px"
-                        :alt="author.fullName"
-                        :imgAttrs="{
-                          class: 'h-10 w-10 rounded-full bg-gray-50',
-                        }"
-                      />
-                      <div class="text-sm leading-6">
-                        <p class="font-semibold text-gray-900">
-                          <NuxtLink
-                            class="text-sky-600 hover:text-sky-800 dark:text-sky-500 dark:hover:text-sky-300"
-                            :to="author.linkedin"
-                          >
-                            <span class="absolute inset-0" />
-                            {{ author.fullName }}
-                          </NuxtLink>
-                        </p>
-                        <p class="text-gray-600">{{ author.role }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+                <BlogPostSummary :post="post" :author="author" />
               </template>
             </AuthorsContext>
           </template>

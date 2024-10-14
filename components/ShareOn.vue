@@ -20,7 +20,7 @@ const properties = computed<{ [key in Icon]?: Setting }>(() => ({
     viewBox: "0 0 1200 1227",
   },
   Linkedin: {
-    url: `https://www.linkedin.com/shareArticle?mini=true&amp;url=${urlEncoded}&amp;title=${textEncoded}&amp;summary=${textEncoded}&amp;source=${urlEncoded}`,
+    url: `https://www.linkedIn.com/shareArticle?mini=true&amp;url=${urlEncoded}&amp;title=${textEncoded}&amp;summary=${textEncoded}&amp;source=${urlEncoded}`,
     viewBox: "0 0 512 512",
   },
   Whatsapp: {
