@@ -7,6 +7,7 @@ export interface PostSummary
    */
   slug?: string;
   title?: string;
+  url?: string;
   description: string;
   category?: string;
   author?: string;
