@@ -18,7 +18,7 @@ const setPost = (post: Post) => {
 };
 </script>
 <template>
-  <div class="prose mx-auto">
+  <div class="prose mx-auto" itemscope itemtype="https://schema.org/Blog">
     <PostsContext :id="id" @load="setPost">
       <template #post="{ post }">
         <AuthorsContext :userName="post.author">

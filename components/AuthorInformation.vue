@@ -9,27 +9,41 @@ defineProps<{
 </script>
 
 <template>
-  <div class="relative flex items-center gap-x-4">
-    <NuxtPicture
+  <div
+    class="relative flex items-center gap-x-4"
+    itemscope
+    itemtype="https://schema.org/Person"
+    data-testid="author-information"
+  >
+    <AppImage
       v-if="imageUrl"
       :src="imageUrl"
       sizes="50px"
+      aspectRatio="1/1"
       :alt="fullName"
-      :imgAttrs="{ class: 'h-10 w-10 rounded-full bg-gray-50' }"
+      class="h-10 w-10 rounded-full"
     />
     <div class="text-sm leading-6">
       <p class="font-semibold text-gray-800 dark:text-gray-300">
         <slot name="topLine">
-          <span v-if="fullName">{{ fullName }}</span>
+          <span v-if="fullName" itemprop="author" data-testid="author-name">{{
+            fullName
+          }}</span>
           <span v-if="fullName && linkedIn"> · </span>
-          <AppLink v-if="linkedIn" :to="linkedIn" color="blue">
+          <AppLink
+            v-if="linkedIn"
+            :to="linkedIn"
+            color="blue"
+            itemprop="url"
+            data-testid="author-url"
+          >
             {{ $t("Linkedin") }}
           </AppLink>
         </slot>
       </p>
       <p class="text-gray-500 dark:text-gray-400">
         <slot name="bottomLine">
-          <span>{{ role }}</span>
+          <span itemprop="jobTitle" data-testid="author-role">{{ role }}</span>
         </slot>
       </p>
     </div>

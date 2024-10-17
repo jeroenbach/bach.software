@@ -11,14 +11,21 @@ defineProps<{
 </script>
 
 <template>
-  <article v-if="post" class="prose prose-lg dark:prose-invert lg:prose-xl">
-    <h1>{{ post.title }}</h1>
+  <article
+    v-if="post"
+    class="prose prose-lg dark:prose-invert lg:prose-xl"
+    itemtype="https://schema.org/BlogPosting"
+    itemprop="blogPost"
+  >
+    <h1 itemprop="headline">{{ post.title }}</h1>
     <div class="not-prose">
       <AuthorInformation v-if="author" v-bind="author" class="mb-8">
         <template #bottomLine>
-          <span>{{ post.readTime }} {{ $t("read") }}</span>
+          <span itemprop="timeRequired"
+            >{{ post.readTime }} {{ $t("read") }}</span
+          >
           <span> · </span>
-          <time>{{ formatDate(post.date) }}</time>
+          <time itemprop="datePublished">{{ formatDate(post.date) }}</time>
         </template>
       </AuthorInformation>
       <div
@@ -32,15 +39,15 @@ defineProps<{
           <EyeIcon class="inline-block size-4" />
           <span>200</span>
         </div>
-        <div class="ms-auto flex items-center gap-1">
+        <aside class="ms-auto flex items-center gap-1">
           <span>{{ $t("Share") }}:</span>
           <ShareOn
             :url="`${baseUrl}${post.value?.url}`"
             :text="post.title ?? ''"
           />
-        </div>
+        </aside>
       </div>
     </div>
-    <ContentRenderer :value="post" />
+    <ContentRenderer :value="post" itemprop="articleBody" />
   </article>
 </template>
