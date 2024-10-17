@@ -7,7 +7,7 @@ import type { Config } from "./types/Config";
 
 useState<Config>("config", () => appConfig);
 const { notifications } = useNotification();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 useSeoMeta({
   title: t("_metadata.title"),
@@ -21,6 +21,11 @@ useSeoMeta({
   ogDescription: t("_metadata.description"),
   ogImage: "https://bach.software/JEROEN-4238-SQUARE.jpeg",
   twitterCard: "summary_large_image",
+});
+useHead({
+  htmlAttrs: {
+    lang: locale,
+  },
 });
 </script>
 <template>

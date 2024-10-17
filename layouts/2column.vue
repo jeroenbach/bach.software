@@ -8,9 +8,9 @@
           <slot name="default" />
         </main>
       </div>
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <aside class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <slot name="side" />
-      </div>
+      </aside>
     </div>
     <Footer />
   </div>

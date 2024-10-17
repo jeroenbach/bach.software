@@ -9,24 +9,35 @@ defineProps<{
 </script>
 
 <template>
-  <article v-if="post" class="flex flex-col items-start gap-8 lg:flex-row">
+  <article
+    v-if="post"
+    class="flex flex-col items-start gap-8 lg:flex-row"
+    itemtype="https://schema.org/BlogPosting"
+    itemprop="blogPost"
+  >
     <div class="w-full lg:w-64">
-      <NuxtLink :to="post.url">
-        <NuxtPicture
+      <AppLink :to="post.url">
+        <AppImage
           :src="post.imgCoverUrl"
           :alt="post.title"
-          sizes="sm:640px, lg:256px"
-          :imgAttrs="{
-            class:
-              'aspect-16/9 sm:aspect-2/1 lg:aspect-1/1 w-full rounded-2xl bg-slate-200 object-cover',
-          }"
+          :partOfScreenSmall="1"
+          :partOfScreenLarge="1 / 4"
+          aspectRatio="16/9"
+          aspectRatioSmall="2/1"
+          aspectRatioLarge="1/1"
+          class="w-full rounded-2xl"
+          itemprop="thumbnail"
         />
-      </NuxtLink>
+      </AppLink>
     </div>
     <div class="flex max-w-xl flex-col items-start justify-between">
       <div class="flex items-center gap-x-4 text-xs">
-        <time :datetime="post.date" class="text-gray-500"
-          >{{ formatDate(post.date) }}
+        <time
+          class="text-gray-500"
+          :datetime="post.date"
+          itemprop="datePublished"
+        >
+          {{ formatDate(post.date) }}
         </time>
         <ChipLink :to="`/posts?category=${post.category}`" class="z-10">{{
           post.category
@@ -36,6 +47,7 @@ defineProps<{
         <AppLink :to="post.url">
           <h3
             class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600"
+            itemprop="headline"
           >
             <span class="absolute inset-0" />
             {{ post.title }}
@@ -44,6 +56,7 @@ defineProps<{
             :value="post"
             :excerpt="true"
             class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
+            itemprop="description"
           />
         </AppLink>
       </div>

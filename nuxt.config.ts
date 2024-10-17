@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { screens } from "./utils/screen";
 import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
   // ssr: false,
@@ -68,13 +69,8 @@ export default defineNuxtConfig({
     quality: 80,
     format: ["avif", "webp"],
     screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      xxl: 1536,
-      "2xl": 1536,
+      ...screens,
+      "2xl": screens.xxl,
     },
   },
   // experimental: {
