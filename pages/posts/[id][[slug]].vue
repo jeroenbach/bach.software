@@ -4,22 +4,19 @@ import type { Post } from "~/types/Post";
 
 const config = useState<Config>("config");
 const { id } = useRoute().params as { id: string; slug: string };
+const _post = ref<Post | null>(null);
 
-const setPost = (post: Post) => {
-  if (!post) return;
-  useSeoMeta({
-    title: post.title,
-    ogTitle: post.title,
-    description: post.description,
-    ogDescription: post.description,
-    ogImage: post.imgCoverUrl,
-    ogImageAlt: post.title,
-  });
-};
+useMetadata(() => ({
+  title: _post.value?.title,
+  description: _post.value?.description,
+  imageUrl: _post.value?.imgCoverUrl,
+  imageAlt: _post.value?.title,
+  structuredData: createArticleMetadata(config.value?.baseUrl, _post.value),
+}));
 </script>
 <template>
   <div class="prose mx-auto" itemscope itemtype="https://schema.org/Blog">
-    <PostsContext :id="id" @load="setPost">
+    <PostsContext :id="id" @load="(p) => (_post = p)">
       <template #post="{ post }">
         <AuthorsContext :userName="post.author">
           <template #author="{ author }">

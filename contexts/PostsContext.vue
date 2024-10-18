@@ -6,12 +6,8 @@
     TSingle extends string | undefined
   "
 >
-import type { PostSummary as _PostSummary, Post as _Post } from "~/types/Post";
+import type { PostSummary, Post } from "~/types/Post";
 import { createSlug } from "~/utils/slug";
-
-export interface Post extends _Post {}
-
-export interface PostSummary extends Omit<_PostSummary, "_path"> {}
 
 type TPost = undefined extends TSummary
   ? Post
@@ -37,14 +33,15 @@ const { data: posts } = await useAsyncData<TPost[]>(
   uniqueId.value,
   async () => {
     const query = isFalseOrUndefined(props.summary)
-      ? queryContent<_Post>("posts")
-      : queryContent<_PostSummary>("posts").only([
+      ? queryContent<Post>("posts")
+      : queryContent<PostSummary>("posts").only([
           "slug",
           "title",
           "description",
           "category",
           "author",
-          "date",
+          "datePublished",
+          "dateModified",
           "imgCoverUrl",
           "readTime",
           "_path",
@@ -78,8 +75,6 @@ watch(
 );
 </script>
 <template>
-  <slot :posts="posts"> </slot>
-  <slot name="post" v-for="post in posts" :key="post.slug" :post="post">
-    <pre>{{ post }}</pre>
-  </slot>
+  <slot :posts="posts" />
+  <slot name="post" v-for="post in posts" :key="post.slug" :post="post" />
 </template>

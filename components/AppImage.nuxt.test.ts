@@ -4,6 +4,11 @@ import AppImage from "./AppImage.vue";
 import { find, mountStory } from "~/utils/test";
 
 describe("AppImage", () => {
+  it("should have the same html output", async () => {
+    const w = mountStory(stories.Default);
+    expect(w.html()).toMatchSnapshot();
+  });
+
   it("should render alt", async () => {
     const w = mountStory(stories.Default);
     const img = await find(w, "img");
@@ -19,7 +24,18 @@ describe("AppImage", () => {
   it("should add correct classes to image", async () => {
     const w = mountStory(stories.Default);
     const img = await find(w, "img");
-    expect(img.attributes("class")).toBe("w-full bg-slate-200 object-cover");
+    expect(img.attributes("class")).toBe(
+      "w-full aspect-1/1 bg-slate-200 object-cover",
+    );
+  });
+
+  it("should render a placeholder when no image is provided", async () => {
+    const w = mountStory(stories.NoImage);
+    const placeholder = await find(w, "figure div");
+    expect(placeholder.exists()).toBe(true);
+    expect(placeholder.attributes("class")).toBe(
+      "w-full aspect-1/1 bg-slate-200 object-cover",
+    );
   });
 
   it("should render avif & webp", async () => {
@@ -76,28 +92,33 @@ describe("AppImage", () => {
     );
   });
 
-  it.only("should calculate only the sizes that are specified", async () => {
-    const attr = async (override: stories.Story["args"]) =>
-      mountStory(stories.DifferentScreenSizesAndRatios, override).vm.imgSizes;
-    // const sizes = (remove?: number, defaultSize?: number = 341) =>
-    //   [
-    //     "(max-width: 640px) 640px",
-    //     "(max-width: 768px) 384px",
-    //     "(max-width: 1024px) 341px",
-    //     "(max-width: 1280px) 320px",
-    //     "(max-width: 1536px) 307px",
-    //     `${defaultSize}px`,
-    //   ]
-    //     .filter((_, i) => i !== remove)
-    //     .join(", ");
+  it("should calculate only the sizes that are specified", async () => {
+    const getImgSizes = async (override?: stories.Story["args"]) =>
+      (
+        (
+          await getComponent(
+            mountStory(stories.DifferentScreenSizesAndRatios, override),
+            AppImage,
+          )
+        ).vm as any
+      ).imgSizes;
 
-    // expect(await attr({ partOfScreenExtraSmall: undefined })).toBe(sizes(0));
-    // expect(await attr({ partOfScreenSmall: undefined })).toBe(sizes(1));
-    expect(await attr({ partOfScreenMedium: undefined })).toBe(sizes(1));
-    expect(await attr({ partOfScreenLarge: undefined })).toBe(sizes(2));
-    expect(await attr({ partOfScreenExtraLarge: undefined })).toBe(sizes(3));
-    expect(await attr({ partOfScreen2ExtraLarge: undefined })).toBe(
-      sizes(4, 307),
+    const sizes = (remove?: number) =>
+      ["xs:640px", "sm:384px", "md:341px", "lg:320px", "xl:307px", "xxl:341px"]
+        .filter((_, i) => i !== remove)
+        .join(" ");
+
+    expect(await getImgSizes({ partOfScreenExtraSmall: undefined })).toBe(
+      sizes(0),
+    );
+    expect(await getImgSizes({ partOfScreenSmall: undefined })).toBe(sizes(1));
+    expect(await getImgSizes({ partOfScreenMedium: undefined })).toBe(sizes(2));
+    expect(await getImgSizes({ partOfScreenLarge: undefined })).toBe(sizes(3));
+    expect(await getImgSizes({ partOfScreenExtraLarge: undefined })).toBe(
+      sizes(4),
+    );
+    expect(await getImgSizes({ partOfScreen2ExtraLarge: undefined })).toBe(
+      sizes(5),
     );
   });
 

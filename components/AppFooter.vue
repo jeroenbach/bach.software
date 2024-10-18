@@ -1,7 +1,5 @@
-<script lang="ts" setup>
-const counter = useState("counter", () => Math.round(Math.random() * 1000));
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <footer class="flex">{{ counter }}</footer>
+  <footer class="flex"></footer>
 </template>

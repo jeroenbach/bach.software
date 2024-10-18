@@ -19,11 +19,18 @@ const defaultStory = createDefaultStory((_: Story) => ({
     caption: "Figure caption",
     class: "w-full",
   } as Story["args"],
-  // Render function used in tests
+  // We have to add a Render function so we can use these stories in tests
   render: (props) => h(AppImage, props),
 }));
 
 export const Default: Story = defaultStory();
+
+export const NoImage: Story = defaultStory((s) => {
+  s.args = {
+    ...s.args,
+    src: undefined,
+  };
+});
 
 export const OneSize: Story = defaultStory((s) => {
   s.args = {
