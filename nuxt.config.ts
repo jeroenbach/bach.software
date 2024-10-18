@@ -97,4 +97,10 @@ export default defineNuxtConfig({
     defaultLocale: "en",
     strategy: "prefix_except_default",
   },
+  dayjs: {
+    locales: ["en"],
+    plugins: ["relativeTime", "utc", "timezone"],
+    defaultLocale: "en",
+    defaultTimezone: "Europe/Amsterdam",
+  },
 });

@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { useDayjs } from "#dayjs";
 
 /**
  * Format date to default format of MMM D, YYYY
@@ -6,5 +6,13 @@ import dayjs from "dayjs";
  * @returns
  */
 export const formatDate = (date?: string | Date) => {
-  return date ? dayjs(date).format("MMM D, YYYY") : "";
+  if (!date) return "";
+
+  const dayjs = useDayjs();
+  return dayjs(date).format("MMM D, YYYY");
+};
+
+export const toDateWithTimeZone = (date: string | Date) => {
+  const dayjs = useDayjs();
+  return dayjs(date).format();
 };

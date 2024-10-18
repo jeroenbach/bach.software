@@ -23,6 +23,7 @@
     "@vueuse/core": "11.1.0",
     "animate.css": "4.1.1",
     "dayjs": "1.11.13",
+    "luxon": "3.5.0",
     "nuxt-content-twoslash": "0.1.1",
     "pinia": "2.2.4",
     "primevue": "4.1.0",

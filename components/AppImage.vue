@@ -58,6 +58,11 @@ const imgClass = computed(() => {
       : `xxl:aspect-${props.aspectRatio2ExtraLarge}`,
   ].filter(isNotNullOrUndefined);
 
+  // Add a default aspect ratio if none is provided
+  if (ratios.length === 0) {
+    ratios.push("aspect-1/1");
+  }
+
   return [props.class, ratios.join(" "), "bg-slate-200 object-cover"]
     .filter(isNotNullOrUndefinedOrEmpty)
     .join(" ");
@@ -130,5 +135,8 @@ const imgSizes = computed(() => {
     <figcaption v-if="caption" :id="`${id}_figcaption`">
       {{ caption }}
     </figcaption>
+  </figure>
+  <figure v-else>
+    <div :class="imgClass" />
   </figure>
 </template>

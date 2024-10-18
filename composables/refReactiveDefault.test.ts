@@ -191,7 +191,7 @@ describe("refReactiveDefault", () => {
     });
   });
 
-  it.only("should not work with deep changes when it is turned off", async () => {
+  it("should not work with deep changes when it is turned off", async () => {
     const defaultValue = ref<Message>({
       children: [{ details: "child details" }],
     });

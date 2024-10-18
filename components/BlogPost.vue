@@ -4,7 +4,7 @@ import type { Author } from "~/types/Author";
 import type { Post } from "~/types/Post";
 
 defineProps<{
-  post: Post;
+  post?: Post;
   author?: Author;
   baseUrl?: string;
 }>();
@@ -25,7 +25,9 @@ defineProps<{
             >{{ post.readTime }} {{ $t("read") }}</span
           >
           <span> · </span>
-          <time itemprop="datePublished">{{ formatDate(post.date) }}</time>
+          <time itemprop="datePublished">{{
+            formatDate(post.datePublished)
+          }}</time>
         </template>
       </AuthorInformation>
       <div
@@ -41,10 +43,7 @@ defineProps<{
         </div>
         <aside class="ms-auto flex items-center gap-1">
           <span>{{ $t("Share") }}:</span>
-          <ShareOn
-            :url="`${baseUrl}${post.value?.url}`"
-            :text="post.title ?? ''"
-          />
+          <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />
         </aside>
       </div>
     </div>

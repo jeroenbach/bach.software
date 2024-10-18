@@ -1,7 +1,7 @@
-import type { MarkdownParsedContent } from "@nuxt/content";
+import type { MarkdownParsedContent, MarkdownRoot, Toc } from "@nuxt/content";
 
-export interface PostSummary
-  extends Pick<MarkdownParsedContent, "_path" | "excerpt"> {
+export interface PostSummary {
+  _path?: string;
   /**
    * In case you want to override the automatically generated slug
    */
@@ -11,9 +11,20 @@ export interface PostSummary
   description: string;
   category?: string;
   author?: string;
-  date?: string;
+  datePublished?: string;
+  dateModified?: string;
   imgCoverUrl?: string;
   readTime?: string;
+  /**
+   * Content excerpt, generated from content
+   */
+  excerpt?: MarkdownRoot;
+  /**
+   * Parsed Markdown body with included table of contents.
+   */
+  body: MarkdownRoot & {
+    toc?: Toc;
+  };
 }
 
-export interface Post extends PostSummary, MarkdownParsedContent {}
+export interface Post extends PostSummary {}
