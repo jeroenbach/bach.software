@@ -7,7 +7,7 @@
   "
 >
 import type { PostSummary, Post } from "~/types/Post";
-import { createSlug } from "~/utils/slug";
+import { createSlug } from "~/utils/url";
 
 type TPost = undefined extends TSummary
   ? Post

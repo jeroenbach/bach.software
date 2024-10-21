@@ -4,9 +4,15 @@ import type { Author } from "~/types/Author";
 import type { Post } from "~/types/Post";
 
 defineProps<{
-  post?: Post;
-  author?: Author;
-  baseUrl?: string;
+  /**
+   * The post to display. Can be null while loading
+   */
+  post: Post | null;
+  /**
+   * The author of the post. Can be null while loading
+   */
+  author: Author | null;
+  baseUrl: string;
 }>();
 </script>
 

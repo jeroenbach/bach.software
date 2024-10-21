@@ -5,4 +5,5 @@ export interface Author {
   imageUrl?: string;
   homePage?: string;
   linkedIn?: string;
+  twitter?: string;
 }
