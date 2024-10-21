@@ -1,4 +1,4 @@
-import type { MarkdownParsedContent, MarkdownRoot, Toc } from "@nuxt/content";
+import type { MarkdownRoot, Toc } from "@nuxt/content";
 
 export interface PostSummary {
   _path?: string;
@@ -6,13 +6,14 @@ export interface PostSummary {
    * In case you want to override the automatically generated slug
    */
   slug?: string;
-  title?: string;
-  url?: string;
+  title: string;
+  url: string;
   description: string;
   category?: string;
-  author?: string;
-  datePublished?: string;
-  dateModified?: string;
+  keywords?: string[];
+  author: string;
+  datePublished: string;
+  dateModified: string;
   imgCoverUrl?: string;
   readTime?: string;
   /**

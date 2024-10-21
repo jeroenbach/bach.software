@@ -1,6 +1,28 @@
 <script lang="ts" setup>
 import PostsContext from "~/contexts/PostsContext.vue";
 import AuthorsContext from "~/contexts/AuthorsContext.vue";
+import type { PostSummary } from "~/types/Post";
+import type { Author } from "~/types/Author";
+
+const { blog, company, config } = useBlogMetadata();
+const _posts = ref<PostSummary[]>([]);
+const _authors = ref<{ [key: string]: Author }>({});
+
+useMetadata(() => ({
+  baseUrl: config.value.baseUrl,
+  title: blog.name,
+  description: blog.description,
+  imageUrl: blog.imageUrl,
+  imageAlt: blog.imageAlt,
+  url: blog.url,
+  structuredData: createBlogMetadataContext(
+    config.value.baseUrl,
+    blog,
+    _posts.value,
+    Object.entries(_authors.value).map(([_, author]) => author),
+    company,
+  ),
+}));
 </script>
 <template>
   <div class="py-6 sm:py-12" itemscope itemtype="https://schema.org/Blog">
@@ -16,9 +38,12 @@ import AuthorsContext from "~/contexts/AuthorsContext.vue";
       <div
         class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none"
       >
-        <PostsContext summary>
+        <PostsContext summary @load="(p) => (_posts = p)">
           <template #post="{ post }">
-            <AuthorsContext :userName="post.author">
+            <AuthorsContext
+              :userName="post.author"
+              @load="(a) => (_authors[a?.userName] = a)"
+            >
               <template #author="{ author }">
                 <BlogPostSummary :post="post" :author="author" />
               </template>

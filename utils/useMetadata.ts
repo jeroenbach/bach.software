@@ -1,13 +1,36 @@
 import type { WatchSource } from "vue";
-import type { Post } from "~/types/Post";
+import type { Author } from "~/types/Author";
+import type { Blog } from "~/types/Blog";
+import type { Company } from "~/types/Company";
+import type { Config } from "~/types/Config";
+import type { PostSummary } from "~/types/Post";
+import { createAbsoluteUrl } from "~/utils/url";
+import type {
+  Thing,
+  WebSite as SchemaWebsite,
+  Blog as SchemaBlog,
+  BlogPosting as SchemaBlogPosting,
+  Organization as SchemaOrganization,
+  ImageObject as SchemaImageObject,
+  Person as SchemaPerson,
+  WithContext,
+} from "schema-dts";
+
+type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
 type UseHeadOptions = Parameters<typeof useSeoMeta>[1];
 export interface Metadata {
-  title?: string;
-  description?: string;
+  baseUrl: string;
+  title: string;
+  description: string;
   imageUrl?: string;
   imageAlt?: string;
-  structuredData?: any;
+  url: string;
+  /**
+   * In case the canonical is different from the url, specify it here
+   */
+  canonicalUrl?: string;
+  structuredData: any;
 }
 
 /**
@@ -15,33 +38,54 @@ export interface Metadata {
  * @param relativeUrl the url that NuxtPicture uses
  * @param baseUrl the baseUrl of our site
  */
-export const getMetadataImageUrl = (relativeUrl: string, baseUrl?: string) => {
-  let url = `/_ipx/w_1024&f_jpeg&q_80/${relativeUrl}`;
-  // clean extra slashes
-  url = url.split("/").filter(isNotNullOrUndefinedOrEmpty).join("/");
+export const getMetadataImageUrl = (relativeUrl: string, baseUrl: string) =>
+  createAbsoluteUrl(`/_ipx/w_1024&f_jpeg&q_80/${relativeUrl}`, baseUrl);
 
-  // Add baseUrl if it exists
-  if (baseUrl) {
-    url = new URL(`/${url}`, baseUrl).href;
-  }
+/**
+ * Gets the company and blog metadata from the translation files
+ */
+export const useBlogMetadata = () => {
+  const config = useState<Config>("config");
+  const { t } = useI18n();
+  const blog: Blog = {
+    name: t("_metadata.titleTemplate_empty"),
+    description: t("_metadata.description"),
+    url: config.value.baseUrl,
+    // imageUrl: "",
+    // imageAlt: "",
+  };
+  const company: Company = {
+    name: t("_metadata.titleTemplate_empty"),
+    description: t("_metadata.description"),
+    url: config.value.baseUrl,
+    // imageUrl: "",
+    // imageAlt: "",
+  };
 
-  return url;
+  return { blog, company, config };
 };
 
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
 export const useMetadata = (
-  metadata: WatchSource<Metadata>,
+  metadata: WatchSource<Metadata | undefined>,
   options?: UseHeadOptions,
 ) => {
+  if (!toValue(metadata)) return;
   useSeoMeta(
     {
       title: () => toValue(metadata)?.title,
       ogTitle: () => toValue(metadata)?.title,
       description: () => toValue(metadata)?.description,
       ogDescription: () => toValue(metadata)?.description,
-      ogImage: () => getMetadataImageUrl(toValue(metadata)?.imageUrl),
+      ogUrl: () =>
+        createAbsoluteUrl(toValue(metadata)?.url, toValue(metadata)?.baseUrl),
+      ogImage: () =>
+        getMetadataImageUrl(
+          toValue(metadata)?.imageUrl,
+          toValue(metadata)?.baseUrl,
+        ),
       ogImageAlt: () => toValue(metadata)?.imageAlt,
     },
     options,
@@ -54,34 +98,157 @@ export const useMetadata = (
         innerHTML: () => JSON.stringify(toValue(metadata)?.structuredData),
       },
     ],
+    link: [
+      {
+        rel: "canonical",
+        href: () =>
+          createAbsoluteUrl(
+            toValue(metadata)?.canonicalUrl ?? toValue(metadata)?.url,
+            toValue(metadata)?.baseUrl,
+          ),
+      },
+    ],
   });
 };
 
-export const createArticleMetadata = (baseUrl: string, post: Post | null) =>
-  post && {
+export const createWebsiteMetadataContext = (
+  company: Company,
+): WithNullableContext<SchemaWebsite> => {
+  if (!company) return undefined;
+  return {
     "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    headline: post.title,
-    image: post.imgCoverUrl && [getMetadataImageUrl(post.imgCoverUrl, baseUrl)],
-    datePublished: post.datePublished && toDateWithTimeZone(post.datePublished),
-    dateModified: "2024-02-05T09:20:00+08:00",
-    author: [
-      {
-        "@type": "Person",
-        name: "Jane Doe",
-        url: "https://example.com/profile/janedoe123",
-      },
-      {
-        "@type": "Person",
-        name: "John Doe",
-        url: "https://example.com/profile/johndoe123",
-      },
-    ],
+    "@type": "WebSite",
+    name: company.name,
+    url: company.url,
+    // potentialAction: {
+    //   "@type": "SearchAction",
+    //   target: createAbsoluteUrl("/search?&q={query}", baseUrl),
+    //   query: "required",
+    // },
+  };
+};
+
+export const createBlogMetadataContext = (
+  baseUrl: string,
+  blog: Blog,
+  posts: PostSummary[],
+  authors: Author[],
+  publisher?: Company,
+): WithNullableContext<SchemaBlog> => {
+  if (!blog) return undefined;
+
+  const authorDictionary = (authors ?? []).reduce(
+    (acc, author) => {
+      acc[author.userName] = author;
+      return acc;
+    },
+    {} as Record<string, Author>,
+  );
+
+  const blogPost = posts
+    ?.map((post) => {
+      const author = authorDictionary[post.author];
+      return createBlogPostingMetadata(baseUrl, post, author);
+    })
+    .filter(isNotNullOrUndefined);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": blog.url,
+    mainEntityOfPage: blog.url,
+    name: blog.name,
+    description: blog.description,
+    publisher: publisher && createOrganizationMetadata(publisher),
+    blogPost,
+  };
+};
+
+export const createBlogPostingMetadataContext = (
+  baseUrl: string,
+  post: PostSummary,
+  author: Author,
+  publisher?: Company,
+): WithNullableContext<SchemaBlogPosting> => {
+  const structuredData = createBlogPostingMetadata(
+    baseUrl,
+    post,
+    author,
+    publisher,
+  );
+  if (!structuredData) return undefined;
+
+  return {
+    "@context": "https://schema.org",
+    ...structuredData,
     speakable: {
       "@type": "SpeakableSpecification",
-      xPath: [
-        "/html/head/title",
-        "/html/head/meta[@name='description']/@content",
+      cssSelector: [
+        "html head title",
+        'html head meta[name="description"]',
+        'html main article [itemprop="articleBody"]',
       ],
     },
   };
+};
+
+export const createBlogPostingMetadata = (
+  baseUrl: string,
+  post: PostSummary,
+  author: Author,
+  publisher?: Company,
+): SchemaBlogPosting | undefined => {
+  if (!post || !author) return undefined;
+
+  return {
+    "@type": "BlogPosting",
+    headline: post.title,
+    datePublished: post.datePublished && toDateWithTimeZone(post.datePublished),
+    dateModified: post.dateModified && toDateWithTimeZone(post.dateModified),
+    url: post.url,
+    author: createAuthorMetadata(baseUrl, author),
+    publisher: publisher && createOrganizationMetadata(publisher),
+    image: post.imgCoverUrl && createImageMetadata(baseUrl, post.imgCoverUrl),
+    isAccessibleForFree: true,
+    keywords: post.keywords,
+  };
+};
+
+export const createAuthorMetadata = (
+  baseUrl: string,
+  author: Author,
+): SchemaPerson | undefined => {
+  if (!author) return undefined;
+  return {
+    "@type": "Person",
+    name: author.fullName,
+    url: author.homePage ?? author.linkedIn,
+    image: author.imageUrl && createImageMetadata(baseUrl, author.imageUrl),
+  };
+};
+
+export const createImageMetadata = (
+  baseUrl: string,
+  url: string,
+): SchemaImageObject | undefined => {
+  if (!url) return undefined;
+  return {
+    "@type": "ImageObject",
+    url: getMetadataImageUrl(url, baseUrl),
+    height: "1024",
+    width: "1024",
+  };
+};
+
+export const createOrganizationMetadata = (
+  company: Company,
+): SchemaOrganization | undefined => {
+  if (!company) return undefined;
+  return {
+    "@type": "Organization",
+    "@id": company.url,
+    name: company.name,
+    logo:
+      company.imageUrl && getMetadataImageUrl(company.imageUrl, company.url),
+  };
+};

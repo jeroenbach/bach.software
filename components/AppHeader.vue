@@ -36,29 +36,21 @@ const mobileMenuOpen = ref(false);
 </script>
 
 <template>
-  <header>
+  <header class="flex justify-center">
     <nav
-      class="flex items-center justify-between p-6 lg:px-8"
+      class="flex w-full max-w-screen-2xl items-center justify-between p-6 lg:px-8"
       aria-label="Global"
     >
       <div class="dark: flex dark:text-gray-300 lg:flex-1">
         <NuxtLink to="/" class="-m-1.5 p-1.5">
           <span class="sr-only">Bach.Software</span>
+          Bach.Software
           <!-- <img
             class="h-8 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt=""
           /> -->
         </NuxtLink>
-        <button @click="$colorMode.preference = 'system'">
-          <ComputerDesktopIcon class="size-6" />
-        </button>
-        <button @click="$colorMode.preference = 'light'">
-          <SunIcon class="size-6" />
-        </button>
-        <button @click="$colorMode.preference = 'dark'">
-          <MoonIcon class="size-6" />
-        </button>
       </div>
       <div class="flex lg:hidden">
         <button
@@ -79,6 +71,7 @@ const mobileMenuOpen = ref(false);
         >
           {{ item.label }}
         </NuxtLink>
+        <ThemeSwitcher />
       </div>
     </nav>
     <Dialog
