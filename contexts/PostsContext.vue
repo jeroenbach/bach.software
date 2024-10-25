@@ -46,11 +46,14 @@ const { data: posts } = await useAsyncData<TPost[]>(
           "readTime",
           "_path",
           "excerpt",
+          "draft",
         ]);
 
     if (props.id) {
       query.where({ _path: { $eq: `/posts/${props.id}` } });
     }
+
+    query.where({ draft: { $ne: true } });
 
     const raw = await query.find();
     const createPostSlug = (slug?: string, title?: string) =>

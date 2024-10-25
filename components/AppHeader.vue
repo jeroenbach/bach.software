@@ -33,34 +33,21 @@ const navigation = [
 // - hbb24
 
 const mobileMenuOpen = ref(false);
+const close = () => (mobileMenuOpen.value = false);
+const open = () => (mobileMenuOpen.value = true);
 </script>
 
 <template>
   <header class="flex justify-center">
     <nav
-      class="flex w-full max-w-screen-2xl items-center justify-between p-6 lg:px-8"
+      class="flex w-full max-w-screen-2xl items-center py-6 lg:justify-between lg:py-8"
       aria-label="Global"
     >
-      <div class="dark: flex dark:text-gray-300 lg:flex-1">
+      <div class="dark: ml-auto flex dark:text-gray-300 lg:flex-1">
         <NuxtLink to="/" class="-m-1.5 p-1.5">
-          <span class="sr-only">Bach.Software</span>
-          Bach.Software
-          <!-- <img
-            class="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt=""
-          /> -->
+          <span class="sr-only">{{ $t("Bach.Software") }}</span>
+          {{ $t("Bach.Software") }}
         </NuxtLink>
-      </div>
-      <div class="flex lg:hidden">
-        <button
-          type="button"
-          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-          @click="mobileMenuOpen = true"
-        >
-          <span class="sr-only">Open main menu</span>
-          <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-        </button>
       </div>
       <div class="hidden lg:flex lg:gap-x-12">
         <NuxtLink
@@ -73,12 +60,18 @@ const mobileMenuOpen = ref(false);
         </NuxtLink>
         <ThemeSwitcher />
       </div>
+      <div class="ml-auto flex lg:hidden">
+        <button
+          type="button"
+          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+          @click="open"
+        >
+          <span class="sr-only">Open main menu</span>
+          <Bars3Icon class="h-6 w-6" aria-hidden="true" />
+        </button>
+      </div>
     </nav>
-    <Dialog
-      class="lg:hidden"
-      @close="mobileMenuOpen = false"
-      :open="mobileMenuOpen"
-    >
+    <Dialog class="lg:hidden" @close="close" :open="mobileMenuOpen">
       <div class="fixed inset-0 z-50" />
       <DialogPanel
         class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
@@ -95,7 +88,7 @@ const mobileMenuOpen = ref(false);
           <button
             type="button"
             class="-m-2.5 rounded-md p-2.5 text-gray-700"
-            @click="mobileMenuOpen = false"
+            @click="close"
           >
             <span class="sr-only">Close menu</span>
             <XMarkIcon class="h-6 w-6" aria-hidden="true" />
@@ -108,6 +101,7 @@ const mobileMenuOpen = ref(false);
                 v-for="item in navigation"
                 :key="item.label"
                 :href="item.to"
+                @click="close"
                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-gray-300"
               >
                 {{ item.label }}

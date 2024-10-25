@@ -1,12 +1,6 @@
 <script lang="ts" setup>
-useHeadSafe({
-  title: "Home",
-  meta: [
-    {
-      name: "description",
-      content: "Welcome to the home page",
-    },
-  ],
-});
+import Posts from "~/pages/posts/index.vue";
 </script>
-<template>Home page</template>
+<template>
+  <Posts />
+</template>

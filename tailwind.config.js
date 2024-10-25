@@ -13,6 +13,10 @@ export default {
           },
         }
       }),
+      fontSize:{
+        'xs-em': '0.75em',
+        'sm-em': '0.875em',
+      },
       aspectRatio: {
         '16/9': '16 / 9',
         '2/1': '2 / 1',

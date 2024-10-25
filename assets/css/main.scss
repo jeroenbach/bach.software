@@ -1,9 +1,13 @@
 /** Improve twoslash popout */
 .shiki.twoslash-floating {
   .twoslash-popup-code {
-    background-color: white;
+    background-color: theme('backgroundColor.white');
     // font-size: 0.9em;
-    padding: 0.2em 0.6em
+    padding: 0.2em 0.6em;
+
+    @at-root .dark & {
+      background-color: theme('backgroundColor.slate.800');
+    }
   }
   .v-popper__arrow-inner {
     display: none;
@@ -30,19 +34,19 @@
     display: block;
     font-size: .9rem;
     padding: .5em 1em .4em;
-    border: 1px solid #e2e2e3;
+    border: 1px solid theme('borderColor.slate.200');
     border-radius: 4px;
     outline: none;
     margin: .5rem 0;
 
     &:focus {
-      border: 1px solid #c2c2c4 !important;
+      border: 1px solid theme('borderColor.slate.400') !important;
     }
   }
 
   .dark {
     input {
-      color: #374151;
+      color: theme('textColor.gray.700');
     }
   }
 }
