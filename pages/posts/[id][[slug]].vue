@@ -28,11 +28,7 @@ useMetadata(
 );
 </script>
 <template>
-  <div
-    class="prose mx-auto"
-    itemscope
-    itemtype="https://schema.org/BlogPosting"
-  >
+  <PageContent>
     <PostsContext :id="id" @load="(p) => (_post = p)">
       <template #post="{ post }">
         <AuthorsContext :userName="post.author" @load="(a) => (_author = a)">
@@ -46,5 +42,5 @@ useMetadata(
         </AuthorsContext>
       </template>
     </PostsContext>
-  </div>
+  </PageContent>
 </template>

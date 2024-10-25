@@ -1,17 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import DefaultLayout from "./default.vue";
+</script>
 <template>
-  <div class="flex h-screen flex-col bg-white">
-    <AppHeader />
+  <DefaultLayout>
     <div class="grid grow grid-cols-4 gap-4">
       <div class="col-span-3 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <main>
-          <slot name="default" />
-        </main>
+        <slot name="default" />
       </div>
       <aside class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <slot name="side" />
       </aside>
     </div>
-    <Footer />
-  </div>
+  </DefaultLayout>
 </template>
