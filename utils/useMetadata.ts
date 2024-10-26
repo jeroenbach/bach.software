@@ -4,10 +4,12 @@ import type { Blog } from "~/types/Blog";
 import type { Company } from "~/types/Company";
 import type { Config } from "~/types/Config";
 import type { PostSummary } from "~/types/Post";
+import type { Page } from "~/types/Page";
 import { createAbsoluteUrl } from "~/utils/url";
 import type {
   Thing,
   WebSite as SchemaWebsite,
+  WebPage as SchemaWebPage,
   Blog as SchemaBlog,
   BlogPosting as SchemaBlogPosting,
   Organization as SchemaOrganization,
@@ -69,7 +71,7 @@ export const useBlogMetadata = () => {
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
 export const useMetadata = (
-  metadata: WatchSource<Metadata | undefined>,
+  metadata: WatchSource<Metadata | null | undefined>,
   options?: UseHeadOptions,
 ) => {
   if (!toValue(metadata)) return;
@@ -125,6 +127,20 @@ export const createWebsiteMetadataContext = (
     //   target: createAbsoluteUrl("/search?&q={query}", baseUrl),
     //   query: "required",
     // },
+  };
+};
+
+export const createWebPageMetadataContext = (
+  baseUrl: string,
+  page: Page,
+): WithNullableContext<SchemaWebPage> => {
+  if (!page) return undefined;
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: page.title,
+    url: page._path && createAbsoluteUrl(page._path, baseUrl),
+    description: page.description,
   };
 };
 

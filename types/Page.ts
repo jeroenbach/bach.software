@@ -1,22 +1,13 @@
 import type { MarkdownRoot, Toc } from "@nuxt/content";
 
-export interface PostSummary {
+export interface Page {
   _path: string;
-  /**
-   * In case you want to override the automatically generated slug
-   */
-  slug?: string;
   title: string;
   draft?: boolean;
-  url: string;
   description: string;
-  category?: string;
-  keywords?: string[];
   author: string;
   datePublished: string;
   dateModified: string;
-  imgCoverUrl?: string;
-  readTime?: string;
   /**
    * Content excerpt, generated from content
    */
@@ -28,5 +19,3 @@ export interface PostSummary {
     toc?: Toc;
   };
 }
-
-export interface Post extends PostSummary {}

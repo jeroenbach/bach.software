@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import PostsContext from "~/contexts/PostsContext.vue";
-import AuthorsContext from "~/contexts/AuthorsContext.vue";
 import type { PostSummary } from "~/types/Post";
 import type { Author } from "~/types/Author";
 
@@ -30,7 +28,7 @@ useMetadata(() => ({
       <ContentDoc path="/pages/_posts" />
     </AppProse>
     <BlogPosts>
-      <PostsContext summary @load="(p) => (_posts = p)">
+      <BlogPostsContext summary @load="(p) => (_posts = p)">
         <template #post="{ post }">
           <AuthorsContext
             :userName="post.author"
@@ -41,7 +39,7 @@ useMetadata(() => ({
             </template>
           </AuthorsContext>
         </template>
-      </PostsContext>
+      </BlogPostsContext>
     </BlogPosts>
   </PageContent>
 </template>

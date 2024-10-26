@@ -28,7 +28,8 @@ const open = () => (mobileMenuOpen.value = true);
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
         <NuxtLink to="/" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
-          {{ $t("Bach.Software") }}
+          <NuxtImg class="inline h-10 dark:hidden" src="/logo.svg" />
+          <NuxtImg class="hidden h-10 dark:inline" src="/logo-light.svg" />
         </NuxtLink>
       </div>
       <div class="ml-auto hidden lg:flex lg:gap-x-12">
@@ -82,7 +83,11 @@ const open = () => (mobileMenuOpen.value = true);
             <div class="flex items-center justify-between">
               <NuxtLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
-                {{ $t("Bach.Software") }}
+                <NuxtImg class="inline h-10 dark:hidden" src="/logo.svg" />
+                <NuxtImg
+                  class="hidden h-10 dark:inline"
+                  src="/logo-light.svg"
+                />
               </NuxtLink>
               <button
                 type="button"
