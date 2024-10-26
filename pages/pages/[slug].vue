@@ -1,26 +1,38 @@
 <script lang="ts" setup>
+import type { Page } from "~/types/Page";
+
+const { slug } = useRoute().params as { slug: string };
+
 const config = useConfig();
 
-// useMetadata(() => ({
-//   baseUrl: config.value.baseUrl,
-//   title: blog.name,
-//   description: blog.description,
-//   imageUrl: blog.imageUrl,
-//   imageAlt: blog.imageAlt,
-//   url: blog.url,
-//   structuredData: createBlogMetadataContext(
-//     config.value.baseUrl,
-//     blog,
-//     _posts.value,
-//     Object.entries(_authors.value).map(([_, author]) => author),
-//     company,
-//   ),
-// }));
+const { data: page } = await useAsyncData<Page>(slug, async () => {
+  const query = queryContent<Page>("pages").where({
+    _path: { $eq: `/pages/${slug}` },
+    draft: { $ne: true },
+  });
+
+  return await query.findOne();
+});
+
+useMetadata(
+  () =>
+    page.value && {
+      baseUrl: config.value.baseUrl,
+      title: page.value.title,
+      description: page.value.description,
+      url: page.value._path,
+      structuredData: createWebPageMetadataContext(
+        config.value.baseUrl,
+        page.value,
+      ),
+    },
+);
 </script>
 
 <template>
   <PageContent itemscope itemtype="https://schema.org/WebPage">
-    <h1 itemprop="name">Title</h1>
-    <ContentDoc />
+    <AppProse>
+      <ContentRenderer v-if="page" :value="page" itemprop="mainContentOfPage" />
+    </AppProse>
   </PageContent>
 </template>

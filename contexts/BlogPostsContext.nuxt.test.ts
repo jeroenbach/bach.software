@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import PostsContext from "~/contexts/PostsContext.vue";
+import PostsContext from "~/contexts/BlogPostsContext.vue";
 import { mount } from "@vue/test-utils";
 import { flushPromises } from "@vue/test-utils";
 import { mockNuxtImport } from "@nuxt/test-utils/runtime";

@@ -1,5 +1,5 @@
 ---
-title: "About"
+title: "Articles"
 description: "meta description of the page"
 author: jeroenbach
 datePublished: 2024-11-05T08:00:00

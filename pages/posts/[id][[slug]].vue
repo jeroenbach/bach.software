@@ -29,7 +29,7 @@ useMetadata(
 </script>
 <template>
   <PageContent>
-    <PostsContext :id="id" @load="(p) => (_post = p)">
+    <BlogPostsContext :id="id" @load="(p) => (_post = p)">
       <template #post="{ post }">
         <AuthorsContext :userName="post.author" @load="(a) => (_author = a)">
           <template #author="{ author }">
@@ -41,6 +41,6 @@ useMetadata(
           </template>
         </AuthorsContext>
       </template>
-    </PostsContext>
+    </BlogPostsContext>
   </PageContent>
 </template>
