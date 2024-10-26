@@ -39,7 +39,7 @@ defineProps<{
         >
           {{ formatDate(post.datePublished) }}
         </time>
-        <ChipLink :to="`/posts?category=${post.category}`" class="z-10">{{
+        <ChipLink :to="`/posts?category=${post.category}`">{{
           post.category
         }}</ChipLink>
       </div>
@@ -62,7 +62,7 @@ defineProps<{
           </AppProse>
         </AppLink>
       </div>
-      <AuthorInformation v-if="author" v-bind="author" class="mt-8" />
+      <AuthorInformation v-if="author" v-bind="author" class="mt-8 lg:mt-4" />
     </div>
   </article>
 </template>

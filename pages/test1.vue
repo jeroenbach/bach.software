@@ -13,7 +13,7 @@ const navigation = [
 const mobileMenuOpen = ref(false);
 
 definePageMeta({
-  layout: "empty",
+  layout: "2column",
 });
 </script>
 
