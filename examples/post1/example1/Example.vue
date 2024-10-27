@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import MultiSelect, { type KeyValue } from "./MultiSelect.vue";
+import VSelect, { type KeyValue } from "./VSelect.vue";
 const countries: KeyValue[] = [
   { key: "United States", value: "US" },
   { key: "Canada", value: "CA" },
@@ -20,7 +20,7 @@ const selectedCountries = ref<string[]>([]);
 <template>
   <div class="form-field">
     <label>Single select</label>
-    <MultiSelect
+    <VSelect
       :options="countries"
       v-model="selectedCountry"
       optionLabel="name"
@@ -32,7 +32,7 @@ const selectedCountries = ref<string[]>([]);
   </div>
   <div class="form-field">
     <label>Single select</label>
-    <MultiSelect
+    <VSelect
       :options="countries"
       v-model="selectedCountries"
       optionLabel="name"

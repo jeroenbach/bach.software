@@ -1,5 +1,4 @@
 <script lang="ts">
-// Export the type we would like to receive for the options.
 export type KeyValue = { key: string; value: string };
 </script>
 <script lang="ts" setup generic="TMultiple extends true | false | undefined">
@@ -24,7 +23,7 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: TSingleOrMultiple): void;
 }>();
 
-// Also take into account that an empty attribute will result in a "" value
+// Note: an empty attribute will result in an empty string "" value, therefore we check for false and undefined explicitly
 const isMultiple = computed(() => !isFalseOrUndefined(props.multiple));
 
 const value = ref<any>(props.modelValue);
