@@ -46,6 +46,22 @@ export default defineNuxtConfig({
       // Used in Sofia Vera
       viewport:
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      link: [
+        { rel: "icon", sizes: "192x192", href: "/ico/192.png" },
+        { rel: "icon", sizes: "128x128", href: "/ico/128.png" },
+        { rel: "icon", type: "image/png", href: "/ico/favicon.png" },
+        {
+          rel: "icon",
+          sizes: "any",
+          type: "image/svg+xml",
+          href: "/ico/favicon.svg",
+        },
+        { rel: "apple-touch-icon", sizes: "76x76", href: "/ico/76.png" },
+        { rel: "apple-touch-icon", sizes: "120x120", href: "/ico/120.png" },
+        { rel: "apple-touch-icon", sizes: "152x152", href: "/ico/152.png" },
+        { rel: "apple-touch-icon", sizes: "167x167", href: "/ico/167.png" },
+        { rel: "apple-touch-icon", sizes: "180x180", href: "/ico/180.png" },
+      ],
     },
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "page", mode: "out-in" },
