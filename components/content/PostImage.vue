@@ -5,5 +5,5 @@ defineProps<{
 }>();
 </script>
 <template>
-  <NuxtImg :src="`/${src}`" :alt="alt" />
+  <NuxtImg class="w-full" :src="`/${src}`" :alt="alt" />
 </template>
