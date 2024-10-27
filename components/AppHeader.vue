@@ -83,11 +83,8 @@ const open = () => (mobileMenuOpen.value = true);
             <div class="flex items-center justify-between">
               <NuxtLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
-                <NuxtImg class="inline h-10 dark:hidden" src="/logo.svg" />
-                <NuxtImg
-                  class="hidden h-10 dark:inline"
-                  src="/logo-light.svg"
-                />
+                <NuxtImg class="inline h-8 dark:hidden" src="/logo.svg" />
+                <NuxtImg class="hidden h-8 dark:inline" src="/logo-light.svg" />
               </NuxtLink>
               <button
                 type="button"
