@@ -3,18 +3,22 @@
   setup
   generic="
     TOptionType,
-    TOptionValue extends keyof TOptionType,
-    TMultiple extends true | false | undefined
+    TOptionValue extends keyof TOptionType = any,
+    TMultiple extends true | false = any
   "
 >
 import MultiSelect, { type MultiSelectProps } from "primevue/multiselect";
 import Select from "primevue/select";
 
+type TReturnType = undefined extends TOptionValue
+  ? TOptionType
+  : TOptionType[TOptionValue];
+
 type TSingleOrMultiple = undefined extends TMultiple
-  ? TOptionType[TOptionValue]
-  : TMultiple extends true
-    ? TOptionType[TOptionValue][]
-    : TOptionType[TOptionValue];
+  ? TReturnType
+  : TMultiple extends false
+    ? TReturnType
+    : TReturnType[];
 
 interface Props
   extends Omit<MultiSelectProps, "modelValue" | "options" | "optionValue"> {
@@ -29,7 +33,7 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: TSingleOrMultiple): void;
 }>();
 
-// Also take into account that an empty attribute will result in a "" value
+// Note: an empty attribute will result in an empty string "" value, therefore we check for false and undefined explicitly
 const isMultiple = computed(() => !isFalseOrUndefined(props.multiple));
 
 const update = (value: any) => {

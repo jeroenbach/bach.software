@@ -78,7 +78,7 @@ const open = () => (mobileMenuOpen.value = true);
           leave-to="translate-x-full"
         >
           <DialogPanel
-            class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 dark:bg-slate-900 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+            class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1"
           >
             <div class="flex items-center justify-between">
               <NuxtLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
