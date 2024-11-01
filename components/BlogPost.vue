@@ -1,17 +1,12 @@
 <script lang="ts" setup>
 import { EyeIcon } from "@heroicons/vue/24/outline";
-import type { Author } from "~/types/Author";
-import type { Post } from "~/types/Post";
+import type { BlogPost } from "~/types/BlogPost";
 
 defineProps<{
   /**
    * The post to display. Can be null while loading
    */
-  post: Post | null;
-  /**
-   * The author of the post. Can be null while loading
-   */
-  author: Author | null;
+  post: BlogPost | null;
   baseUrl: string;
 }>();
 </script>
@@ -25,7 +20,7 @@ defineProps<{
     >
       <h1 itemprop="headline">{{ post.title }}</h1>
       <div class="not-prose">
-        <AuthorInformation v-if="author" v-bind="author" class="mb-8">
+        <AuthorInformation v-bind="post.author" class="mb-8">
           <template #bottomLine>
             <span itemprop="timeRequired"
               >{{ post.readTime }} {{ $t("read") }}</span
@@ -37,7 +32,7 @@ defineProps<{
           </template>
         </AuthorInformation>
         <div
-          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:text-gray-400"
+          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:text-gray-400 md:py-1.5"
         >
           <div
             v-if="false"

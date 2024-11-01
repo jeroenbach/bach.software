@@ -3,7 +3,7 @@ import type { Author } from "~/types/Author";
 import type { Blog } from "~/types/Blog";
 import type { Company } from "~/types/Company";
 import type { Config } from "~/types/Config";
-import type { PostSummary } from "~/types/Post";
+import type { BlogPostSummary } from "~/types/BlogPost";
 import type { Page } from "~/types/Page";
 import { createAbsoluteUrl } from "~/utils/url";
 import type {
@@ -20,7 +20,7 @@ import type {
 
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
-type UseHeadOptions = Parameters<typeof useSeoMeta>[1];
+type MetadataOptions = Parameters<typeof useSeoMeta>[1];
 export interface Metadata {
   baseUrl: string;
   title: string;
@@ -53,15 +53,11 @@ export const useBlogMetadata = () => {
     name: t("_metadata.titleTemplate_empty"),
     description: t("_metadata.description"),
     url: config.value.baseUrl,
-    // imageUrl: "",
-    // imageAlt: "",
   };
   const company: Company = {
     name: t("_metadata.titleTemplate_empty"),
     description: t("_metadata.description"),
     url: config.value.baseUrl,
-    // imageUrl: "",
-    // imageAlt: "",
   };
 
   return { blog, company, config };
@@ -72,9 +68,10 @@ export const useBlogMetadata = () => {
  */
 export const useMetadata = (
   metadata: WatchSource<Metadata | null | undefined>,
-  options?: UseHeadOptions,
+  options?: MetadataOptions,
 ) => {
   if (!toValue(metadata)) return;
+
   useSeoMeta(
     {
       title: () => toValue(metadata)?.title,
@@ -82,8 +79,12 @@ export const useMetadata = (
       description: () => toValue(metadata)?.description,
       ogDescription: () => toValue(metadata)?.description,
       ogUrl: () =>
-        createAbsoluteUrl(toValue(metadata)?.url, toValue(metadata)?.baseUrl),
+        createAbsoluteUrl(
+          toValue(metadata)?.url ?? "",
+          toValue(metadata)?.baseUrl,
+        ),
       ogImage: () =>
+        toValue(metadata)?.imageUrl &&
         getMetadataImageUrl(
           toValue(metadata)?.imageUrl,
           toValue(metadata)?.baseUrl,
@@ -122,11 +123,6 @@ export const createWebsiteMetadataContext = (
     "@type": "WebSite",
     name: company.name,
     url: company.url,
-    // potentialAction: {
-    //   "@type": "SearchAction",
-    //   target: createAbsoluteUrl("/search?&q={query}", baseUrl),
-    //   query: "required",
-    // },
   };
 };
 
@@ -147,25 +143,13 @@ export const createWebPageMetadataContext = (
 export const createBlogMetadataContext = (
   baseUrl: string,
   blog: Blog,
-  posts: PostSummary[],
-  authors: Author[],
+  posts: BlogPostSummary[],
   publisher?: Company,
 ): WithNullableContext<SchemaBlog> => {
   if (!blog) return undefined;
 
-  const authorDictionary = (authors ?? []).reduce(
-    (acc, author) => {
-      acc[author.userName] = author;
-      return acc;
-    },
-    {} as Record<string, Author>,
-  );
-
   const blogPost = posts
-    ?.map((post) => {
-      const author = authorDictionary[post.author];
-      return createBlogPostingMetadata(baseUrl, post, author);
-    })
+    ?.map((post) => createBlogPostingMetadata(baseUrl, post))
     .filter(isNotNullOrUndefined);
 
   return {
@@ -182,16 +166,10 @@ export const createBlogMetadataContext = (
 
 export const createBlogPostingMetadataContext = (
   baseUrl: string,
-  post: PostSummary,
-  author: Author,
+  post: BlogPostSummary,
   publisher?: Company,
 ): WithNullableContext<SchemaBlogPosting> => {
-  const structuredData = createBlogPostingMetadata(
-    baseUrl,
-    post,
-    author,
-    publisher,
-  );
+  const structuredData = createBlogPostingMetadata(baseUrl, post, publisher);
   if (!structuredData) return undefined;
 
   return {
@@ -210,11 +188,10 @@ export const createBlogPostingMetadataContext = (
 
 export const createBlogPostingMetadata = (
   baseUrl: string,
-  post: PostSummary,
-  author: Author,
+  post: BlogPostSummary,
   publisher?: Company,
 ): SchemaBlogPosting | undefined => {
-  if (!post || !author) return undefined;
+  if (!post) return undefined;
 
   return {
     "@type": "BlogPosting",
@@ -222,7 +199,7 @@ export const createBlogPostingMetadata = (
     datePublished: post.datePublished && toDateWithTimeZone(post.datePublished),
     dateModified: post.dateModified && toDateWithTimeZone(post.dateModified),
     url: post.url,
-    author: createAuthorMetadata(baseUrl, author),
+    author: createAuthorMetadata(baseUrl, post.author),
     publisher: publisher && createOrganizationMetadata(publisher),
     image: post.imgCoverUrl && createImageMetadata(baseUrl, post.imgCoverUrl),
     isAccessibleForFree: true,

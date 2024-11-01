@@ -1,46 +1,29 @@
 <script lang="ts" setup>
-import type { Author } from "~/types/Author";
-import type { Post } from "~/types/Post";
+import { useBlogPostsContext } from "~/contexts/useBlogPostsContext";
 
 const { company, config } = useBlogMetadata();
 const { id } = useRoute().params as { id: string; slug: string };
-const _post = ref<Post>();
-const _author = ref<Author>();
+const { data: post } = await useBlogPostsContext({ id });
 
 useMetadata(
   () =>
-    _post.value && {
+    post.value && {
       baseUrl: config.value.baseUrl,
-      title: _post.value.title,
-      description: _post.value.description,
-      imageUrl: _post.value.imgCoverUrl,
-      imageAlt: _post.value.title,
-      url: _post.value.url,
-      structuredData:
-        _author.value &&
-        createBlogPostingMetadataContext(
-          config.value.baseUrl,
-          _post.value,
-          _author.value,
-          company,
-        ),
+      title: post.value.title,
+      description: post.value.description,
+      imageUrl: post.value.imgCoverUrl,
+      imageAlt: post.value.title,
+      url: post.value.url,
+      structuredData: createBlogPostingMetadataContext(
+        config.value.baseUrl,
+        post.value,
+        company,
+      ),
     },
 );
 </script>
 <template>
   <PageContent>
-    <BlogPostsContext :id="id" @load="(p) => (_post = p)">
-      <template #post="{ post }">
-        <AuthorsContext :userName="post.author" @load="(a) => (_author = a)">
-          <template #author="{ author }">
-            <BlogPost
-              :post="post"
-              :author="author"
-              :baseUrl="config?.baseUrl"
-            />
-          </template>
-        </AuthorsContext>
-      </template>
-    </BlogPostsContext>
+    <BlogPost :post="post" :baseUrl="config?.baseUrl" />
   </PageContent>
 </template>

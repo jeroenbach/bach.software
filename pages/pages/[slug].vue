@@ -1,18 +1,11 @@
 <script lang="ts" setup>
-import type { Page } from "~/types/Page";
+import { usePagesContext } from "~/contexts/usePagesContext";
 
 const { slug } = useRoute().params as { slug: string };
 
 const config = useConfig();
 
-const { data: page } = await useAsyncData<Page>(slug, async () => {
-  const query = queryContent<Page>("pages").where({
-    _path: { $eq: `/pages/${slug}` },
-    draft: { $ne: true },
-  });
-
-  return await query.findOne();
-});
+const { data: page } = await usePagesContext(slug);
 
 useMetadata(
   () =>

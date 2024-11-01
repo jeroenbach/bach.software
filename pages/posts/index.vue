@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-import type { PostSummary } from "~/types/Post";
-import type { Author } from "~/types/Author";
+import { useBlogPostsContext } from "~/contexts/useBlogPostsContext";
 
 const { blog, company, config } = useBlogMetadata();
-const _posts = ref<PostSummary[]>([]);
-const _authors = ref<{ [key: string]: Author }>({});
+const { data: posts } = await useBlogPostsContext({ summary: true });
 
-useMetadata(() => ({
-  baseUrl: config.value.baseUrl,
-  title: blog.name,
-  description: blog.description,
-  imageUrl: blog.imageUrl,
-  imageAlt: blog.imageAlt,
-  url: blog.url,
-  structuredData: createBlogMetadataContext(
-    config.value.baseUrl,
-    blog,
-    _posts.value,
-    Object.entries(_authors.value).map(([_, author]) => author),
-    company,
-  ),
-}));
+useMetadata(
+  () =>
+    posts.value && {
+      baseUrl: config.value.baseUrl,
+      title: blog.name,
+      description: blog.description,
+      imageUrl: blog.imageUrl,
+      imageAlt: blog.imageAlt,
+      url: blog.url,
+      structuredData: createBlogMetadataContext(
+        config.value.baseUrl,
+        blog,
+        posts.value,
+        company,
+      ),
+    },
+);
 </script>
 <template>
   <PageContent>
@@ -28,18 +28,7 @@ useMetadata(() => ({
       <ContentDoc path="/pages/_posts" />
     </AppProse>
     <BlogPosts>
-      <BlogPostsContext summary @load="(p) => (_posts = p)">
-        <template #post="{ post }">
-          <AuthorsContext
-            :userName="post.author"
-            @load="(a) => (_authors[a?.userName] = a)"
-          >
-            <template #author="{ author }">
-              <BlogPostSummary :post="post" :author="author" />
-            </template>
-          </AuthorsContext>
-        </template>
-      </BlogPostsContext>
+      <BlogPostSummary v-for="post in posts" :post="post" />
     </BlogPosts>
   </PageContent>
 </template>

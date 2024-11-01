@@ -10,16 +10,15 @@ export const createSlug = (text?: string) =>
  * @param baseUrl the base url of the site
  * @returns a clean url
  */
-export const createAbsoluteUrl = (relativeUrl: string, baseUrl?: string) => {
-  let url = relativeUrl;
+export const createAbsoluteUrl = (relativeUrl: string, baseUrl: string) => {
+  // Add baseUrl
+  const url = new URL(relativeUrl, baseUrl);
 
-  // clean extra slashes
-  url = url.split("/").filter(isNotNullOrUndefinedOrEmpty).join("/");
+  // Clean up any double slashes in the path
+  url.pathname = url.pathname
+    .split("/")
+    .filter(isNotNullOrUndefinedOrEmpty)
+    .join("/");
 
-  // Add baseUrl if it exists
-  if (baseUrl) {
-    url = new URL(`/${url}`, baseUrl).href;
-  }
-
-  return url;
+  return url.href;
 };

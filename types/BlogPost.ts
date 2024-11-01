@@ -1,6 +1,7 @@
 import type { MarkdownRoot, Toc } from "@nuxt/content";
+import type { Author } from "~/types/Author";
 
-export interface PostSummary {
+export interface BlogPostSummary {
   _path: string;
   /**
    * In case you want to override the automatically generated slug
@@ -12,7 +13,8 @@ export interface PostSummary {
   description: string;
   category?: string;
   keywords?: string[];
-  author: string;
+  authorName: string;
+  author: Author;
   datePublished: string;
   dateModified: string;
   imgCoverUrl?: string;
@@ -21,6 +23,9 @@ export interface PostSummary {
    * Content excerpt, generated from content
    */
   excerpt?: MarkdownRoot;
+}
+
+export interface BlogPost extends BlogPostSummary {
   /**
    * Parsed Markdown body with included table of contents.
    */
@@ -28,5 +33,3 @@ export interface PostSummary {
     toc?: Toc;
   };
 }
-
-export interface Post extends PostSummary {}

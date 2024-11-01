@@ -51,24 +51,26 @@ describe("create metadata functions", () => {
           baseUrl,
           buildBlog(),
           [
-            buildPost((x) => {
-              x.author = "author1";
+            buildPost((p) => {
+              p.authorName = "author1";
+              p.author = buildAuthor((a) => {
+                a.userName = p.authorName;
+                a.fullName = p.authorName;
+              });
             }),
-            buildPost((x) => {
-              x.author = "author2";
+            buildPost((p) => {
+              p.authorName = "author2";
+              p.author = buildAuthor((a) => {
+                a.userName = p.authorName;
+                a.fullName = p.authorName;
+              });
             }),
-            buildPost((x) => {
-              x.author = "author2";
-            }),
-          ],
-          [
-            buildAuthor((x) => {
-              x.userName = "author1";
-              x.fullName = "author1";
-            }),
-            buildAuthor((x) => {
-              x.userName = "author2";
-              x.fullName = "author2";
+            buildPost((p) => {
+              p.authorName = "author2";
+              p.author = buildAuthor((a) => {
+                a.userName = p.authorName;
+                a.fullName = p.authorName;
+              });
             }),
           ],
           buildCompany(),
@@ -176,7 +178,7 @@ describe("create metadata functions", () => {
   describe("createBlogPostingMetadataContext", () => {
     it("should render the correct structured data", async () => {
       expect(
-        createBlogPostingMetadataContext(baseUrl, buildPost(), buildAuthor()),
+        createBlogPostingMetadataContext(baseUrl, buildPost(), buildCompany()),
       ).toEqual({
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -201,6 +203,12 @@ describe("create metadata functions", () => {
           width: "1024",
         },
         keywords: ["keyword", "keyword2", "keyword3"],
+        publisher: {
+          "@id": "https://bach.software",
+          "@type": "Organization",
+          logo: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/company/logo.png",
+          name: "Company",
+        },
         speakable: {
           "@type": "SpeakableSpecification",
           cssSelector: [

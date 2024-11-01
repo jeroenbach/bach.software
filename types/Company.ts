@@ -1,6 +1,6 @@
 export interface Company {
   name: string;
-  description: string;
+  description?: string;
   imageUrl?: string;
   imageAlt?: string;
   url: string;

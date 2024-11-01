@@ -37,7 +37,7 @@ const properties = computed<{ [key in Icon]?: Setting }>(() => ({
   <div class="sharing-buttons flex flex-wrap">
     <a
       v-for="icon in icons"
-      class="ease mr-1 inline-flex items-center rounded-full border-2 border-sky-600 bg-sky-600 p-1 text-white transition duration-200 hover:border-sky-700 hover:bg-sky-700"
+      class="ease mr-1 inline-flex items-center rounded-full border-sky-600 bg-gradient-to-r from-sky-600 to-sky-500 p-2 text-white transition duration-200 hover:from-sky-700 hover:to-sky-600"
       target="_blank"
       rel="noopener"
       :href="properties[icon]?.url"

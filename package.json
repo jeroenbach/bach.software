@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "bach.software",
   "private": true,
   "type": "module",
   "scripts": {
@@ -51,6 +51,7 @@
     "@storybook/test": "8.3.0 ",
     "@storybook/vue3": "8.3.0 ",
     "@tailwindcss/typography": "0.5.15",
+    "@testing-library/vue": "8.1.0",
     "@types/node": "22.7.5",
     "@vue/test-utils": "2.4.6",
     "dayjs-nuxt": "2.1.11",

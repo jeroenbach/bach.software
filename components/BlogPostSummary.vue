@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import type { Author } from "~/types/Author";
-import type { PostSummary } from "~/types/Post";
+import type { BlogPostSummary } from "~/types/BlogPost";
 
 defineProps<{
-  post?: PostSummary;
-  author?: Author;
+  post?: BlogPostSummary;
 }>();
 </script>
 
@@ -15,7 +14,7 @@ defineProps<{
     itemtype="https://schema.org/BlogPosting"
     itemprop="blogPost"
   >
-    <div class="w-full lg:w-64">
+    <div class="flex w-full lg:w-64">
       <AppLink :to="post.url">
         <AppImage
           :src="post.imgCoverUrl"
@@ -25,13 +24,13 @@ defineProps<{
           aspectRatio="16/9"
           aspectRatioSmall="2/1"
           aspectRatioLarge="1/1"
-          class="w-full rounded-2xl"
+          class="w-full rounded-2xl drop-shadow-md"
           itemprop="thumbnail"
         />
       </AppLink>
     </div>
     <div class="flex max-w-xl flex-col items-start justify-between">
-      <div class="text-xs-em flex items-center gap-x-4">
+      <div class="flex items-center gap-x-4 text-xs-em">
         <time
           class="text-gray-500 dark:text-gray-500"
           :datetime="post.datePublished"
@@ -49,7 +48,6 @@ defineProps<{
             class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-300"
             itemprop="headline"
           >
-            <span class="absolute inset-0" />
             {{ post.title }}
           </h3>
           <AppProse>
@@ -62,7 +60,7 @@ defineProps<{
           </AppProse>
         </AppLink>
       </div>
-      <AuthorInformation v-if="author" v-bind="author" class="mt-8 lg:mt-4" />
+      <AuthorInformation v-bind="post.author" class="mt-8 lg:mt-4" />
     </div>
   </article>
 </template>

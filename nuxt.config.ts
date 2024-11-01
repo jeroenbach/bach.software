@@ -2,8 +2,7 @@
 import { screens } from "./utils/screen";
 import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
-  // ssr: false,
-  compatibilityDate: "2024-04-03",
+  compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
@@ -18,29 +17,19 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
   ],
-  components: [
-    // ~/contexts/account/UserDeleteDialog.vue => <UserDeleteDialog />
-    { path: "~/contexts", pathPrefix: false },
-    "~/components",
-  ],
+  components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {
     autoImport: false,
     options: {
       theme: {
         preset: Aura,
-        // options: {
-        //   cssLayer: {
-        //     name: "primevue",
-        //     order: "tailwind-base, primevue, tailwind-utilities",
-        //   },
-        // },
       },
     },
   },
   colorMode: {
     classSuffix: "",
   },
-  css: ["~/assets/css/main.scss", "animate.css"],
+  css: ["~/assets/css/main.scss"],
   app: {
     head: {
       // Used in Sofia Vera
@@ -75,9 +64,9 @@ export default defineNuxtConfig({
         dark: "github-dark",
       },
     },
-    // markdown: {
-    //   anchorLinks: true,
-    // },
+    markdown: {
+      anchorLinks: true,
+    },
     experimental: {
       search: {},
     },
@@ -94,19 +83,11 @@ export default defineNuxtConfig({
       "2xl": screens.xxl,
     },
   },
-  // experimental: {
-  //   viewTransition: true,
-  // },
   routeRules: {
     // Generated at build time for SEO purpose
     "/": { prerender: true },
     // Cached for 1 hour
     "/api/*": { cache: { maxAge: 60 * 60 } },
-    // Redirection to avoid 404
-    "/old-page": {
-      redirect: { to: "/new-page", statusCode: 302 },
-    },
-    // ...
   },
   nitro: {
     prerender: {

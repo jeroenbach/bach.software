@@ -1,4 +1,5 @@
-import type { Post as _Post } from "~/types/Post";
+import type { BlogPost as _Post } from "~/types/BlogPost";
+import { buildAuthor } from "./authorBuilder";
 
 interface Post extends _Post {
   _dir?: string;
@@ -21,7 +22,10 @@ export const buildPost = (fn?: (post: Post) => void) => {
     title: "Title",
     description: "Description",
     category: "Category",
-    author: "author",
+    authorName: "author",
+    author: buildAuthor((a) => {
+      a.userName = "author";
+    }),
     datePublished: "2024-11-05T08:00:00.000Z",
     dateModified: "2024-11-05T08:00:00.000Z",
     imgCoverUrl: "/posts/1/cover.jpeg",

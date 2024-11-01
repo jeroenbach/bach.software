@@ -6,13 +6,10 @@ import {
   TransitionRoot,
   TransitionChild,
 } from "@headlessui/vue";
-const navigation = [
-  { label: "Blog", to: "/posts" },
-  { label: "Articles", to: "/pages/articles" },
-  { label: "Open source", to: "/pages/open-source" },
-  { label: "Projects", to: "/pages/projects" },
-  { label: "About", to: "/pages/about" },
-];
+
+const { t } = useI18n();
+
+const navigation = [{ label: t("Blog"), to: "/posts" }];
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
