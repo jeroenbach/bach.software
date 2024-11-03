@@ -19,6 +19,15 @@ jobs:
         with:
           submodules: true
           lfs: false
+          
+      # Install dependencies
+      - name: Install Dependencies
+        run: pnpm install
+
+      # Run tests before deployment
+      - name: Run Tests
+        run: pnpm test  
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
