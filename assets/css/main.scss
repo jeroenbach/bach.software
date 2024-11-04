@@ -1,0 +1,52 @@
+/** Improve twoslash popout */
+.shiki.twoslash-floating {
+  .twoslash-popup-code {
+    background-color: theme('backgroundColor.white');
+    // font-size: 0.9em;
+    padding: 0.2em 0.6em;
+
+    @at-root .dark & {
+      background-color: theme('backgroundColor.slate.800');
+    }
+  }
+  .v-popper__arrow-inner {
+    display: none;
+  }
+}
+
+/** Improve prose styling */
+.prose {
+  div.code-group pre {
+    margin: 0;
+    padding: 0;
+    --tw-prose-pre-bg: transparent;
+    --tw-prose-invert-pre-bg: transparent;
+  }
+
+  .form-field {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  input, select {
+    display: block;
+    font-size: .9rem;
+    padding: .5em 1em .4em;
+    border: 1px solid theme('borderColor.slate.200');
+    border-radius: 4px;
+    outline: none;
+    margin: .5rem 0;
+
+    &:focus {
+      border: 1px solid theme('borderColor.slate.400') !important;
+    }
+  }
+
+  .dark {
+    input {
+      color: theme('textColor.gray.700');
+    }
+  }
+}

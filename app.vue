@@ -1,39 +1,55 @@
 <script lang="ts" setup>
-import "@fontsource/inter"; // Defaults to weight 400
-const people = [
-  {
-    name: "Calvin Hawkins",
-    email: "calvin.hawkins@example.com",
-    image:
-      "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+import appConfig from "~/appConfig.json";
+import type { Config } from "./types/Config";
+
+const config = useState<Config>("config", () => appConfig);
+const { notifications } = useNotification();
+const { t, locale } = useI18n();
+
+useSeoMeta({
+  titleTemplate: (titleChunk) => {
+    return titleChunk
+      ? t("_metadata.titleTemplate", { titleChunk })
+      : t("_metadata.titleTemplate_empty");
   },
-  {
-    name: "Kristen Ramos",
-    email: "kristen.ramos@example.com",
-    image:
-      "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+});
+useHead({
+  htmlAttrs: {
+    lang: locale,
   },
-  {
-    name: "Ted Fox",
-    email: "ted.fox@example.com",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
+});
+useMetadata(() => ({
+  baseUrl: config.value.baseUrl,
+  title: t("_metadata.title"),
+  description: t("_metadata.description"),
+  imageUrl: "JEROEN-4238-SQUARE.jpeg",
+  imageAlt: t("_metadata.title"),
+  url: "/",
+  structuredData: createWebsiteMetadataContext({
+    name: t("_metadata.title"),
+    url: config.value.baseUrl,
+  }),
+}));
 </script>
 <template>
-  <div>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
-    <ul class="divide-y divide-gray-200">
-      <li v-for="person in people" :key="person.email" class="py-4 flex">
-        <img class="h-10 w-10 rounded-full" :src="person.image" alt="" />
-        <div class="ml-3">
-          <p class="text-sm font-medium text-gray-900">{{ person.name }}</p>
-          <p class="text-sm text-gray-500">{{ person.email }}</p>
-        </div>
-      </li>
-    </ul>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NotificationContainer />
+  <NotificationMessage
+    v-for="notification in notifications"
+    v-bind="notification"
+  />
+  <NuxtLoadingIndicator />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
+<style lang="scss" scoped>
+.page-enter-active,
+.page-leave-active {
+  transition: all 50ms;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}
+</style>
