@@ -1,7 +1,6 @@
-<script lang="ts">
-export type KeyValue = { key: string; value: string };
-</script>
-<script lang="ts" setup generic="TMultiple extends true | false | undefined">
+<script lang="ts" setup generic="TMultiple extends boolean | undefined">
+import { computed } from "vue";
+
 // Lets return the correct type based on the TMultiple value.
 // - TMultiple === undefined => string
 // - TMultiple === false => string
@@ -14,7 +13,7 @@ type TSingleOrMultiple = undefined extends TMultiple
 
 interface Props {
   modelValue?: TSingleOrMultiple;
-  options?: KeyValue[];
+  options?: { key: string; value: string }[];
   multiple?: TMultiple;
 }
 
@@ -23,8 +22,11 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: TSingleOrMultiple): void;
 }>();
 
-// Note: an empty attribute will result in an empty string "" value, therefore we check for false and undefined explicitly
-const isMultiple = computed(() => !isFalseOrUndefined(props.multiple));
+// Note: an empty attribute will result in an empty string "" value,
+// therefore we check for false and undefined explicitly
+const isMultiple = computed(
+  () => props.multiple !== false && props.multiple !== undefined,
+);
 
 const value = ref<any>(props.modelValue);
 watch(value, (v) => emit("update:modelValue", v));

@@ -16,11 +16,11 @@ const urlEncoded = encodeURIComponent(props.url);
 const textEncoded = encodeURIComponent(props.text ?? "");
 const properties = computed<{ [key in Icon]?: Setting }>(() => ({
   X: {
-    url: `https://twitter.com/intent/tweet?url=${urlEncoded}&amp;text=`,
+    url: `https://twitter.com/intent/tweet?url=${urlEncoded}&text=${textEncoded}`,
     viewBox: "0 0 1200 1227",
   },
   Linkedin: {
-    url: `https://www.linkedIn.com/shareArticle?mini=true&amp;url=${urlEncoded}&amp;title=${textEncoded}&amp;summary=${textEncoded}&amp;source=${urlEncoded}`,
+    url: `https://www.linkedIn.com/shareArticle?mini=true&url=${urlEncoded}&title=${textEncoded}&summary=${textEncoded}&source=${urlEncoded}`,
     viewBox: "0 0 512 512",
   },
   Whatsapp: {
@@ -28,7 +28,7 @@ const properties = computed<{ [key in Icon]?: Setting }>(() => ({
     viewBox: "0 0 512 512",
   },
   Email: {
-    url: `mailto:?subject=${textEncoded}&amp;body=${urlEncoded}`,
+    url: `mailto:?subject=${textEncoded}&body=${urlEncoded}`,
     viewBox: "0 0 512 512",
   },
 }));

@@ -5,16 +5,18 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "pnpm run i18n-extract && nuxt dev",
-    "generate": "pnpm run i18n-extract && nuxt generate && pnpm build-storybook",
+    "generate": "nuxt generate",
+    "generate2": "pnpm run i18n-extract && nuxt generate && pnpm build-storybook",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "ssg": "nuxt generate && pnpm run serve",
-    "serve": "pnpm dlx serve .output/public",
+    "serve": "pnpm dlx serve dist",
     "check-updates": "ncu -i --format group",
-    "test": "vitest -w",
+    "test": "TZ=Europe/Amsterdam vitest -w",
     "i18n-extract": "vue-i18n-extract report --vueFiles './**/*.?(js|vue)' --languageFiles './locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
     "storybook": "storybook dev --port 6006",
-    "build-storybook": "storybook build -o ./.output/public/_storybook/"
+    "build-storybook": "storybook build -o ./.output/public/_storybook/",
+    "ci:test": "TZ=Europe/Amsterdam vitest run"
   },
   "dependencies": {
     "@headlessui/vue": "1.7.23",
