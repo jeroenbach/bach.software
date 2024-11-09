@@ -14,13 +14,13 @@ defineProps<{
     itemtype="https://schema.org/BlogPosting"
     itemprop="blogPost"
   >
-    <div class="flex w-full lg:w-64">
+    <div class="w-full lg:w-64">
       <AppLink :to="post.url">
         <AppImage
           :src="post.imgCoverUrl"
           :alt="post.title"
           :partOfScreenSmall="1"
-          :partOfScreenLarge="1 / 4"
+          :partOfScreenLarge="1 / 6"
           aspectRatio="16/9"
           aspectRatioSmall="2/1"
           aspectRatioLarge="1/1"
@@ -29,7 +29,7 @@ defineProps<{
         />
       </AppLink>
     </div>
-    <div class="flex max-w-xl flex-col items-start justify-between">
+    <div class="flex flex-col items-start justify-between">
       <div class="flex items-center gap-x-4 text-xs-em">
         <time
           class="text-gray-500 dark:text-gray-500"
@@ -42,7 +42,7 @@ defineProps<{
           post.category
         }}</ChipLink>
       </div>
-      <div class="group relative max-w-xl">
+      <div class="group relative">
         <AppLink :to="post.url">
           <h3
             class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-300"

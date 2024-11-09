@@ -16,17 +16,17 @@ vi.mock("@unhead/vue", () => ({
 describe("getMetadataImageUrl", () => {
   it("should render the correct full url of an image", async () => {
     expect(getMetadataImageUrl("/test.jpeg", "https://bach.software")).toBe(
-      "https://bach.software/_ipx/w_1024&f_jpeg&q_80/test.jpeg",
+      "https://bach.software/_ipx/w_768&f_jpeg&q_80/test.jpeg",
     );
   });
 
   it("should not have extra slashes", async () => {
     expect(getMetadataImageUrl("//test.jpeg", "https://bach.software/")).toBe(
-      "https://bach.software/_ipx/w_1024&f_jpeg&q_80/test.jpeg",
+      "https://bach.software/_ipx/w_768&f_jpeg&q_80/test.jpeg",
     );
     expect(
       getMetadataImageUrl("asdf/d//test.jpeg", "https://bach.software//"),
-    ).toBe("https://bach.software/_ipx/w_1024&f_jpeg&q_80/asdf/d/test.jpeg");
+    ).toBe("https://bach.software/_ipx/w_768&f_jpeg&q_80/asdf/d/test.jpeg");
   });
 });
 
@@ -85,7 +85,7 @@ describe("create metadata functions", () => {
         publisher: {
           "@type": "Organization",
           "@id": "https://bach.software",
-          logo: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/company/logo.png",
+          logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png",
           name: "Company",
         },
         blogPost: [
@@ -95,9 +95,9 @@ describe("create metadata functions", () => {
               "@type": "Person",
               image: {
                 "@type": "ImageObject",
-                height: "1024",
-                url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
-                width: "1024",
+                height: "768",
+                url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
+                width: "768",
               },
               name: "author1",
               url: "https://author.com/authors/author",
@@ -107,9 +107,9 @@ describe("create metadata functions", () => {
             headline: "Title",
             image: {
               "@type": "ImageObject",
-              height: "1024",
-              url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/posts/1/cover.jpeg",
-              width: "1024",
+              height: "768",
+              url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
+              width: "768",
             },
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
@@ -122,9 +122,9 @@ describe("create metadata functions", () => {
               "@type": "Person",
               image: {
                 "@type": "ImageObject",
-                height: "1024",
-                url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
-                width: "1024",
+                height: "768",
+                url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
+                width: "768",
               },
               name: "author2",
               url: "https://author.com/authors/author",
@@ -134,9 +134,9 @@ describe("create metadata functions", () => {
             headline: "Title",
             image: {
               "@type": "ImageObject",
-              height: "1024",
-              url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/posts/1/cover.jpeg",
-              width: "1024",
+              height: "768",
+              url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
+              width: "768",
             },
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
@@ -149,9 +149,9 @@ describe("create metadata functions", () => {
               "@type": "Person",
               image: {
                 "@type": "ImageObject",
-                height: "1024",
-                url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
-                width: "1024",
+                height: "768",
+                url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
+                width: "768",
               },
               name: "author2",
               url: "https://author.com/authors/author",
@@ -161,9 +161,9 @@ describe("create metadata functions", () => {
             headline: "Title",
             image: {
               "@type": "ImageObject",
-              height: "1024",
-              url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/posts/1/cover.jpeg",
-              width: "1024",
+              height: "768",
+              url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
+              width: "768",
             },
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
@@ -188,9 +188,9 @@ describe("create metadata functions", () => {
           url: "https://author.com/authors/author",
           image: {
             "@type": "ImageObject",
-            height: "1024",
-            url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
-            width: "1024",
+            height: "768",
+            url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg",
+            width: "768",
           },
         },
         dateModified: "2024-11-05T09:00:00+01:00",
@@ -198,15 +198,15 @@ describe("create metadata functions", () => {
         headline: "Title",
         image: {
           "@type": "ImageObject",
-          height: "1024",
-          url: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/posts/1/cover.jpeg",
-          width: "1024",
+          height: "768",
+          url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
+          width: "768",
         },
         keywords: ["keyword", "keyword2", "keyword3"],
         publisher: {
           "@id": "https://bach.software",
           "@type": "Organization",
-          logo: "https://bach.software/_ipx/w_1024&f_jpeg&q_80/company/logo.png",
+          logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png",
           name: "Company",
         },
         speakable: {
@@ -248,7 +248,7 @@ describe("useMetadata", () => {
       "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
     );
     expect(seoArgs.ogImage()).toBe(
-      "https://bach.software/_ipx/w_1024&f_jpeg&q_80/posts/1/cover.jpeg",
+      "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
     );
     expect(seoArgs.ogImageAlt()).toBe("Image alt");
   });

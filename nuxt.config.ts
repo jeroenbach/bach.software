@@ -77,7 +77,7 @@ export default defineNuxtConfig({
   image: {
     dir: "assets/images",
     quality: 80,
-    format: ["avif", "webp"],
+    format: ["avif", "webp", "jpeg", "jpg"],
     screens: {
       ...screens,
       "2xl": screens.xxl,
@@ -86,6 +86,8 @@ export default defineNuxtConfig({
   routeRules: {
     // Generated at build time for SEO purpose
     "/": { prerender: true },
+    // "/posts": { prerender: true, experimentalNoScripts: true },
+    // "/posts/*": { prerender: true },
     // Cached for 1 hour
     "/api/*": { cache: { maxAge: 60 * 60 } },
   },

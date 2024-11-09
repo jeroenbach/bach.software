@@ -41,7 +41,7 @@ export interface Metadata {
  * @param baseUrl the baseUrl of our site
  */
 export const getMetadataImageUrl = (relativeUrl: string, baseUrl: string) =>
-  createAbsoluteUrl(`/_ipx/w_1024&f_jpeg&q_80/${relativeUrl}`, baseUrl);
+  createAbsoluteUrl(`/_ipx/w_768&f_jpeg&q_80/${relativeUrl}`, baseUrl);
 
 /**
  * Gets the company and blog metadata from the translation files
@@ -109,6 +109,48 @@ export const useMetadata = (
             toValue(metadata)?.canonicalUrl ?? toValue(metadata)?.url,
             toValue(metadata)?.baseUrl,
           ),
+      },
+    ],
+  });
+};
+/***
+ * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
+ */
+export const useMetadata2 = (
+  metadata: Metadata | null,
+  options?: MetadataOptions,
+) => {
+  if (!metadata) return;
+
+  useSeoMeta(
+    {
+      title: metadata.title,
+      ogTitle: metadata.title,
+      description: metadata.description,
+      ogDescription: metadata.description,
+      ogUrl: createAbsoluteUrl(metadata.url, metadata.baseUrl),
+      ogImage:
+        metadata.imageUrl &&
+        getMetadataImageUrl(metadata.imageUrl, metadata.baseUrl),
+      ogImageAlt: metadata.imageAlt,
+    },
+    options,
+  );
+
+  useHead({
+    script: [
+      {
+        type: "application/ld+json",
+        innerHTML: JSON.stringify(metadata.structuredData),
+      },
+    ],
+    link: [
+      {
+        rel: "canonical",
+        href: createAbsoluteUrl(
+          metadata.canonicalUrl ?? metadata.url,
+          metadata.baseUrl,
+        ),
       },
     ],
   });
@@ -228,8 +270,8 @@ export const createImageMetadata = (
   return {
     "@type": "ImageObject",
     url: getMetadataImageUrl(url, baseUrl),
-    height: "1024",
-    width: "1024",
+    height: "768",
+    width: "768",
   };
 };
 
