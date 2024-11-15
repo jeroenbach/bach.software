@@ -38,7 +38,7 @@ const open = () => (mobileMenuOpen.value = true);
         >
           {{ item.label }}
         </NuxtLink>
-        <ThemeSwitcher />
+        <ColorModeSwitcher />
       </div>
       <div class="ml-auto flex lg:hidden">
         <button
@@ -106,7 +106,7 @@ const open = () => (mobileMenuOpen.value = true);
                   </NuxtLink>
                 </div>
                 <div class="space-y-2 py-6">
-                  <ThemeSwitcher />
+                  <ColorModeSwitcher />
                 </div>
               </div>
             </div>

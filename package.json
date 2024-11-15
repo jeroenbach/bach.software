@@ -5,8 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "pnpm run i18n-extract && nuxt dev",
-    "generate": "nuxt generate",
-    "generate2": "pnpm run i18n-extract && nuxt generate && pnpm build-storybook",
+    "generate": "pnpm run i18n-extract && nuxt generate && pnpm build-storybook",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "ssg": "nuxt generate && pnpm run serve",

@@ -20,7 +20,11 @@ const toggleColorMode = () => {
 <template>
   <div class="flex size-6 flex-col overflow-hidden">
     <ClientOnly>
-      <button class="absolute" @click="toggleColorMode">
+      <button
+        title="Switch color mode"
+        class="absolute"
+        @click="toggleColorMode"
+      >
         <AppTransition name="slide-up">
           <ComputerDesktopIcon
             v-if="$colorMode.preference === 'system'"

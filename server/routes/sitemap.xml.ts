@@ -4,7 +4,9 @@ import appConfig from "~/appConfig.json";
 
 export default defineEventHandler(async (event) => {
   // Fetch all documents
-  const docs = await serverQueryContent(event).find();
+  const docs = await serverQueryContent(event)
+    .where({ _partial: false })
+    .find();
   const sitemap = new SitemapStream({
     hostname: appConfig.baseUrl,
   });
