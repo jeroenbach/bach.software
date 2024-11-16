@@ -52,12 +52,12 @@ export const useBlogMetadata = () => {
   const blog: Blog = {
     name: t("_metadata.titleTemplate_empty"),
     description: t("_metadata.description"),
-    url: config.value.baseUrl,
+    url: "/posts",
   };
   const company: Company = {
     name: t("_metadata.titleTemplate_empty"),
     description: t("_metadata.description"),
-    url: config.value.baseUrl,
+    url: "/",
   };
 
   return { blog, company, config };
@@ -67,56 +67,6 @@ export const useBlogMetadata = () => {
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
 export const useMetadata = (
-  metadata: WatchSource<Metadata | null | undefined>,
-  options?: MetadataOptions,
-) => {
-  if (!toValue(metadata)) return;
-
-  useSeoMeta(
-    {
-      title: () => toValue(metadata)?.title,
-      ogTitle: () => toValue(metadata)?.title,
-      description: () => toValue(metadata)?.description,
-      ogDescription: () => toValue(metadata)?.description,
-      ogUrl: () =>
-        createAbsoluteUrl(
-          toValue(metadata)?.url ?? "",
-          toValue(metadata)?.baseUrl,
-        ),
-      ogImage: () =>
-        toValue(metadata)?.imageUrl &&
-        getMetadataImageUrl(
-          toValue(metadata)?.imageUrl,
-          toValue(metadata)?.baseUrl,
-        ),
-      ogImageAlt: () => toValue(metadata)?.imageAlt,
-    },
-    options,
-  );
-
-  useHead({
-    script: [
-      {
-        type: "application/ld+json",
-        innerHTML: () => JSON.stringify(toValue(metadata)?.structuredData),
-      },
-    ],
-    link: [
-      {
-        rel: "canonical",
-        href: () =>
-          createAbsoluteUrl(
-            toValue(metadata)?.canonicalUrl ?? toValue(metadata)?.url,
-            toValue(metadata)?.baseUrl,
-          ),
-      },
-    ],
-  });
-};
-/***
- * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
- */
-export const useMetadata2 = (
   metadata: Metadata | null,
   options?: MetadataOptions,
 ) => {
@@ -240,7 +190,7 @@ export const createBlogPostingMetadata = (
     headline: post.title,
     datePublished: post.datePublished && toDateWithTimeZone(post.datePublished),
     dateModified: post.dateModified && toDateWithTimeZone(post.dateModified),
-    url: post.url,
+    url: post.url && createAbsoluteUrl(post.url, baseUrl),
     author: createAuthorMetadata(baseUrl, post.author),
     publisher: publisher && createOrganizationMetadata(publisher),
     image: post.imgCoverUrl && createImageMetadata(baseUrl, post.imgCoverUrl),

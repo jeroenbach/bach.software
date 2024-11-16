@@ -4,13 +4,14 @@ import { useBlogPostsContext } from "~/contexts/useBlogPostsContext";
 const { blog, company, config } = useBlogMetadata();
 const { data: posts } = await useBlogPostsContext({ summary: true });
 
-useMetadata2({
+useMetadata({
   baseUrl: config.value.baseUrl,
   title: blog.name,
   description: blog.description,
   imageUrl: blog.imageUrl,
   imageAlt: blog.imageAlt,
   url: blog.url,
+  canonicalUrl: blog.url,
   structuredData: createBlogMetadataContext(
     config.value.baseUrl,
     blog,

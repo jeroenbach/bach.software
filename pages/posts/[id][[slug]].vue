@@ -5,7 +5,7 @@ const { company, config } = useBlogMetadata();
 const { id } = useRoute().params as { id: string; slug: string };
 const { data: post } = await useBlogPostsContext({ id });
 
-useMetadata2(
+useMetadata(
   post.value && {
     baseUrl: config.value.baseUrl,
     title: post.value.title,

@@ -18,7 +18,7 @@ useHead({
     lang: locale,
   },
 });
-useMetadata(() => ({
+useMetadata({
   baseUrl: config.value.baseUrl,
   title: t("_metadata.title"),
   description: t("_metadata.description"),
@@ -29,7 +29,7 @@ useMetadata(() => ({
     name: t("_metadata.title"),
     url: config.value.baseUrl,
   }),
-}));
+});
 </script>
 <template>
   <NotificationContainer />
