@@ -2,12 +2,23 @@
 import { screens } from "./utils/screen";
 import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
+  $development: {
+    partytown: {
+      debug: true,
+    },
+    app: {
+      head: {
+        script: [{ innerHTML: `console.log("development environment");` }],
+      },
+    },
+  },
   compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/storybook",
-    "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
+    // this needs to be before `@nuxt/content`
+    "nuxt-content-twoslash",
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/color-mode",
@@ -16,6 +27,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "dayjs-nuxt",
     "@primevue/nuxt-module",
+    "@nuxtjs/partytown",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {
@@ -30,11 +42,22 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
   css: ["~/assets/css/main.scss"],
+  partytown: {
+    forward: [],
+  },
   app: {
     head: {
       // Used in Sofia Vera
       viewport:
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      script: [
+        {
+          src: "https://plausible.io/js/script.outbound-links.pageview-props.js",
+          defer: true,
+          // 'data-domain': 'gentle-glacier-00e050903-5.westeurope.5.azurestaticapps.net',
+          type: "text/partytown",
+        },
+      ],
       link: [
         { rel: "icon", sizes: "192x192", href: "/ico/192.png" },
         { rel: "icon", sizes: "128x128", href: "/ico/128.png" },
