@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/css/main.scss"],
   partytown: {
-    forward: [],
+    forward: ["plausible"],
   },
   app: {
     head: {
@@ -52,10 +52,12 @@ export default defineNuxtConfig({
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
       script: [
         {
-          src: "https://plausible.io/js/script.outbound-links.pageview-props.js",
+          src: "https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js",
           defer: true,
-          // 'data-domain': 'gentle-glacier-00e050903-5.westeurope.5.azurestaticapps.net',
           type: "text/partytown",
+        },
+        {
+          innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
         },
       ],
       link: [
