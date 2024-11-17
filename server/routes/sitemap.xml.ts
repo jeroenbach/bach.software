@@ -16,6 +16,10 @@ export default defineEventHandler(async (event) => {
 
   // Some hard coded urls
   sitemap.write({
+    url: "/",
+    changefreq: "monthly",
+  });
+  sitemap.write({
     url: "/posts",
     changefreq: "monthly",
   });

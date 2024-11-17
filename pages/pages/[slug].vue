@@ -8,17 +8,16 @@ const config = useConfig();
 const { data: page } = await usePagesContext(slug);
 
 useMetadata(
-  () =>
-    page.value && {
-      baseUrl: config.value.baseUrl,
-      title: page.value.title,
-      description: page.value.description,
-      url: page.value._path,
-      structuredData: createWebPageMetadataContext(
-        config.value.baseUrl,
-        page.value,
-      ),
-    },
+  page.value && {
+    baseUrl: config.value.baseUrl,
+    title: page.value.title,
+    description: page.value.description,
+    url: page.value._path,
+    structuredData: createWebPageMetadataContext(
+      config.value.baseUrl,
+      page.value,
+    ),
+  },
 );
 </script>
 

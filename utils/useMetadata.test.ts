@@ -114,7 +114,7 @@ describe("create metadata functions", () => {
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
             publisher: undefined,
-            url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+            url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
           },
           {
             "@type": "BlogPosting",
@@ -141,7 +141,7 @@ describe("create metadata functions", () => {
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
             publisher: undefined,
-            url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+            url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
           },
           {
             "@type": "BlogPosting",
@@ -168,7 +168,7 @@ describe("create metadata functions", () => {
             isAccessibleForFree: true,
             keywords: ["keyword", "keyword2", "keyword3"],
             publisher: undefined,
-            url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+            url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
           },
         ],
       });
@@ -218,7 +218,7 @@ describe("create metadata functions", () => {
           ],
         },
         isAccessibleForFree: true,
-        url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+        url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
       });
     });
   });
@@ -226,55 +226,57 @@ describe("create metadata functions", () => {
 
 describe("useMetadata", () => {
   beforeEach(() => {
-    useMetadata(() => ({
+    useMetadata({
       baseUrl: "https://bach.software",
       title: "Title",
       description: "Description",
       imageUrl: "/posts/1/cover.jpeg",
       imageAlt: "Image alt",
-      url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+      url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
       canonicalUrl:
-        "/posts/1-vue-3_3-generics-and-conditional-properties-original",
+        "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original",
       structuredData: { structuredData: "data" },
-    }));
+    });
   });
+
   it("should call the useSeoMeta with the correct parameters", async () => {
     const seoArgs = mock.useSeoMeta.mock.calls[0][0];
-    expect(seoArgs.title()).toBe("Title");
-    expect(seoArgs.ogTitle()).toBe("Title");
-    expect(seoArgs.description()).toBe("Description");
-    expect(seoArgs.ogDescription()).toBe("Description");
-    expect(seoArgs.ogUrl()).toBe(
+    expect(seoArgs.title).toBe("Title");
+    expect(seoArgs.ogTitle).toBe("Title");
+    expect(seoArgs.description).toBe("Description");
+    expect(seoArgs.ogDescription).toBe("Description");
+    expect(seoArgs.ogUrl).toBe(
       "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
     );
-    expect(seoArgs.ogImage()).toBe(
+    expect(seoArgs.ogImage).toBe(
       "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg",
     );
-    expect(seoArgs.ogImageAlt()).toBe("Image alt");
+    expect(seoArgs.ogImageAlt).toBe("Image alt");
   });
+
   it("should call the useHead with the correct parameters", async () => {
     const headArgs = mock.useHead.mock.calls[0][0];
     expect(headArgs.script[0].type).toBe("application/ld+json");
-    expect(headArgs.script[0].innerHTML()).toBe('{"structuredData":"data"}');
+    expect(headArgs.script[0].innerHTML).toBe('{"structuredData":"data"}');
     expect(headArgs.link[0].rel).toBe("canonical");
-    expect(headArgs.link[0].href()).toBe(
+    expect(headArgs.link[0].href).toBe(
       "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original",
     );
   });
 
   it("should use url if canonical url is empty", async () => {
     mock.useHead.mockReset();
-    useMetadata(() => ({
+    useMetadata({
       baseUrl: "https://bach.software",
       title: "Title",
       description: "Description",
-      imageUrl: "/posts/1/cover.jpeg",
+      imageUrl: "https://bach.software/posts/1/cover.jpeg",
       imageAlt: "Image alt",
-      url: "/posts/1-vue-3_3-generics-and-conditional-properties",
+      url: "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
       structuredData: { structuredData: "data" },
-    }));
+    });
     const headArgs = mock.useHead.mock.calls[0][0];
-    expect(headArgs.link[0].href()).toBe(
+    expect(headArgs.link[0].href).toBe(
       "https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties",
     );
   });
