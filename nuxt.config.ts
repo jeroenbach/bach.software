@@ -95,6 +95,9 @@ export default defineNuxtConfig({
     experimental: {
       search: {},
     },
+    api: {
+      baseURL: "/_content",
+    },
   },
   twoslash: {
     enableInDev: true,
@@ -116,11 +119,6 @@ export default defineNuxtConfig({
     // Cached for 1 hour
     "/api/*": { cache: { maxAge: 60 * 60 } },
   },
-  nitro: {
-    prerender: {
-      routes: ["/sitemap.xml"],
-    },
-  },
   i18n: {
     locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
     defaultLocale: "en",
@@ -131,5 +129,15 @@ export default defineNuxtConfig({
     plugins: ["relativeTime", "utc", "timezone"],
     defaultLocale: "en",
     defaultTimezone: "Europe/Amsterdam",
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: "", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    },
+  },
+  nitro: {
+    prerender: {
+      routes: ["/sitemap.xml"],
+    },
   },
 });

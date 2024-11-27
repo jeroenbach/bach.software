@@ -16,8 +16,8 @@
     "storybook": "storybook dev --port 6006",
     "build-storybook": "storybook build -o ./.output/public/_storybook/",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
-    "azure": "swa start .output/public --api-location azure-api",
-    "function": "cd ./azure-api && dotnet watch start"
+    "azure": "swa start .output/public --api-location api/Bach.Software.Function",
+    "function": "cd ./api/Bach.Software.Function && dotnet watch start"
   },
   "dependencies": {
     "@headlessui/vue": "1.7.23",

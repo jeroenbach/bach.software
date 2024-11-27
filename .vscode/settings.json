@@ -8,5 +8,13 @@
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.projectLanguageModel": 4,
-  "azureFunctions.preDeployTask": "publish (functions)"
+  "azureFunctions.preDeployTask": "publish (functions)",
+
+  // Default tab size
+  "editor.tabSize": 2,
+
+  // Specific tab size for C# files
+  "[csharp]": {
+    "editor.tabSize": 4
+  }
 }

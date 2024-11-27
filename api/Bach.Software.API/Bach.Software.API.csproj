@@ -28,4 +28,8 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Bach.Software.Core/Bach.Software.Core.csproj" />
+    <ProjectReference Include="../Bach.Software.Infrastructure/Bach.Software.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

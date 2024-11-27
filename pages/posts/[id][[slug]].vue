@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { useBlogPostsContext } from "~/contexts/useBlogPostsContext";
+import { usePageReads } from "~/contexts/usePageViewsContext";
 
 const { company, config } = useBlogMetadata();
 const { id } = useRoute().params as { id: string; slug: string };
 const { data: post } = await useBlogPostsContext({ id });
+// const { getPageViews } = usePageReads();
 
 useMetadata(
   post.value && {
