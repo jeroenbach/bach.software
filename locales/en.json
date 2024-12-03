@@ -8,9 +8,9 @@
   "Copied to clipboard!": "Copied to clipboard!",
   "Linkedin": "Linkedin",
   "Share": "Share",
-  "read": "read",
   "Bach": {
     "Software": "Bach.Software"
   },
-  "Blog": "Blog"
+  "Blog": "Blog",
+  "read": "{n} read | {n} reads"
 }

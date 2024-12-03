@@ -1,6 +1,6 @@
 import type { BlogPost, BlogPostSummary } from "~/types/BlogPost";
 import { toDictionary } from "~/utils/collections";
-import { useAuthorsContext } from "~/contexts/useAuthorsContext";
+import { getAuthors } from "~/services/content/authorsService";
 
 /**
  * Fetches blog posts data based on the provided options.
@@ -58,7 +58,7 @@ export const getBlogPosts = async <
           "datePublished",
           "dateModified",
           "imgCoverUrl",
-          "readTime",
+          "readingTime",
           "_path",
           "excerpt",
           "draft",
@@ -72,9 +72,7 @@ export const getBlogPosts = async <
 
     const postsRaw = await query.find();
     const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
-    const { data: authors } = await useAuthorsContext(
-      Array.from(authorUserNames),
-    );
+    const { data: authors } = await getAuthors(Array.from(authorUserNames));
 
     const authorsDictionary = toDictionary(
       authors.value ?? [],

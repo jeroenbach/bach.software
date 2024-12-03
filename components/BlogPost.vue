@@ -35,7 +35,7 @@ defineProps<{
         >
           <div
             v-if="pageReads !== null"
-            :title="`${pageReads} views`"
+            :title="$t('read', { n: pageReads })"
             class="flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
