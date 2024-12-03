@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/css/main.scss"],
   partytown: {
-    forward: [],
+    forward: ["plausible"],
   },
   app: {
     head: {
@@ -52,10 +52,12 @@ export default defineNuxtConfig({
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
       script: [
         {
-          src: "https://plausible.io/js/script.outbound-links.pageview-props.js",
+          src: "https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js",
           defer: true,
-          // 'data-domain': 'gentle-glacier-00e050903-5.westeurope.5.azurestaticapps.net',
           type: "text/partytown",
+        },
+        {
+          innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
         },
       ],
       link: [
@@ -89,9 +91,13 @@ export default defineNuxtConfig({
     },
     markdown: {
       anchorLinks: true,
+      remarkPlugins: ["remark-reading-time"],
     },
     experimental: {
       search: {},
+    },
+    api: {
+      baseURL: "/_content",
     },
   },
   twoslash: {
@@ -114,11 +120,6 @@ export default defineNuxtConfig({
     // Cached for 1 hour
     "/api/*": { cache: { maxAge: 60 * 60 } },
   },
-  nitro: {
-    prerender: {
-      routes: ["/sitemap.xml"],
-    },
-  },
   i18n: {
     locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
     defaultLocale: "en",
@@ -129,5 +130,15 @@ export default defineNuxtConfig({
     plugins: ["relativeTime", "utc", "timezone"],
     defaultLocale: "en",
     defaultTimezone: "Europe/Amsterdam",
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: "", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    },
+  },
+  nitro: {
+    prerender: {
+      routes: ["/sitemap.xml"],
+    },
   },
 });

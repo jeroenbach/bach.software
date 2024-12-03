@@ -9,7 +9,7 @@ import type { Page } from "~/types/Page";
  * @param {string} [slug] - An optional slug to filter the page.
  * @returns {Promise<Page | null>} A promise that resolves to a single page or null.
  */
-export const usePagesContext = async (slug: string) => {
+export const getPages = async (slug: string) => {
   const uniqueId = `pagesContext-${slug}`;
 
   return await useAsyncData(uniqueId, async () => {
