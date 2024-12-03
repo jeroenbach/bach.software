@@ -8,6 +8,7 @@ defineProps<{
    */
   post: BlogPost | null;
   baseUrl: string;
+  pageReads: number | null;
 }>();
 </script>
 
@@ -22,9 +23,7 @@ defineProps<{
       <div class="not-prose">
         <AuthorInformation v-bind="post.author" class="mb-8">
           <template #bottomLine>
-            <span itemprop="timeRequired"
-              >{{ post.readTime }} {{ $t("read") }}</span
-            >
+            <span itemprop="timeRequired">{{ post.readingTime?.text }}</span>
             <span> · </span>
             <time itemprop="datePublished">{{
               formatDate(post.datePublished)
@@ -35,12 +34,12 @@ defineProps<{
           class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:text-gray-400 md:py-1.5"
         >
           <div
-            v-if="false"
-            :title="`${200} views`"
+            v-if="pageReads !== null"
+            :title="`${pageReads} views`"
             class="flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
-            <span>200</span>
+            <span>{{ pageReads }}</span>
           </div>
           <aside class="ms-auto flex items-center gap-1">
             <span>{{ $t("Share") }}:</span>

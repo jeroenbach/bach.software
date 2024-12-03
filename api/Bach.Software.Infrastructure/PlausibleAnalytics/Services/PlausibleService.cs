@@ -29,7 +29,7 @@ public class PlausibleService : IAnalyticsService
         var payload = new
         {
             site_id = domain,
-            metrics = new[] { "events" },
+            metrics = new[] { "visitors" }, // Get the unique number of Reading events
             date_range = "all",
             filters = new[]{
                 new List<object> { "contains", "event:page", new[] { relativeUrl } },

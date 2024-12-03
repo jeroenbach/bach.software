@@ -91,6 +91,7 @@ export default defineNuxtConfig({
     },
     markdown: {
       anchorLinks: true,
+      remarkPlugins: ["remark-reading-time"],
     },
     experimental: {
       search: {},
