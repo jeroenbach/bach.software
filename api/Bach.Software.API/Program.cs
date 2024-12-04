@@ -11,20 +11,6 @@ builder.ConfigureFunctionsWebApplication();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IAnalyticsService, PlausibleService>();
 
-// Enable CORS only in development mode
-// if (builder.Environment.IsDevelopment())
-// {
-// builder.Services.AddCors(options =>
-// {
-//     options.AddDefaultPolicy(builder =>
-//     {
-//         builder.WithOrigins("http://localhost:3000/")
-//                .AllowAnyMethod()
-//                .AllowAnyHeader();
-//     });
-// });
-// }
-
 // Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
 // builder.Services
 //     .AddApplicationInsightsTelemetryWorkerService()

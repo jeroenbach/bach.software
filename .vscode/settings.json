@@ -9,6 +9,8 @@
   "debug.internalConsoleOptions": "neverOpen",
   "azureFunctions.projectLanguageModel": 4,
   "azureFunctions.preDeployTask": "publish (functions)",
+  "dotnet-test-explorer.testProjectPath": "api/**/*Tests.@(csproj|vbproj|fsproj)",
+  "azureFunctions.projectSubpath": "api/Bach.Software.API",
 
   // Default tab size
   "editor.tabSize": 2,
@@ -16,5 +18,5 @@
   // Specific tab size for C# files
   "[csharp]": {
     "editor.tabSize": 4
-  }
+  },
 }

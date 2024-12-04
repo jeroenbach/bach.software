@@ -7,6 +7,7 @@
     "george-alisson.html-preview-vscode",
     "esbenp.prettier-vscode",
     "vue.volar",
-    "nuxt.mdc"
+    "nuxt.mdc",
+    "formulahendry.dotnet-test-explorer"
   ]
 }

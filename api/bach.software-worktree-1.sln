@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Core", "Bach.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Infrastructure", "Bach.Software.Infrastructure\Bach.Software.Infrastructure.csproj", "{6E601F6A-46E1-45FA-8B03-DEFB1B3CB4BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Tests", "Bach.Software.Tests\Bach.Software.Tests.csproj", "{27939F61-8259-41AC-84C8-05BCBF10E244}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Tests", "Bach.Software.Tests\Bach.Software.Tests.csproj", "{6A4723B9-672F-43C5-8C31-F954126BBB53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{6E601F6A-46E1-45FA-8B03-DEFB1B3CB4BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E601F6A-46E1-45FA-8B03-DEFB1B3CB4BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E601F6A-46E1-45FA-8B03-DEFB1B3CB4BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{27939F61-8259-41AC-84C8-05BCBF10E244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27939F61-8259-41AC-84C8-05BCBF10E244}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27939F61-8259-41AC-84C8-05BCBF10E244}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27939F61-8259-41AC-84C8-05BCBF10E244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

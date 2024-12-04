@@ -165,7 +165,7 @@ describe("usePageRead", () => {
     },
   );
 
-  it.only("should respect minimumTime even for short articles", async () => {
+  it("should respect minimumTime even for short articles", async () => {
     const mockScroll = ref(600); // 75% scroll
     mock.useScroll.mockReturnValueOnce({ y: mockScroll });
 

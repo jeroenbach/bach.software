@@ -1,7 +1,6 @@
 // setup.js
 import inquirer from 'inquirer';
 import fs from 'fs/promises';
-import path from 'path';
 
 const questions = [
   {
