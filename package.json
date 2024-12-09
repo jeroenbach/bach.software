@@ -17,7 +17,7 @@
     "storybook": "storybook dev --port 6006",
     "build-storybook": "storybook build -o ./.output/public/_storybook/",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
-    "azure": "swa start .output/public --api-location api/Bach.Software.API",
+    "azure": "cp staticwebapp.config.json .output/public && swa start .output/public --api-location api/Bach.Software.API",
     "api": "cd ./api/Bach.Software.API && dotnet watch start"
   },
   "dependencies": {
@@ -45,6 +45,7 @@
     "@nuxtjs/color-mode": "3.5.1",
     "@nuxtjs/i18n": "8.5.5",
     "@nuxtjs/partytown": "1.5.0",
+    "@nuxtjs/plausible": "1.2.0",
     "@nuxtjs/storybook": "8.3.0",
     "@nuxtjs/tailwindcss": "6.12.1",
     "@pinia/nuxt": "0.5.5",

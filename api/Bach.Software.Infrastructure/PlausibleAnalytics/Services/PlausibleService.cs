@@ -22,6 +22,8 @@ public class PlausibleService : IAnalyticsService
 
     public async Task<int> GetPageReads(string url)
     {
+        using var scope = _logger.BeginScope(new Dictionary<string, object> { { "url", url } });
+
         var uri = new Uri(url);
         var domain = uri.Host;
         var relativeUrl = uri.PathAndQuery;
@@ -33,7 +35,7 @@ public class PlausibleService : IAnalyticsService
             date_range = "all",
             filters = new[]{
                 new List<object> { "contains", "event:page", new[] { relativeUrl } },
-                new List<object> { "is", "event:goal", new[] {"Reading Time"} },
+                new List<object> { "is", "event:goal", new[] {"read"} },
             }
         };
 
@@ -42,7 +44,6 @@ public class PlausibleService : IAnalyticsService
 
         var response = await SendRequest(jsonPayload);
         var responseContent = await response.Content.ReadAsStringAsync();
-
         _logger.LogDebug("Response: {responseContent}", responseContent);
 
         var queryResult = JsonSerializer.Deserialize<QueryResult>(responseContent);

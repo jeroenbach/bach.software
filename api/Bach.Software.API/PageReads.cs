@@ -1,32 +1,32 @@
 using Bach.Software.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Bach.Software.API
+namespace Bach.Software.API;
+
+public class PageReads
 {
-    public class PageReads
+    private readonly ILogger<PageReads> _logger;
+    private readonly IAnalyticsService _analyticsService;
+
+    public PageReads(IAnalyticsService analyticsService, ILogger<PageReads> logger)
     {
-        private readonly ILogger<PageReads> _logger;
-        private readonly IAnalyticsService _analyticsService;
+        _analyticsService = analyticsService;
+        _logger = logger;
+    }
 
-        public PageReads(IAnalyticsService analyticsService, ILogger<PageReads> logger)
+    [Function("pageReads")]
+    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req, string url)
+    {
+        if (string.IsNullOrEmpty(url))
         {
-            _analyticsService = analyticsService;
-            _logger = logger;
+            _logger.LogWarning("No url specified in the request");
+            return new BadRequestObjectResult("Invalid request");
         }
 
-        [Function("pageReads")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
-        {
-            // Get the URL of the page that calls this service from the Referer header
-            var refererUrl = req.Headers["Referer"].ToString();
-            var url = req.GetDisplayUrl();
-            var read = await _analyticsService.GetPageReads("https://gentle-glacier-00e050903-6.westeurope.5.azurestaticapps.net/posts/1");
-
-            return new OkObjectResult(read);
-        }
+        var read = await _analyticsService.GetPageReads(url!);
+        return new OkObjectResult(read);
     }
 }

@@ -31,7 +31,9 @@ async function setup() {
     };
 
     // Create .env.local for Nuxt
-    const envLocal = `NUXT_PUBLIC_API_BASE=http://localhost:7071\n`;
+    let envLocal = `NUXT_PUBLIC_API_BASE=http://localhost:7071\n`;
+    envLocal += `NUXT_PUBLIC_PLAUSIBLE_DOMAIN=dev.bach.software\n`;
+
 
     await fs.writeFile('api/Bach.Software.API/local.settings.json', JSON.stringify(localSettings, null, 2));
     await fs.writeFile('.env.local', envLocal);
