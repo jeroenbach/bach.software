@@ -9,7 +9,7 @@ import type { Author } from "~/types/Author";
  * @param {string[]} [userNames] - An optional array of usernames to filter the authors.
  * @returns {Promise<Author[]>} A promise that resolves to an array of authors.
  */
-export const useAuthorsContext = async (userNames?: string[]) => {
+export const getAuthors = async (userNames?: string[]) => {
   const uniqueId = `authorsContext-${userNames?.join("-")}`;
 
   return await useAsyncData(uniqueId, async () => {

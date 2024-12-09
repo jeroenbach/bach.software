@@ -18,7 +18,7 @@ export interface BlogPostSummary {
   datePublished: string;
   dateModified: string;
   imgCoverUrl?: string;
-  readTime?: string;
+  readingTime?: { text: string; minutes: number; time: number; words: number };
   /**
    * Content excerpt, generated from content
    */

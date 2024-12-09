@@ -17,8 +17,7 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/storybook",
-    // this needs to be before `@nuxt/content`
-    "nuxt-content-twoslash",
+    "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/color-mode",
@@ -28,6 +27,7 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/partytown",
+    "@nuxtjs/plausible",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {
@@ -42,21 +42,26 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
   css: ["~/assets/css/main.scss"],
-  partytown: {
-    forward: [],
+  plausible: {
+    // Tracking always on
+    ignoredHostnames: [],
   },
+  // partytown: {
+  //   forward: ["plausible"],
+  // },
   app: {
     head: {
-      // Used in Sofia Vera
       viewport:
-        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no", // Used in Sofia Vera
       script: [
-        {
-          src: "https://plausible.io/js/script.outbound-links.pageview-props.js",
-          defer: true,
-          // 'data-domain': 'gentle-glacier-00e050903-5.westeurope.5.azurestaticapps.net',
-          type: "text/partytown",
-        },
+        // {
+        //   src: "https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js",
+        //   defer: true,
+        //   type: "text/partytown",
+        // },
+        // {
+        //   innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
+        // },
       ],
       link: [
         { rel: "icon", sizes: "192x192", href: "/ico/192.png" },
@@ -89,9 +94,13 @@ export default defineNuxtConfig({
     },
     markdown: {
       anchorLinks: true,
+      remarkPlugins: ["remark-reading-time"],
     },
     experimental: {
       search: {},
+    },
+    api: {
+      baseURL: "/_content",
     },
   },
   twoslash: {
@@ -114,11 +123,6 @@ export default defineNuxtConfig({
     // Cached for 1 hour
     "/api/*": { cache: { maxAge: 60 * 60 } },
   },
-  nitro: {
-    prerender: {
-      routes: ["/sitemap.xml"],
-    },
-  },
   i18n: {
     locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
     defaultLocale: "en",
@@ -129,5 +133,16 @@ export default defineNuxtConfig({
     plugins: ["relativeTime", "utc", "timezone"],
     defaultLocale: "en",
     defaultTimezone: "Europe/Amsterdam",
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: "", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      plausibleDomain: "", // can be overridden by NUXT_PUBLIC_PLAUSIBLE_DOMAIN environment variable
+    },
+  },
+  nitro: {
+    prerender: {
+      routes: ["/sitemap.xml"],
+    },
   },
 });

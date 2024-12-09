@@ -1,10 +1,13 @@
 {
   "recommendations": [
+    "ms-azuretools.vscode-azurefunctions",
+    "ms-dotnettools.csharp",
     "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
     "george-alisson.html-preview-vscode",
     "esbenp.prettier-vscode",
     "vue.volar",
-    "nuxt.mdc"
+    "nuxt.mdc",
+    "formulahendry.dotnet-test-explorer"
   ]
 }

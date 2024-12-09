@@ -1,9 +1,18 @@
 <script lang="ts" setup>
-import { useBlogPostsContext } from "~/contexts/useBlogPostsContext";
+import { getBlogPosts } from "~/services/content/blogPostsService";
 
 const { company, config } = useBlogMetadata();
 const { id } = useRoute().params as { id: string; slug: string };
-const { data: post } = await useBlogPostsContext({ id });
+const { data: post } = await getBlogPosts({ id });
+
+useReadProgressTracking(
+  {
+    wordCount: post.value?.readingTime?.words,
+  },
+  {
+    author: post.value?.authorName ?? "",
+  },
+);
 
 useMetadata(
   post.value && {
@@ -23,6 +32,12 @@ useMetadata(
 </script>
 <template>
   <PageContent>
-    <BlogPost :post="post" :baseUrl="config?.baseUrl" />
+    <PageReadsContext v-slot="{ pageReads }">
+      <BlogPost
+        :post="post"
+        :baseUrl="config?.baseUrl"
+        :pageReads="pageReads"
+      />
+    </PageReadsContext>
   </PageContent>
 </template>
