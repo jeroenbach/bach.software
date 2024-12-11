@@ -41,7 +41,7 @@ defineProps<{
             <EyeIcon class="inline-block size-4" />
             <span>{{ pageReads }}</span>
           </div>
-          <aside class="ms-auto flex items-center gap-1">
+          <aside class="ms-auto flex h-8 items-center gap-1">
             <span>{{ $t("Share") }}:</span>
             <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />
           </aside>

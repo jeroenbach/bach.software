@@ -40,11 +40,11 @@ public class PlausibleService : IAnalyticsService
         };
 
         var jsonPayload = JsonSerializer.Serialize(payload);
-        _logger.LogDebug("Payload: {jsonPayload}", jsonPayload);
+        _logger.LogInformation("Payload: {jsonPayload}", jsonPayload);
 
         var response = await SendRequest(jsonPayload);
         var responseContent = await response.Content.ReadAsStringAsync();
-        _logger.LogDebug("Response: {responseContent}", responseContent);
+        _logger.LogInformation("Response: {responseContent}", responseContent);
 
         var queryResult = JsonSerializer.Deserialize<QueryResult>(responseContent);
         if (queryResult == null)
