@@ -35,7 +35,7 @@ async function setup() {
     envLocal += `NUXT_PUBLIC_PLAUSIBLE_DOMAIN=dev.bach.software\n`;
 
 
-    await fs.writeFile('api/Bach.Software.API/local.settings.json', JSON.stringify(localSettings, null, 2));
+    await fs.writeFile('src/api/Bach.Software.API/local.settings.json', JSON.stringify(localSettings, null, 2));
     await fs.writeFile('.env.local', envLocal);
 
     console.log('✅ Development environment files created successfully!');
