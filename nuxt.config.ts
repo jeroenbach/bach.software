@@ -1,22 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { screens } from "./utils/screen";
+import { screens } from "./src/app/utils/screen";
 import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
   $development: {
-    partytown: {
-      debug: true,
-    },
+    // partytown: {
+    //   debug: true,
+    // },
     app: {
       head: {
         script: [{ innerHTML: `console.log("development environment");` }],
       },
     },
   },
+  srcDir: "src/app",
   compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/storybook",
+    // "@nuxtjs/storybook",
     "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
@@ -26,7 +27,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "dayjs-nuxt",
     "@primevue/nuxt-module",
-    "@nuxtjs/partytown",
+    // "@nuxtjs/partytown",
     "@nuxtjs/plausible",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
