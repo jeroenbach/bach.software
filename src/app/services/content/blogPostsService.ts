@@ -70,6 +70,8 @@ export const getBlogPosts = async <
 
     query.where({ draft: { $ne: true } });
 
+    query.sort({ datePublished: -1 });
+
     const postsRaw = await query.find();
     const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
     const { data: authors } = await getAuthors(Array.from(authorUserNames));

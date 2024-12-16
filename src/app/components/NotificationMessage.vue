@@ -57,7 +57,7 @@ useTimeoutFn(
             severity === 'error',
           'border-l-4 border-yellow-400 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300':
             severity === 'warning',
-          'border-l-4 border-blue-400 bg-blue-50 dark:bg-gray-800 dark:text-blue-400':
+          'border-l-4 border-blue-400 bg-white dark:bg-gray-800 dark:text-blue-400':
             severity === 'info',
         }"
       >
@@ -65,19 +65,19 @@ useTimeoutFn(
           <div class="flex items-start gap-4">
             <CheckCircleIcon
               v-if="severity === 'success'"
-              class="size-6 text-green-400"
+              class="size-6 shrink-0 text-green-400"
             />
             <XCircleIcon
               v-if="severity === 'error'"
-              class="size-6 text-red-400"
+              class="size-6 shrink-0 text-red-400"
             />
             <ExclamationTriangleIcon
               v-if="severity === 'warning'"
-              class="size-6 text-yellow-400"
+              class="size-6 shrink-0 text-yellow-400"
             />
             <InformationCircleIcon
               v-if="severity === 'info'"
-              class="size-6 text-blue-400"
+              class="size-6 shrink-0 text-blue-400"
             />
             <div class="my-auto flex grow flex-col gap-1 text-sm">
               <p

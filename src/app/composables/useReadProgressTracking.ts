@@ -49,10 +49,13 @@ export const useReadProgressTracking = (
   const scrollProgress = computed<Progress>(() =>
     getProgress(scrollPercentage.value),
   );
+  const totalProgress = computed<Progress>(() =>
+    getProgress(Math.min(scrollPercentage.value, timeSpentPercentage.value)),
+  );
 
   // Track progress changes
   watch(
-    timeProgress,
+    totalProgress,
     (progress, oldProgress) => {
       if (progress === oldProgress) return;
 
@@ -74,5 +77,6 @@ export const useReadProgressTracking = (
     timeSpent,
     timeProgress,
     scrollProgress,
+    totalProgress,
   };
 };
