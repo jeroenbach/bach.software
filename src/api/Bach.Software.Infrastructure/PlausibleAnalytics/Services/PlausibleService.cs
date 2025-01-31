@@ -8,8 +8,10 @@ namespace Bach.Software.Infrastructure.PlausibleAnalytics.Services;
 
 public class PlausibleService : IAnalyticsService
 {
-    private const string _apiUrl = "https://plausible.io/api/v2/query";
+    private const string _defaultPlausibleUrl = "https://plausible.io";
+    private const string _queryUrl = "/api/v2/query";
     private readonly HttpClient _httpClient;
+    private readonly string _apiUrl;
     private readonly string _apiToken;
     private readonly ILogger<PlausibleService> _logger;
 
@@ -17,6 +19,7 @@ public class PlausibleService : IAnalyticsService
     {
         _httpClient = httpClient;
         _apiToken = configuration["PLAUSIBLE_API_TOKEN"] ?? throw new ArgumentNullException(nameof(_apiToken), "API token cannot be null");
+        _apiUrl = configuration["PLAUSIBLE_API_URL"] ?? _defaultPlausibleUrl;
         _logger = logger;
     }
 
@@ -59,7 +62,7 @@ public class PlausibleService : IAnalyticsService
     {
         ArgumentNullException.ThrowIfNullOrEmpty(jsonPayload);
 
-        var request = new HttpRequestMessage(HttpMethod.Post, _apiUrl);
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{_apiUrl}{_queryUrl}");
         request.Headers.Add("Authorization", $"Bearer {_apiToken}");
         request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 

@@ -5,6 +5,12 @@ import fs from 'fs/promises';
 const questions = [
   {
     type: 'input',
+    name: 'PLAUSIBLE_API_URL',
+    message: 'Enter your Plausible URL (default: https://plausible.io):',
+    
+  },
+  {
+    type: 'input',
     name: 'PLAUSIBLE_API_TOKEN',
     message: 'Enter your Plausible API token:',
     validate: input => input.length > 0 ? true : 'Token is required'
@@ -21,6 +27,7 @@ async function setup() {
       "Values": {
         "AzureWebJobsStorage": "",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+        "PLAUSIBLE_API_URL": answers.PLAUSIBLE_API_URL,
         "PLAUSIBLE_API_TOKEN": answers.PLAUSIBLE_API_TOKEN
       },
       "Host": {
