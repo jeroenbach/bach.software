@@ -44,6 +44,7 @@ export default defineNuxtConfig({
   },
   css: ["~/assets/css/main.scss"],
   plausible: {
+    apiHost: "https://plausible.bach.software",
     // Tracking always on
     ignoredHostnames: [],
   },
