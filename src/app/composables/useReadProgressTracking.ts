@@ -1,8 +1,15 @@
 import {
   useReadProgress,
-  type ReadProgressOptions,
+  type ReadProgressOptions as InternalReadProgressOptions,
 } from "@/composables/useReadProgress";
 import { useTrackEvent } from "#imports";
+
+export interface ReadProgressOptions extends InternalReadProgressOptions {
+  /**
+   * In case you don't want to track the actual event, like for demo purposes
+   * */
+  disableEventTracking?: boolean;
+}
 
 export type Progress =
   | "opened"
@@ -40,8 +47,13 @@ export const useReadProgressTracking = (
   options: ReadProgressOptions = {},
   extraTrackingProps?: MaybeRefOrGetter<Record<string, any>>,
 ) => {
-  const { hasRead, scrollPercentage, timeSpentPercentage, timeSpent } =
-    useReadProgress(options);
+  const {
+    hasRead,
+    scrollPercentage,
+    timeSpentPercentage,
+    timeSpent,
+    minimumReadingTime,
+  } = useReadProgress(options);
 
   const timeProgress = computed<Progress>(() =>
     getProgress(timeSpentPercentage.value),
@@ -49,17 +61,23 @@ export const useReadProgressTracking = (
   const scrollProgress = computed<Progress>(() =>
     getProgress(scrollPercentage.value),
   );
+  const totalProgress = computed<Progress>(() =>
+    getProgress(Math.min(scrollPercentage.value, timeSpentPercentage.value)),
+  );
 
   // Track progress changes
   watch(
-    timeProgress,
+    totalProgress,
     (progress, oldProgress) => {
       if (progress === oldProgress) return;
+
+      if (options.disableEventTracking) return;
 
       const trackingProps = toValue(extraTrackingProps) ?? {};
       useTrackEvent(progress, {
         props: {
           scrolled: scrollProgress.value,
+          timeSpend: timeProgress.value,
           ...trackingProps,
         },
       });
@@ -74,5 +92,7 @@ export const useReadProgressTracking = (
     timeSpent,
     timeProgress,
     scrollProgress,
+    totalProgress,
+    minimumReadingTime,
   };
 };

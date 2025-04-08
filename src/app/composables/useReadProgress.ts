@@ -5,17 +5,23 @@ export type ReadProgressOptions = {
   /** The number of words on the page */
   wordCount?: number;
   /**
-   * The minimum time in milliseconds that needs to be spent even if the calculated minimum time based
-   * on the word count is lower.
-   * @default 30_000
+   * The amount of time the reader needs to read the article in ms.
+   * This is used to calculate the time spent percentage.
+   * If not provided, it will be calculated based on the word count and average reading speed.
    */
-  minimumTime?: number;
+  readingTime?: number;
   /**
    * The average reading speed in words per minute
    * Medium.com uses roughly 275 words per minute as a reading speed.
    * @default 275
    */
   averageReadingSpeed?: number;
+  /**
+   * The minimum time in milliseconds that needs to be spent even if the calculated minimum time based
+   * on the word count is lower.
+   * @default 30_000
+   */
+  minimumTime?: number;
   /** The interval in milliseconds to update the read status @default 500 */
   updateInterval?: number;
 };
@@ -29,6 +35,8 @@ export type ReadProgress = {
   timeSpentPercentage: Ref<number>;
   /** The time spent on the page in milliseconds */
   timeSpent: Ref<number>;
+  /** The time needed to read the page in milliseconds */
+  minimumReadingTime: number;
 };
 
 /**
@@ -55,6 +63,7 @@ export const useReadProgress = (
       scrollPercentage: ref(0),
       timeSpentPercentage: ref(0),
       timeSpent: ref(0),
+      minimumReadingTime: 0,
     };
 
   const visibility = useDocumentVisibility();
@@ -106,13 +115,14 @@ export const useReadProgress = (
     { immediate: true, flush: "sync" },
   );
 
-  // If we know the word count, we can adjust the minimum time accordingly
-  // by dividing the words by the average reading speed per second.
+  // If a readingTime is specified, we use that value, otherwise we calculate it based on the word count
+  // and the average reading speed.
+  let minimumReadingTime =
+    _options.readingTime ??
+    (_options.wordCount / _options.averageReadingSpeed) * 60 * 1000; // milliseconds
+
   // Reading time can never be less then the minimumTime (which is by default 30 seconds).
-  const minimumReadingTime = Math.max(
-    _options.minimumTime,
-    (_options.wordCount / _options.averageReadingSpeed) * 60 * 1000, // milliseconds
-  );
+  minimumReadingTime = Math.max(_options.minimumTime, minimumReadingTime);
 
   const timeSpentPercentage = computed(() =>
     Math.min(100, (timeSpent.value / minimumReadingTime) * 100),
@@ -127,5 +137,6 @@ export const useReadProgress = (
     scrollPercentage,
     timeSpentPercentage,
     timeSpent,
+    minimumReadingTime,
   };
 };
