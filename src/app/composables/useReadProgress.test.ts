@@ -110,6 +110,35 @@ describe("useReadProgress", () => {
   it.each([
     {
       wordCount: 1375,
+      readingTime: 2 * 60 * 1000, // 2 minutes
+      timeElapsed: 2 * 60 * 1000,
+      description: "long article",
+    },
+    {
+      wordCount: 20,
+      readingTime: 1000, // 1 second
+      timeElapsed: 30 * 1000, // 30 seconds minimum
+      description: "short article",
+    },
+  ])(
+    "should use provided readingTime on $description",
+    async ({ wordCount, readingTime, timeElapsed }) => {
+      const { timeSpentPercentage } = useReadProgress({
+        wordCount,
+        readingTime,
+      });
+
+      vi.advanceTimersByTime(timeElapsed / 2);
+      expect(timeSpentPercentage.value).toBe(50);
+
+      vi.advanceTimersByTime(timeElapsed);
+      expect(timeSpentPercentage.value).toBe(100);
+    },
+  );
+
+  it.each([
+    {
+      wordCount: 1375,
       timeElapsed: 300_000, // 1375 / 275 * 60 * 1000
       description: "long article",
     },

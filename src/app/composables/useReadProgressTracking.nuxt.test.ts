@@ -41,8 +41,18 @@ describe("useReadProgressTracking", () => {
     expect(timeProgress.value).toBe("opened");
     expect(scrollProgress.value).toBe("opened");
     expect(mock.useTrackEvent).toHaveBeenCalledWith("opened", {
-      props: { scrolled: "opened" },
+      props: { scrolled: "opened", timeSpend: "opened" },
     });
+  });
+
+  it("should disable event tracking when specified so", () => {
+    const { timeProgress, scrollProgress } = useReadProgressTracking({
+      disableEventTracking: true,
+    });
+
+    expect(timeProgress.value).toBe("opened");
+    expect(scrollProgress.value).toBe("opened");
+    expect(mock.useTrackEvent).toHaveBeenCalledTimes(0);
   });
 
   describe("progress tracking", () => {
@@ -73,30 +83,81 @@ describe("useReadProgressTracking", () => {
       vi.advanceTimersByTime(elapsed);
       expect(timeProgress.value).toBe(progress);
     });
+
+    it.each([
+      { scrollY: 0, elapsed: 0, progress: "opened" },
+      { scrollY: 0, elapsed: 3_000, progress: "opened" },
+      { scrollY: 80, elapsed: 0, progress: "opened" },
+      { scrollY: 80, elapsed: 3_000, progress: "peeked" },
+      { scrollY: 80, elapsed: 7_500, progress: "peeked" },
+      { scrollY: 200, elapsed: 3_000, progress: "peeked" },
+      { scrollY: 200, elapsed: 7_500, progress: "quarter-read" },
+      { scrollY: 200, elapsed: 15_000, progress: "quarter-read" },
+      { scrollY: 400, elapsed: 7_500, progress: "quarter-read" },
+      { scrollY: 400, elapsed: 15_000, progress: "half-read" },
+      { scrollY: 400, elapsed: 22_500, progress: "half-read" },
+      { scrollY: 600, elapsed: 15_000, progress: "half-read" },
+      { scrollY: 600, elapsed: 22_500, progress: "three-quarter-read" },
+      { scrollY: 600, elapsed: 30_000, progress: "three-quarter-read" },
+      { scrollY: 800, elapsed: 22_500, progress: "three-quarter-read" },
+      { scrollY: 800, elapsed: 30_000, progress: "read" },
+    ])(
+      "should track total progress: $progress",
+      ({ scrollY, elapsed, progress }) => {
+        const mockScroll = ref(scrollY);
+        mock.useScroll.mockReturnValueOnce({ y: mockScroll });
+
+        const { totalProgress } = useReadProgressTracking();
+        vi.advanceTimersByTime(elapsed);
+        expect(totalProgress.value).toBe(progress);
+      },
+    );
   });
 
   describe("event tracking", () => {
     it("should track events when time progress changes", () => {
-      useReadProgressTracking();
-      vi.clearAllMocks(); // Clear initial "opened" event
+      const mockScroll = ref(0);
+      mock.useScroll.mockReturnValueOnce({ y: mockScroll });
 
+      useReadProgressTracking();
+      vi.clearAllMocks();
+
+      mockScroll.value = 400;
       vi.advanceTimersByTime(3_000);
       expect(mock.useTrackEvent).toHaveBeenCalledWith("peeked", {
-        props: { scrolled: "opened" },
+        props: { scrolled: "half-read", timeSpend: "peeked" },
       });
 
+      mockScroll.value = 600;
       vi.advanceTimersByTime(5_000);
       expect(mock.useTrackEvent).toHaveBeenCalledWith("quarter-read", {
-        props: { scrolled: "opened" },
+        props: { scrolled: "three-quarter-read", timeSpend: "quarter-read" },
       });
     });
 
     it("should include extra tracking props", () => {
+      const mockScroll = ref(0);
+      mock.useScroll.mockReturnValueOnce({ y: mockScroll });
+      vi.clearAllMocks();
+
       useReadProgressTracking({}, { articleId: "123", category: "blog" });
 
       expect(mock.useTrackEvent).toHaveBeenCalledWith("opened", {
         props: {
           scrolled: "opened",
+          timeSpend: "opened",
+          articleId: "123",
+          category: "blog",
+        },
+      });
+
+      mockScroll.value = 800;
+      vi.advanceTimersByTime(22_500);
+
+      expect(mock.useTrackEvent).toHaveBeenCalledWith("three-quarter-read", {
+        props: {
+          scrolled: "read",
+          timeSpend: "three-quarter-read",
           articleId: "123",
           category: "blog",
         },
@@ -117,17 +178,22 @@ describe("useReadProgressTracking", () => {
     });
 
     it("should track with updated extraTrackingProps", () => {
+      const mockScroll = ref(0);
+      mock.useScroll.mockReturnValue({ y: mockScroll });
       const trackingProps = ref({ articleId: "123" });
+
       useReadProgressTracking({}, trackingProps);
       vi.clearAllMocks();
 
       // Update tracking props and trigger a progress change
       trackingProps.value = { articleId: "456" };
+      mockScroll.value = 600;
       vi.advanceTimersByTime(3_000);
 
       expect(mock.useTrackEvent).toHaveBeenCalledWith("peeked", {
         props: {
-          scrolled: "opened",
+          scrolled: "three-quarter-read",
+          timeSpend: "peeked",
           articleId: "456",
         },
       });

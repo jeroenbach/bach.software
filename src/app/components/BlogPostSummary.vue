@@ -14,7 +14,7 @@ defineProps<{
     itemtype="https://schema.org/BlogPosting"
     itemprop="blogPost"
   >
-    <div class="w-full lg:w-64">
+    <div class="w-full lg:w-72">
       <AppLink :to="post.url">
         <AppImage
           :src="post.imgCoverUrl"
@@ -25,6 +25,7 @@ defineProps<{
           aspectRatioSmall="2/1"
           aspectRatioLarge="1/1"
           class="w-full rounded-2xl drop-shadow-md"
+          :class="post.imgCoverPosition"
           itemprop="thumbnail"
         />
       </AppLink>
@@ -54,13 +55,13 @@ defineProps<{
             <ContentRenderer
               :value="post"
               :excerpt="true"
-              class="mt-5 line-clamp-3 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-400"
+              class="line-clamp-4 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-400"
               itemprop="description"
             />
           </AppProse>
         </AppLink>
       </div>
-      <AuthorInformation v-bind="post.author" class="mt-8 lg:mt-4" />
+      <AuthorInformation v-bind="post.author" class="mt-4 lg:mt-4" />
     </div>
   </article>
 </template>
