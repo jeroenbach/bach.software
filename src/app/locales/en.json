@@ -12,5 +12,19 @@
     "Software": "Bach.Software"
   },
   "Blog": "Blog",
-  "read": "{n} read | {n} reads"
+  "read": "{n} read | {n} reads",
+  "plausible": {
+    "current": {
+      "text": "We currently {status} excluding your visits.",
+      "not": "are not",
+      "are": "are"
+    },
+    "title": "Plausible Exclude",
+    "description": "Click the button below to toggle your exclusion in analytics for this site",
+    "button": {
+      "text": "{action} my visits",
+      "include": "Include",
+      "exclude": "Exclude"
+    }
+  }
 }
