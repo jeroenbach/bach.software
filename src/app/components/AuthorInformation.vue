@@ -15,7 +15,7 @@ defineProps<{
     itemtype="https://schema.org/Person"
     data-testid="author-information"
   >
-    <AppImage
+    <ResponsiveImage
       v-if="imageUrl"
       :src="imageUrl"
       sizes="50px"

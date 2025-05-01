@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { isNotNullOrUndefined } from "~/utils/checks";
 
-type AspectRatio = "1/1" | "2/1" | "16/9"; // Also add them in the template
+type AspectRatio = "1/1" | "2/1" | "1/2" | "16/9"; // Also add them in the template
 export interface Props {
   src?: string;
   alt?: string;
@@ -35,6 +35,7 @@ export interface Props {
 const props = defineProps<Props>();
 
 const id = useId();
+const loadingBackground = "bg-slate-50 dark:bg-slate-900";
 const imgClass = computed(() => {
   const ratios = [
     isNullOrUndefined(props.aspectRatio) ? null : `aspect-${props.aspectRatio}`,
@@ -63,7 +64,7 @@ const imgClass = computed(() => {
     ratios.push("aspect-1/1");
   }
 
-  return [props.class, ratios.join(" "), "bg-slate-200 object-cover"]
+  return [props.class, ratios.join(" "), loadingBackground, "object-cover"]
     .filter(isNotNullOrUndefinedOrEmpty)
     .join(" ");
 });
@@ -101,6 +102,19 @@ const imgSizes = computed(() => {
     .filter(isNotNullOrUndefined)
     .join(" ");
 });
+
+// Unfortunately removing this using vue doesn't work, so we need to do it in pure JS
+function removeLoadingBackground(e: Event) {
+  const img = e.target as HTMLImageElement;
+  if (img) {
+    const classes = loadingBackground.split(" ");
+    classes.forEach((cls) => {
+      if (img.classList.contains(cls)) {
+        img.classList.remove(cls);
+      }
+    });
+  }
+}
 </script>
 
 <template>
@@ -109,6 +123,7 @@ const imgSizes = computed(() => {
     itemscope
     itemtype="https://schema.org/ImageObject"
     itemprop="image"
+    :class="props.class /** Make sure we can still add additional classes */"
   >
     <NuxtPicture
       :src="src"
@@ -118,6 +133,7 @@ const imgSizes = computed(() => {
         itemprop: 'thumbnailUrl',
         'aria-describedby': caption ? `${id}_figcaption` : undefined,
         class: imgClass,
+        onLoad: removeLoadingBackground,
       }"
     />
     <div v-if="false">
@@ -130,6 +146,9 @@ const imgSizes = computed(() => {
       />
       <div
         class="xs:aspect-1/1 xxl:aspect-1/1 aspect-1/1 sm:aspect-1/1 md:aspect-1/1 lg:aspect-1/1 xl:aspect-1/1"
+      />
+      <div
+        class="xs:aspect-1/2 xxl:aspect-1/2 aspect-1/2 sm:aspect-1/2 md:aspect-1/2 lg:aspect-1/2 xl:aspect-1/2"
       />
     </div>
     <figcaption v-if="caption" :id="`${id}_figcaption`">

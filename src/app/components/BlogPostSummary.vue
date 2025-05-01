@@ -16,7 +16,7 @@ defineProps<{
   >
     <div class="w-full lg:w-72">
       <AppLink :to="post.url">
-        <AppImage
+        <ResponsiveImage
           :src="post.imgCoverUrl"
           :alt="post.title"
           :partOfScreenSmall="1"
@@ -31,9 +31,9 @@ defineProps<{
       </AppLink>
     </div>
     <div class="flex flex-col items-start justify-between">
-      <div class="flex items-center gap-x-4 text-xs-em">
+      <div class="flex items-center gap-x-4">
         <time
-          class="text-gray-500 dark:text-gray-500"
+          class="text-xs-em text-gray-500 dark:text-gray-500"
           :datetime="post.datePublished"
           itemprop="datePublished"
         >
