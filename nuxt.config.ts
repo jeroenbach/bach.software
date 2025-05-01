@@ -9,6 +9,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  imports: {
+    dirs: ["./composables", "./utils", "./contexts"],
+  },
   srcDir: "src/app",
   compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
@@ -90,6 +93,8 @@ export default defineNuxtConfig({
     api: {
       baseURL: "/_content",
     },
+    locales: ["en"],
+    defaultLocale: "en",
   },
   twoslash: {
     enableInDev: true,
@@ -115,6 +120,7 @@ export default defineNuxtConfig({
     locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
     defaultLocale: "en",
     strategy: "prefix_except_default",
+    lazy: true,
   },
   dayjs: {
     locales: ["en"],

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import appConfig from "~/appConfig.json";
-import type { Config } from "./types/Config";
+import type { Config } from "~/types/Config";
 
 const config = useState<Config>("config", () => appConfig);
 const { notifications } = useNotification();
 const { t, locale } = useI18n();
+
+const { data: navigation } = await useContentNavigationContext();
 
 useSeoMeta({
   titleTemplate: (titleChunk) => {
@@ -38,7 +40,7 @@ useMetadata({
     v-bind="notification"
   />
   <NuxtLoadingIndicator />
-  <NuxtLayout>
+  <NuxtLayout :navigation="navigation">
     <NuxtPage />
   </NuxtLayout>
 </template>

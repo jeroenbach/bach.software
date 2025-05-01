@@ -6,10 +6,13 @@ import {
   TransitionRoot,
   TransitionChild,
 } from "@headlessui/vue";
+import type { NavigationItem } from "~/types/NavigationItem";
 
-const { t } = useI18n();
-
-const navigation = [{ label: t("Blog"), to: "/posts" }];
+interface Props {
+  border?: boolean;
+  navigation?: NavigationItem[];
+}
+const { border, navigation } = defineProps<Props>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -23,21 +26,21 @@ const open = () => (mobileMenuOpen.value = true);
       aria-label="Global"
     >
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
-        <NuxtLink to="/" class="-m-1.5 p-1.5 text-lg">
+        <AppLink to="/" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
-          <NuxtImg class="inline h-10 dark:hidden" src="/logo.svg" />
-          <NuxtImg class="hidden h-10 dark:inline" src="/logo-light.svg" />
-        </NuxtLink>
+          <AppImage class="inline h-10 dark:hidden" src="/logo.svg" />
+          <AppImage class="hidden h-10 dark:inline" src="/logo-light.svg" />
+        </AppLink>
       </div>
       <div class="ml-auto hidden lg:flex lg:gap-x-12">
-        <NuxtLink
+        <AppLink
           v-for="item in navigation"
           :key="item.label"
           :to="item.to"
           class="text-sm font-semibold leading-6"
         >
           {{ item.label }}
-        </NuxtLink>
+        </AppLink>
         <ColorModeSwitcher />
       </div>
       <div class="ml-auto flex lg:hidden">
@@ -78,32 +81,35 @@ const open = () => (mobileMenuOpen.value = true);
             class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1"
           >
             <div class="flex items-center justify-between">
-              <NuxtLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
+              <AppLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
-                <NuxtImg class="inline h-8 dark:hidden" src="/logo.svg" />
-                <NuxtImg class="hidden h-8 dark:inline" src="/logo-light.svg" />
-              </NuxtLink>
-              <button
+                <AppImage class="inline h-8 dark:hidden" src="/logo.svg" />
+                <AppImage
+                  class="hidden h-8 dark:inline"
+                  src="/logo-light.svg"
+                />
+              </AppLink>
+              <AppButton
                 type="button"
                 class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-400"
                 @click="close"
               >
                 <span class="sr-only">Close menu</span>
                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-              </button>
+              </AppButton>
             </div>
             <div class="mt-6 flow-root">
               <div class="-my-6 divide-y divide-gray-500/10">
                 <div class="space-y-2 py-6">
-                  <NuxtLink
+                  <AppLink
                     v-for="item in navigation"
                     :key="item.label"
-                    :href="item.to"
+                    :to="item.to"
                     @click="close"
                     class="-mx-3 block rounded-lg px-3 py-2 font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     {{ item.label }}
-                  </NuxtLink>
+                  </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
                   <ColorModeSwitcher />
