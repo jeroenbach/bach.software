@@ -3,9 +3,6 @@ import { screens } from "./src/app/utils/screen";
 import Aura from "@primevue/themes/aura";
 export default defineNuxtConfig({
   $development: {
-    // partytown: {
-    //   debug: true,
-    // },
     app: {
       head: {
         script: [{ innerHTML: `console.log("development environment");` }],
@@ -27,7 +24,6 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "dayjs-nuxt",
     "@primevue/nuxt-module",
-    // "@nuxtjs/partytown",
     "@nuxtjs/plausible",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
@@ -51,23 +47,10 @@ export default defineNuxtConfig({
     // Tracking always on
     ignoredHostnames: [],
   },
-  // partytown: {
-  //   forward: ["plausible"],
-  // },
   app: {
     head: {
       viewport:
         "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no", // Used in Sofia Vera
-      script: [
-        // {
-        //   src: "https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js",
-        //   defer: true,
-        //   type: "text/partytown",
-        // },
-        // {
-        //   innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
-        // },
-      ],
       link: [
         { rel: "icon", sizes: "192x192", href: "/ico/192.png" },
         { rel: "icon", sizes: "128x128", href: "/ico/128.png" },

@@ -10,8 +10,3 @@
     </div>
   </div>
 </template>
-<style lang="scss" global>
-.dark {
-  color-scheme: dark;
-}
-</style>

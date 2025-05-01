@@ -53,3 +53,8 @@ useMetadata({
   filter: blur(1rem);
 }
 </style>
+<style lang="scss" global>
+.dark {
+  color-scheme: dark;
+}
+</style>
