@@ -6,7 +6,6 @@ import {
   XCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
-import { useAnimate, useTimeoutFn } from "@vueuse/core";
 import type { Notification } from "~/composables/useNotification";
 
 interface Props extends Omit<Notification, "notificationId" | "title"> {
@@ -16,11 +15,15 @@ interface Props extends Omit<Notification, "notificationId" | "title"> {
 withDefaults(defineProps<Props>(), {
   severity: "error",
 });
-defineEmits<{
+const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
 const dismissed = ref(false);
+const close = () => {
+  dismissed.value = true;
+  emit("close");
+};
 </script>
 
 <template>
@@ -89,7 +92,7 @@ const dismissed = ref(false);
             <span class="sr-only">Close</span>
             <button
               class="flex size-6 rounded-lg text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
-              @click="dismissed = true"
+              @click="close"
             >
               <XMarkIcon class="m-auto size-5" />
             </button>

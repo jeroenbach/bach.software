@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
 import { createDefaultStory } from "~/utils/createDefaultStory";
 
-import Alert from "./AlertMessage.vue";
+import Alert from "./AlertBar.vue";
 
 const variations = () =>
   h("div", { class: "p-5" }, [
