@@ -7,29 +7,38 @@ import {
   TransitionChild,
 } from "@headlessui/vue";
 import type { NavigationItem } from "~/types/NavigationItem";
+import { useScroll } from "@vueuse/core";
 
 interface Props {
   border?: boolean;
   navigation?: NavigationItem[];
 }
+
 const { border, navigation } = defineProps<Props>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
 const open = () => (mobileMenuOpen.value = true);
+
+// Animate only during scroll of max 64px (the max height of the header)
+const { y } = useScroll(window);
+const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 </script>
 
 <template>
-  <header class="flex justify-center text-gray-900 dark:text-gray-300">
+  <header
+    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-400 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
+    :class="{ 'border-b': border }"
+  >
     <nav
-      class="flex w-full max-w-screen-2xl items-center py-6 lg:py-8"
+      class="mx-auto flex h-full w-full max-w-7xl items-center"
       aria-label="Global"
     >
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
         <AppLink to="/" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
-          <AppImage class="inline h-10 dark:hidden" src="/logo.svg" />
-          <AppImage class="hidden h-10 dark:inline" src="/logo-light.svg" />
+          <AppImage class="logo inline dark:hidden" src="/logo.svg" />
+          <AppImage class="logo hidden dark:inline" src="/logo-light.svg" />
         </AppLink>
       </div>
       <div class="ml-auto hidden lg:flex lg:gap-x-12">
@@ -122,3 +131,50 @@ const open = () => (mobileMenuOpen.value = true);
     </TransitionRoot>
   </header>
 </template>
+<style lang="scss" scoped>
+@keyframes reduce-height {
+  to {
+    height: var(--reduceHeight);
+  }
+}
+@keyframes border-appear {
+  from {
+    border-color: transparent;
+  }
+  to {
+    border-bottom-width: 1px;
+  }
+}
+
+header {
+  --height: 4rem;
+  --reduceHeight: calc(var(--height) * 0.65);
+  height: var(--height);
+  animation: reduce-height 1s linear both paused;
+  animation-delay: calc(v-bind(scrollHeader) * -1s);
+
+  &:not(.border-b) {
+    animation:
+      reduce-height 1s linear both paused,
+      border-appear 1s linear both paused;
+    animation-delay: calc(v-bind(scrollHeader) * -1s);
+  }
+
+  .logo {
+    --height: 2rem;
+    --reduceHeight: calc(var(--height) * 0.85);
+    height: var(--height);
+    animation: reduce-height 1s linear both paused;
+    animation-delay: calc(v-bind(scrollHeader) * -1s);
+  }
+}
+
+@media (min-width: 1024px) {
+  header {
+    --height: 5rem;
+    .logo {
+      --height: 2.5rem;
+    }
+  }
+}
+</style>

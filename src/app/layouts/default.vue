@@ -2,18 +2,23 @@
 import type { NavigationItem } from "~/types/NavigationItem";
 
 interface Props {
+  background?: "white" | "gray";
   navigation?: NavigationItem[];
 }
-const { navigation } = defineProps<Props>();
+const { background = "white", navigation } = defineProps<Props>();
 </script>
 <template>
   <div
-    class="min-h-screen bg-white px-4 text-gray-700 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
+    class="flex min-h-screen flex-col text-gray-700 dark:text-gray-300"
+    :class="{
+      'bg-white dark:bg-slate-900': background === 'white',
+      'bg-gray-50 dark:bg-gray-900': background === 'gray',
+    }"
   >
-    <div class="mx-auto flex max-w-7xl flex-col">
-      <AppHeader :navigation="navigation" />
+    <AppHeader :navigation="navigation" :border="background === 'gray'" />
+    <main class="pt-6 text-base lg:pt-8 lg:text-lg">
       <slot />
-      <AppFooter />
-    </div>
+    </main>
+    <AppFooter />
   </div>
 </template>

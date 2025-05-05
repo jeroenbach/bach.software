@@ -1,7 +1,9 @@
 <script lang="ts" setup></script>
 
 <template>
-  <main class="mx-auto mt-6 w-full max-w-prose text-base lg:mt-8 lg:text-lg">
-    <slot />
-  </main>
+  <div class="px-4 lg:px-6">
+    <div class="mx-auto w-full max-w-prose">
+      <slot />
+    </div>
+  </div>
 </template>
