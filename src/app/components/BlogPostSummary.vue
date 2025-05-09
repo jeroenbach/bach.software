@@ -46,7 +46,7 @@ defineProps<{
       <div class="group relative">
         <AppLink :to="post.url">
           <h3
-            class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-300"
+            class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-200"
             itemprop="headline"
           >
             {{ post.title }}
@@ -55,7 +55,7 @@ defineProps<{
             <ContentRenderer
               :value="post"
               :excerpt="true"
-              class="line-clamp-4 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-400"
+              class="line-clamp-4 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-300"
               itemprop="description"
             />
           </AppProse>

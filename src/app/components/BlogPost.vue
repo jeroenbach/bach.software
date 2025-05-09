@@ -31,7 +31,7 @@ defineProps<{
           </template>
         </AuthorInformation>
         <div
-          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:text-gray-400 md:py-1.5"
+          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:border-gray-400 dark:text-gray-400 md:py-1.5"
         >
           <div
             v-if="pageReads !== null"

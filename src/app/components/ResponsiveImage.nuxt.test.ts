@@ -25,7 +25,7 @@ describe("ResponsiveImage", () => {
     const w = mountStory(stories.Default);
     const img = await find(w, "img");
     expect(img.attributes("class")).toBe(
-      "w-full aspect-1/1 bg-slate-50 object-cover",
+      "w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover",
     );
   });
 
@@ -34,7 +34,7 @@ describe("ResponsiveImage", () => {
     const placeholder = await find(w, "figure div");
     expect(placeholder.exists()).toBe(true);
     expect(placeholder.attributes("class")).toBe(
-      "w-full aspect-1/1 bg-slate-50 object-cover",
+      "w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover",
     );
   });
 

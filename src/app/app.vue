@@ -5,7 +5,6 @@ import type { Config } from "~/types/Config";
 const config = useState<Config>("config", () => appConfig);
 const { notifications } = useNotification();
 const { t, locale } = useI18n();
-
 const { data: navigation } = await useContentNavigationContext();
 
 useSeoMeta({
@@ -34,13 +33,8 @@ useMetadata({
 });
 </script>
 <template>
-  <NotificationContainer />
-  <NotificationMessage
-    v-for="notification in notifications"
-    v-bind="notification"
-  />
   <NuxtLoadingIndicator />
-  <NuxtLayout :navigation="navigation">
+  <NuxtLayout :navigation="navigation" :notifications="notifications">
     <NuxtPage />
   </NuxtLayout>
 </template>
