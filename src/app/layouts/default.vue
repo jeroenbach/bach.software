@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import type { NavigationItem } from "~/types/NavigationItem";
-
+// Note: this file cannot contain any async code at the top level,
+// the static site generation didn't work when refreshing a page.
 export interface Props {
   background?: "white" | "gray";
-  navigation?: NavigationItem[];
-  notifications?: Notification[];
 }
-const {
-  background = "white",
-  navigation,
-  notifications,
-} = defineProps<Props>();
-const { locale } = useI18n();
+const { background = "white" } = defineProps<Props>();
 </script>
 <template>
   <div
@@ -21,12 +14,7 @@ const { locale } = useI18n();
       'bg-gray-50 dark:bg-gray-800': background === 'gray',
     }"
   >
-    <AppHeader :navigation="navigation" :border="background === 'gray'" />
-    <NotificationContainer />
-    <NotificationMessage
-      v-for="notification in notifications"
-      v-bind="notification"
-    />
+    <AppHeaderContext :border="background === 'gray'" />
     <main class="pt-6 text-base lg:pt-8 lg:text-lg">
       <slot />
     </main>

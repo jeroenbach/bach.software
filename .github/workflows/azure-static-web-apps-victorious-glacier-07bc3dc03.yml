@@ -22,14 +22,14 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        # with:
+        #   version: 9 ## Version of pnpm is specified in the package.json file
 
       - name: Install Dependencies
         run: pnpm install
 
       - name: Run Tests
-        run: pnpm ci:test  
+        run: pnpm ci:test
 
       - name: Generate Site
         run: pnpm generate

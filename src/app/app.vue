@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+// Note: this file cannot contain any async code at the top level,
+// the static site generation didn't work when refreshing a page.
 import appConfig from "~/appConfig.json";
 import type { Config } from "~/types/Config";
 
 const config = useState<Config>("config", () => appConfig);
-const { notifications } = useNotification();
 const { t, locale } = useI18n();
-const { data: navigation } = await useContentNavigationContext();
 
 useSeoMeta({
   titleTemplate: (titleChunk) => {
@@ -34,7 +34,7 @@ useMetadata({
 </script>
 <template>
   <NuxtLoadingIndicator />
-  <NuxtLayout :navigation="navigation" :notifications="notifications">
+  <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>

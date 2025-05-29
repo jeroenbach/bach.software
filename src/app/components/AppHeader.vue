@@ -7,11 +7,13 @@ import {
   TransitionChild,
 } from "@headlessui/vue";
 import type { NavigationItem } from "~/types/NavigationItem";
+import type { Notification } from "~/composables/useNotification";
 import { useScroll } from "@vueuse/core";
 
 interface Props {
   border?: boolean;
-  navigation?: NavigationItem[];
+  navigation?: NavigationItem[] | null;
+  notifications?: Notification[];
 }
 
 const { border, navigation } = defineProps<Props>();
@@ -129,6 +131,11 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         </TransitionChild>
       </Dialog>
     </TransitionRoot>
+    <NotificationContainer />
+    <NotificationMessage
+      v-for="notification in notifications"
+      v-bind="notification"
+    />
   </header>
 </template>
 <style lang="scss" scoped>

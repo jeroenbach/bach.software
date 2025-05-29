@@ -1,10 +1,10 @@
 import {
   useReadProgress,
-  type ReadProgressOptions as InternalReadProgressOptions,
+  type ReadProgressOptions,
 } from "@/composables/useReadProgress";
 import { useTrackEvent } from "#imports";
 
-export interface ReadProgressOptions extends InternalReadProgressOptions {
+export interface ReadProgressTrackingOptions extends ReadProgressOptions {
   /**
    * In case you don't want to track the actual event, like for demo purposes
    * */
@@ -33,7 +33,7 @@ const getProgress = (percentage: number): Progress => {
  * This composable is a wrapper around `useReadProgress` and adds tracking capabilities with plausible.io,
  * sending tracking events automatically.
  *
- * @param {ReadProgressOptions} [options={}] - Options for configuring read progress tracking.
+ * @param {ReadProgressTrackingOptions} [options={}] - Options for configuring read progress tracking.
  * @param {MaybeRefOrGetter<Record<string, any>>} [extraTrackingProps] - Additional properties to include in tracking events.
  * @returns {Object} An object containing the following properties:
  * - `hasRead`: A boolean indicating if the content has been read.
@@ -44,7 +44,7 @@ const getProgress = (percentage: number): Progress => {
  * - `scrollProgress`: A computed ref representing the progress based on scroll percentage.
  */
 export const useReadProgressTracking = (
-  options: ReadProgressOptions = {},
+  options: ReadProgressTrackingOptions = {},
   extraTrackingProps?: MaybeRefOrGetter<Record<string, any>>,
 ) => {
   const {
