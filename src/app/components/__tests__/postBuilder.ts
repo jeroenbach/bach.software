@@ -29,7 +29,6 @@ export const buildPost = (fn?: (post: Post) => void) => {
     datePublished: "2024-11-05T08:00:00.000Z",
     dateModified: "2024-11-05T08:00:00.000Z",
     imgCoverUrl: "/posts/1/cover.jpeg",
-    readTime: "10 min",
     keywords: ["keyword", "keyword2", "keyword3"],
     excerpt: {
       type: "root",

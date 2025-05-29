@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import VSelect, { type KeyValue } from "./VSelect.vue";
-const countries: KeyValue[] = [
+import VSelect from "./VSelect.vue";
+const countries = [
   { key: "United States", value: "US" },
   { key: "Canada", value: "CA" },
   { key: "United Kingdom", value: "GB" },

@@ -28,6 +28,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Run Typecheck
+        run: pnpm ci:typecheck
+
       - name: Run Tests
         run: pnpm ci:test
 

@@ -2,14 +2,16 @@
 import { EyeIcon } from "@heroicons/vue/24/outline";
 import type { BlogPost } from "~/types/BlogPost";
 
-defineProps<{
+interface Props {
   /**
    * The post to display. Can be null while loading
    */
   post: BlogPost | null;
   baseUrl: string;
   pageReads: number | null;
-}>();
+}
+
+defineProps<Props>();
 </script>
 
 <template>

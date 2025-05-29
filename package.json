@@ -24,6 +24,7 @@
     "serve": "pnpm dlx serve ./.output/public/",
     "test": "TZ=Europe/Amsterdam vitest -w",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
+    "ci:type-check": "nuxi typecheck",
     "storybook": "storybook dev --config-dir ./src/app/.storybook --port 6006",
     "storybook:build": "echo 'Temporary turned off the storybook build'",
     "storybook:build:disabled": "storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/"
