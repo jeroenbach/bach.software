@@ -6,9 +6,10 @@ import {
   TransitionRoot,
   TransitionChild,
 } from "@headlessui/vue";
+import { useScroll } from "@vueuse/core";
+
 import type { NavigationItem } from "~/types/NavigationItem";
 import type { Notification } from "~/composables/useNotification";
-import { useScroll } from "@vueuse/core";
 
 interface Props {
   border?: boolean;
@@ -16,7 +17,7 @@ interface Props {
   notifications?: Notification[];
 }
 
-const { border, navigation } = defineProps<Props>();
+const { border, navigation = [], notifications = [] } = defineProps<Props>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -71,28 +72,28 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         <TransitionChild
           as="template"
           enter="duration-75 ease-out"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
           leave="delay-200 duration-75 ease-in"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
           <div class="fixed inset-0 z-50 bg-black/30" aria-hidden="true" />
         </TransitionChild>
         <TransitionChild
           as="template"
           enter="delay-75 duration-200 ease-out transition-transform"
-          enter-from="translate-x-full"
-          enter-to="translate-x-0"
+          enterFrom="translate-x-full"
+          enterTo="translate-x-0"
           leave="duration-200 ease-in transition-transform"
-          leave-from="translate-x-0"
-          leave-to="translate-x-full"
+          leaveFrom="translate-x-0"
+          leaveTo="translate-x-full"
         >
           <DialogPanel
             class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1"
           >
             <div class="flex items-center justify-between">
-              <AppLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
+              <AppLink to="/" class="-m-1.5 p-1.5 text-lg" @click="close">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
                 <AppImage class="inline h-8 dark:hidden" src="/logo.svg" />
                 <AppImage
@@ -116,8 +117,8 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                     v-for="item in navigation"
                     :key="item.label"
                     :to="item.to"
-                    @click="close"
                     class="-mx-3 block rounded-lg px-3 py-2 font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    @click="close"
                   >
                     {{ item.label }}
                   </AppLink>
@@ -134,6 +135,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
     <NotificationContainer />
     <NotificationMessage
       v-for="notification in notifications"
+      :key="notification.notificationId"
       v-bind="notification"
     />
   </header>

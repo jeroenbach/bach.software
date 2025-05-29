@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { EyeIcon } from "@heroicons/vue/24/outline";
+
 import type { BlogPost } from "~/types/BlogPost";
 
 interface Props {

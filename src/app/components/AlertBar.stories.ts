@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
-import { createDefaultStory } from "~/utils/createDefaultStory";
 
 import Alert from "./AlertBar.vue";
+
+import { createDefaultStory } from "~/utils/createDefaultStory";
+
 
 const variations = () =>
   h("div", { class: "p-5" }, [
@@ -44,7 +46,7 @@ function render() {
 
 const meta = {
   title: "Components/Alert",
-  // @ts-ignore
+  // @ts-expect-error to avoid type error with render function
   component: render,
   args: { onClose: fn() },
 } satisfies Meta<typeof render>;

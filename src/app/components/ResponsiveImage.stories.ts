@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
-import { createDefaultStory } from "~/utils/createDefaultStory";
 
-import ResponsiveImage from "./ResponsiveImage.vue";
+import ResponsiveImage from "~/components/ResponsiveImage.vue";
+import { createDefaultStory } from "~/utils/createDefaultStory";
 
 const meta = {
   title: "Components/ResponsiveImage",
-  // @ts-ignore
   component: ResponsiveImage,
 } satisfies Meta<typeof ResponsiveImage>;
 

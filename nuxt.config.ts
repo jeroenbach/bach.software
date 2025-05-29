@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { screens } from "./src/app/utils/screen";
 import Aura from "@primevue/themes/aura";
+
+import { screens } from "./src/app/utils/screen";
 export default defineNuxtConfig({
   $development: {
     app: {
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/plausible",
+    "@nuxt/eslint",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {

@@ -30,7 +30,7 @@ export interface Props {
    * If you need to override the partOfScreen and set the sizes directly
    */
   sizes?: string;
-  class?: any;
+  class?: unknown;
 }
 const props = defineProps<Props>();
 

@@ -6,6 +6,7 @@ import {
   XCircleIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
+
 import type { Notification } from "~/composables/useNotification";
 
 interface Props extends Omit<Notification, "notificationId" | "title"> {
@@ -13,6 +14,7 @@ interface Props extends Omit<Notification, "notificationId" | "title"> {
 }
 
 withDefaults(defineProps<Props>(), {
+  title: undefined,
   severity: "error",
 });
 const emit = defineEmits<{

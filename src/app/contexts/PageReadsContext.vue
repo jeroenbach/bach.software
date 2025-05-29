@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useAsyncState } from "@vueuse/core";
+
 import { useAzureApi } from "~/services/useAzureApi";
 const { getPageViews } = useAzureApi();
 

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Author } from "~/types/Author";
 import type { BlogPostSummary } from "~/types/BlogPost";
 
 defineProps<{

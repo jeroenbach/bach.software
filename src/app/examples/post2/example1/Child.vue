@@ -2,7 +2,6 @@
 defineProps<{ test?: string }>();
 defineEmits(["update:test"]);
 
-const modelValue = defineModel<string>();
 const message = defineModel<{ message?: string; length?: number }>("message", {
   default: {
     message: "Hello world",

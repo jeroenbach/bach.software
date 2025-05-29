@@ -2,9 +2,9 @@
 export interface Props {
   to?: string;
   text?: string;
-  color?: "gray" | "blue";
+  color?: "gray" | "blue" | undefined;
 }
-const { color } = defineProps<Props>();
+const { color = undefined, to = undefined, text = "" } = defineProps<Props>();
 </script>
 
 <template>

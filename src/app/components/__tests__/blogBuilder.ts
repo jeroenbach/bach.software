@@ -8,6 +8,6 @@ export const buildBlog = (fn?: (blog: Blog) => void) => {
     imageUrl: "/blog/logo.png",
     imageAlt: "Blog Logo",
   };
-  fn && fn(blog);
+  if (fn) fn(blog);
   return blog;
 };

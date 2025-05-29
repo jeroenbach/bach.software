@@ -9,7 +9,7 @@ const plausibleIgnore = useStorage("plausible_ignore", false);
         class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
       >
         <i18n-t keypath="plausible.current.text" tag="p">
-          <template v-slot:status>
+          <template #status>
             <span
               v-if="plausibleIgnore"
               class="font-bold text-red-600 dark:text-red-400"
@@ -32,8 +32,8 @@ const plausibleIgnore = useStorage("plausible_ignore", false);
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">
         <AppButton
-          @click="plausibleIgnore = !plausibleIgnore"
           class="rounded-md bg-sky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+          @click="plausibleIgnore = !plausibleIgnore"
         >
           {{
             $t("plausible.button.text", {

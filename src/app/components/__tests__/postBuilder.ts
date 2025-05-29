@@ -1,5 +1,6 @@
-import type { BlogPost as _Post } from "~/types/BlogPost";
 import { buildAuthor } from "./authorBuilder";
+
+import type { BlogPost as _Post } from "~/types/BlogPost";
 
 interface Post extends _Post {
   _dir?: string;
@@ -85,6 +86,6 @@ export const buildPost = (fn?: (post: Post) => void) => {
     _extension: "md",
     url: "/posts/1-vue-3_3-generics-and-conditional-properties",
   };
-  fn && fn(post);
+  if (fn) fn(post);
   return post;
 };

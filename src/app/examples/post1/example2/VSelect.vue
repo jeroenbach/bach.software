@@ -48,8 +48,8 @@ const isMultiple = computed(
   () => props.multiple !== false && props.multiple !== undefined,
 );
 
-const update = (value: any) => {
-  emit("update:modelValue", value);
+const update = (value: unknown) => {
+  emit("update:modelValue", value as TSingleOrMultiple);
 };
 </script>
 

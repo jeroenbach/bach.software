@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { useReadProgressTracking } from "@/composables/useReadProgressTracking";
-import NotificationMessage from "@/components/NotificationMessage.vue";
 import { computed } from "vue";
 
+import { useReadProgressTracking } from "@/composables/useReadProgressTracking";
+import NotificationMessage from "@/components/NotificationMessage.vue";
+
 interface Props {
-  wordCount?: number;
-  readingTime?: number;
+  wordCount: number;
+  readingTime: number;
 }
 
 const { wordCount, readingTime } = defineProps<Props>();

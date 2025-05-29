@@ -28,7 +28,7 @@ const isMultiple = computed(
   () => props.multiple !== false && props.multiple !== undefined,
 );
 
-const value = ref<any>(props.modelValue);
+const value = ref(props.modelValue);
 watch(value, (v) => emit("update:modelValue", v));
 </script>
 
@@ -37,8 +37,12 @@ watch(value, (v) => emit("update:modelValue", v));
     <option disabled value="">
       Please select {{ isMultiple ? "multiple" : "one" }}
     </option>
-    <option v-for="{ key, value } in options" :value="key">
-      {{ value }}
+    <option
+      v-for="{ key, value: optionValue } in options"
+      :key="key"
+      :value="key"
+    >
+      {{ optionValue }}
     </option>
   </select>
 </template>

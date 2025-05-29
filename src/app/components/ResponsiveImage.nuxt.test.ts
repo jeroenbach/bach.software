@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it } from "vitest";
+
 import * as stories from "./ResponsiveImage.stories";
 import ResponsiveImage from "./ResponsiveImage.vue";
+
 import { find, mountStory } from "~/utils/test";
 
 describe("ResponsiveImage", () => {

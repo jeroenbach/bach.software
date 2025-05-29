@@ -21,5 +21,5 @@ export const isFalseOrUndefined = <T>(
   value: T | undefined | false,
 ): value is undefined | false => value === false || value === undefined;
 
-export const isNumber = (value: any): value is number =>
+export const isNumber = (value: unknown): value is number =>
   typeof value === "number";

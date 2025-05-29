@@ -11,7 +11,7 @@ export function cloneFnJSONExtended<T>(source: T): T {
   return cloneFnJSON(source);
 }
 
-export interface RefReactiveDefaultOptions<T = any> {
+export interface RefReactiveDefaultOptions<T = unknown> {
   /**
    * Custom clone function.
    *

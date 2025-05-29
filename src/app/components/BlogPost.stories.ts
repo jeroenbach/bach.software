@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
-import { createDefaultStory } from "~/utils/createDefaultStory";
 
 import BlogPost from "./BlogPost.vue";
 import { buildPost } from "./__tests__/postBuilder";
 
+import { createDefaultStory } from "~/utils/createDefaultStory";
+
 const meta = {
   title: "Components/BlogPost",
-  // @ts-ignore
   component: BlogPost,
 } satisfies Meta<typeof BlogPost>;
 

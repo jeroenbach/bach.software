@@ -27,8 +27,8 @@ import { getAuthors } from "~/services/content/authorsService";
  * const singlePost = await useBlogPostsContext({ id: 'post-id' });
  */
 export const getBlogPosts = async <
-  TSingle extends string = any,
-  TSummary extends boolean = any,
+  TSingle extends string | undefined = undefined,
+  TSummary extends boolean | undefined = undefined,
 >(options?: {
   id?: TSingle;
   summary?: TSummary;

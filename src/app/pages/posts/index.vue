@@ -26,7 +26,7 @@ useMetadata({
       <ContentDocLocaleContext path="/pages/posts" />
     </AppProse>
     <BlogPosts>
-      <BlogPostSummary v-for="post in posts" :post="post" />
+      <BlogPostSummary v-for="post in posts" :key="post._path" :post="post" />
     </BlogPosts>
   </PageContent>
 </template>

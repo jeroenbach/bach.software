@@ -45,7 +45,7 @@ const getProgress = (percentage: number): Progress => {
  */
 export const useReadProgressTracking = (
   options: ReadProgressTrackingOptions = {},
-  extraTrackingProps?: MaybeRefOrGetter<Record<string, any>>,
+  extraTrackingProps?: MaybeRefOrGetter<Record<string, unknown>>,
 ) => {
   const {
     hasRead,

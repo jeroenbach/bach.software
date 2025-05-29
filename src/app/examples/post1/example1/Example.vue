@@ -21,8 +21,8 @@ const selectedCountries = ref<string[]>([]);
   <div class="form-field">
     <label>Single select</label>
     <VSelect
-      :options="countries"
       v-model="selectedCountry"
+      :options="countries"
       optionLabel="name"
     />
     <span
@@ -33,8 +33,8 @@ const selectedCountries = ref<string[]>([]);
   <div class="form-field">
     <label>Single select</label>
     <VSelect
-      :options="countries"
       v-model="selectedCountries"
+      :options="countries"
       optionLabel="name"
       multiple
     />

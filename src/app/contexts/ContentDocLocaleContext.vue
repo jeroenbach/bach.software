@@ -2,17 +2,17 @@
 const { locale } = useI18n();
 
 interface Props {
-  path?: string;
+  path: string;
 }
 
 const { path } = defineProps<Props>();
 </script>
 <template>
   <ContentQuery
+    v-slot="{ data }"
     :path="path"
     :where="{ _locale: locale }"
     find="one"
-    v-slot="{ data }"
   >
     <ContentRenderer :value="data" />
   </ContentQuery>
