@@ -5,7 +5,6 @@ import Alert from "./AlertBar.vue";
 
 import { createDefaultStory } from "~/utils/createDefaultStory";
 
-
 const variations = () =>
   h("div", { class: "p-5" }, [
     h(Alert, {

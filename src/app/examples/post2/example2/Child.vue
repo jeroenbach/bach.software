@@ -8,5 +8,5 @@ const modelValue = refReactiveDefault(() => props.modelValue);
 </script>
 <template>
   Child2
-  <input v-model="modelValue" @input="$emit('update:modelValue', modelValue)" >
+  <input v-model="modelValue" @input="$emit('update:modelValue', modelValue)" />
 </template>

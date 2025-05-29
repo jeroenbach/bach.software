@@ -31,6 +31,8 @@ jobs:
       - name: Run Typecheck
         run: pnpm ci:typecheck
 
+      - name: Run linter
+        run: pnpm ci:lint
       - name: Run Tests
         run: pnpm ci:test
 

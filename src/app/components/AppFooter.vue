@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 
 <template>
-  <footer class="flex"/>
+  <footer class="flex" />
 </template>

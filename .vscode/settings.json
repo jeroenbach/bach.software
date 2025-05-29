@@ -1,7 +1,8 @@
 {
-  "i18n-ally.localesPaths": [
-    "locales"
-  ],
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "i18n-ally.localesPaths": ["locales"],
   "azureFunctions.deploySubpath": "api/bin/Release/net8.0/publish",
   "azureFunctions.postDeployTask": "npm install (functions)",
   "azureFunctions.projectLanguage": "C#",
@@ -18,5 +19,5 @@
   // Specific tab size for C# files
   "[csharp]": {
     "editor.tabSize": 4
-  },
+  }
 }

@@ -27,8 +27,10 @@
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lint:fix": "eslint . --fix && prettier --write --list-different .",
+    "check": "pnpm ci:lint && pnpm ci:typecheck",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
-    "ci:type-check": "nuxi typecheck",
+    "ci:lint": "pnpm lint",
+    "ci:typecheck": "nuxi typecheck",
     "storybook": "storybook dev --config-dir ./src/app/.storybook --port 6006",
     "storybook:build": "echo 'Temporary turned off the storybook build'",
     "storybook:build:disabled": "storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/"
