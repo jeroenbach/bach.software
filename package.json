@@ -14,7 +14,9 @@
     "test": "vitest -w",
     "i18n-extract": "vue-i18n-extract report --vueFiles './**/*.?(js|vue)' --languageFiles './locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
     "storybook": "storybook dev --port 6006",
-    "build-storybook": "storybook build -o ./.output/public/_storybook/"
+    "build-storybook": "storybook build -o ./.output/public/_storybook/",
+    "ci:type-check": "nuxi typecheck",
+    "ci:lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
   },
   "dependencies": {
     "@headlessui/vue": "1.7.23",

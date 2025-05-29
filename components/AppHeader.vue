@@ -11,7 +11,7 @@ const navigation = [
   { label: "Articles", to: "/pages/articles" },
   { label: "Open source", to: "/pages/open-source" },
   { label: "Projects", to: "/pages/projects" },
-  { label: "About", to: "/pages/about" },
+  { label: "About", to: "/pages/jeroen-bach" },
 ];
 
 const mobileMenuOpen = ref(false);
