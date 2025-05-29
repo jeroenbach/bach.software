@@ -28,11 +28,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Run linter
+        run: pnpm ci:lint
+
       - name: Run Typecheck
         run: pnpm ci:typecheck
 
-      - name: Run linter
-        run: pnpm ci:lint
       - name: Run Tests
         run: pnpm ci:test
 
