@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { getBlogPosts } from "~/services/content/blogPostsService";
-
 const { blog, company, config } = useBlogMetadata();
-const { data: posts } = await getBlogPosts({ summary: true });
+const { data: posts } = await useBlogPostsContext({ summary: true });
 
 useMetadata({
   baseUrl: config.value.baseUrl,

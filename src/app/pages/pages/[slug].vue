@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { getPages } from "~/services/content/pagesService";
-
 const { slug } = useRoute().params as { slug: string };
 
 const config = useConfig();
 
-const { data: page } = await getPages(slug);
+const { data: page } = await usePagesContext(slug);
 
 useMetadata(
   page.value && {

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { getBlogPosts } from "~/services/content/blogPostsService";
-
 const { company, config } = useBlogMetadata();
 const { id } = useRoute().params as { id: string; slug: string };
-const { data: post } = await getBlogPosts({ id });
+const { data: post } = await useBlogPostsContext({ id });
 const author = post.value?.authorName ?? "";
 const category = post.value?.category ?? "";
 const wordCount = post.value?.readingTime?.words ?? 0;

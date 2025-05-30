@@ -110,14 +110,15 @@ export default defineNuxtConfig({
       "2xl": screens.xxl,
     },
   },
-  routeRules: {
-    // Generated at build time for SEO purpose
-    "/": { prerender: true },
-    // "/posts": { prerender: true, experimentalNoScripts: true },
-    // "/posts/*": { prerender: true },
-    // Cached for 1 hour
-    "/api/*": { cache: { maxAge: 60 * 60 } },
-  },
+  /** TODO: check if this is needed in the end */
+  // routeRules: {
+  //   // Generated at build time for SEO purpose
+  //   "/": { prerender: true },
+  //   // "/posts": { prerender: true, experimentalNoScripts: true },
+  //   // "/posts/*": { prerender: true },
+  //   // Cached for 1 hour
+  //   "/api/*": { cache: { maxAge: 60 * 60 } },
+  // },
   i18n: {
     locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
     defaultLocale: "en",
