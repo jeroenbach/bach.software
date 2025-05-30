@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <button>
+  <span class="block rounded-full px-3 py-0.5 text-sm/7">
     <slot />
-  </button>
+  </span>
 </template>

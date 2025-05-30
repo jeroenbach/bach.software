@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ref } from "vue";
+
 import { useReadProgress } from "./useReadProgress";
 
 const mock = vi.hoisted(() => ({

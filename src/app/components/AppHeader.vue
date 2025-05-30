@@ -6,38 +6,53 @@ import {
   TransitionRoot,
   TransitionChild,
 } from "@headlessui/vue";
+import { useScroll } from "@vueuse/core";
 
-const { t } = useI18n();
+import type { NavigationItem } from "~/types/NavigationItem";
+import type { Notification } from "~/composables/useNotification";
 
-const navigation = [{ label: t("Blog"), to: "/posts" }];
+interface Props {
+  border?: boolean;
+  navigation?: NavigationItem[] | null;
+  notifications?: Notification[];
+}
+
+const { border, navigation = [], notifications = [] } = defineProps<Props>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
 const open = () => (mobileMenuOpen.value = true);
+
+// Animate only during scroll of max 64px (the max height of the header)
+const { y } = useScroll(window);
+const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 </script>
 
 <template>
-  <header class="flex justify-center text-gray-900 dark:text-gray-300">
+  <header
+    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-400 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
+    :class="{ 'border-b': border }"
+  >
     <nav
-      class="flex w-full max-w-screen-2xl items-center py-6 lg:py-8"
+      class="mx-auto flex h-full w-full max-w-7xl items-center"
       aria-label="Global"
     >
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
-        <NuxtLink to="/" class="-m-1.5 p-1.5 text-lg">
+        <AppLink to="/" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
-          <NuxtImg class="inline h-10 dark:hidden" src="/logo.svg" />
-          <NuxtImg class="hidden h-10 dark:inline" src="/logo-light.svg" />
-        </NuxtLink>
+          <AppImage class="logo inline dark:hidden" src="/logo.svg" />
+          <AppImage class="logo hidden dark:inline" src="/logo-light.svg" />
+        </AppLink>
       </div>
       <div class="ml-auto hidden lg:flex lg:gap-x-12">
-        <NuxtLink
+        <AppLink
           v-for="item in navigation"
           :key="item.label"
           :to="item.to"
           class="text-sm font-semibold leading-6"
         >
           {{ item.label }}
-        </NuxtLink>
+        </AppLink>
         <ColorModeSwitcher />
       </div>
       <div class="ml-auto flex lg:hidden">
@@ -57,53 +72,56 @@ const open = () => (mobileMenuOpen.value = true);
         <TransitionChild
           as="template"
           enter="duration-75 ease-out"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
           leave="delay-200 duration-75 ease-in"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
           <div class="fixed inset-0 z-50 bg-black/30" aria-hidden="true" />
         </TransitionChild>
         <TransitionChild
           as="template"
           enter="delay-75 duration-200 ease-out transition-transform"
-          enter-from="translate-x-full"
-          enter-to="translate-x-0"
+          enterFrom="translate-x-full"
+          enterTo="translate-x-0"
           leave="duration-200 ease-in transition-transform"
-          leave-from="translate-x-0"
-          leave-to="translate-x-full"
+          leaveFrom="translate-x-0"
+          leaveTo="translate-x-full"
         >
           <DialogPanel
             class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1"
           >
             <div class="flex items-center justify-between">
-              <NuxtLink @click="close" to="/" class="-m-1.5 p-1.5 text-lg">
+              <AppLink to="/" class="-m-1.5 p-1.5 text-lg" @click="close">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
-                <NuxtImg class="inline h-8 dark:hidden" src="/logo.svg" />
-                <NuxtImg class="hidden h-8 dark:inline" src="/logo-light.svg" />
-              </NuxtLink>
-              <button
+                <AppImage class="inline h-8 dark:hidden" src="/logo.svg" />
+                <AppImage
+                  class="hidden h-8 dark:inline"
+                  src="/logo-light.svg"
+                />
+              </AppLink>
+              <AppButton
                 type="button"
                 class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-400"
                 @click="close"
               >
                 <span class="sr-only">Close menu</span>
                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-              </button>
+              </AppButton>
             </div>
             <div class="mt-6 flow-root">
               <div class="-my-6 divide-y divide-gray-500/10">
                 <div class="space-y-2 py-6">
-                  <NuxtLink
+                  <AppLink
                     v-for="item in navigation"
                     :key="item.label"
-                    :href="item.to"
-                    @click="close"
+                    :to="item.to"
                     class="-mx-3 block rounded-lg px-3 py-2 font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    @click="close"
                   >
                     {{ item.label }}
-                  </NuxtLink>
+                  </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
                   <ColorModeSwitcher />
@@ -114,5 +132,58 @@ const open = () => (mobileMenuOpen.value = true);
         </TransitionChild>
       </Dialog>
     </TransitionRoot>
+    <NotificationContainer />
+    <NotificationMessage
+      v-for="notification in notifications"
+      :key="notification.notificationId"
+      v-bind="notification"
+    />
   </header>
 </template>
+<style lang="scss" scoped>
+@keyframes reduce-height {
+  to {
+    height: var(--reduceHeight);
+  }
+}
+@keyframes border-appear {
+  from {
+    border-color: transparent;
+  }
+  to {
+    border-bottom-width: 1px;
+  }
+}
+
+header {
+  --height: 4rem;
+  --reduceHeight: calc(var(--height) * 0.65);
+  height: var(--height);
+  animation: reduce-height 1s linear both paused;
+  animation-delay: calc(v-bind(scrollHeader) * -1s);
+
+  &:not(.border-b) {
+    animation:
+      reduce-height 1s linear both paused,
+      border-appear 1s linear both paused;
+    animation-delay: calc(v-bind(scrollHeader) * -1s);
+  }
+
+  .logo {
+    --height: 2rem;
+    --reduceHeight: calc(var(--height) * 0.85);
+    height: var(--height);
+    animation: reduce-height 1s linear both paused;
+    animation-delay: calc(v-bind(scrollHeader) * -1s);
+  }
+}
+
+@media (min-width: 1024px) {
+  header {
+    --height: 5rem;
+    .logo {
+      --height: 2.5rem;
+    }
+  }
+}
+</style>

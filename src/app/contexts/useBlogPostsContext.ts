@@ -1,6 +1,5 @@
 import type { BlogPost, BlogPostSummary } from "~/types/BlogPost";
 import { toDictionary } from "~/utils/collections";
-import { getAuthors } from "~/services/content/authorsService";
 
 /**
  * Fetches blog posts data based on the provided options.
@@ -26,9 +25,9 @@ import { getAuthors } from "~/services/content/authorsService";
  * // Fetch the full data of a single blog post by ID
  * const singlePost = await useBlogPostsContext({ id: 'post-id' });
  */
-export const getBlogPosts = async <
-  TSingle extends string = any,
-  TSummary extends boolean = any,
+export const useBlogPostsContext = async <
+  TSingle extends string | undefined = undefined,
+  TSummary extends boolean | undefined = undefined,
 >(options?: {
   id?: TSingle;
   summary?: TSummary;
@@ -75,7 +74,9 @@ export const getBlogPosts = async <
 
     const postsRaw = await query.find();
     const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
-    const { data: authors } = await getAuthors(Array.from(authorUserNames));
+    const { data: authors } = await useAuthorsContext(
+      Array.from(authorUserNames),
+    );
 
     const authorsDictionary = toDictionary(
       authors.value ?? [],

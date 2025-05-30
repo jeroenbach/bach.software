@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it } from "vitest";
-import * as stories from "./AppImage.stories";
-import AppImage from "./AppImage.vue";
+
+import * as stories from "./ResponsiveImage.stories";
+import ResponsiveImage from "./ResponsiveImage.vue";
+
 import { find, mountStory } from "~/utils/test";
 
-describe("AppImage", () => {
+describe("ResponsiveImage", () => {
   it("should have the same html output", async () => {
     const w = mountStory(stories.Default);
     expect(w.html()).toMatchSnapshot();
@@ -25,7 +28,7 @@ describe("AppImage", () => {
     const w = mountStory(stories.Default);
     const img = await find(w, "img");
     expect(img.attributes("class")).toBe(
-      "w-full aspect-1/1 bg-slate-200 object-cover",
+      "w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover",
     );
   });
 
@@ -34,7 +37,7 @@ describe("AppImage", () => {
     const placeholder = await find(w, "figure div");
     expect(placeholder.exists()).toBe(true);
     expect(placeholder.attributes("class")).toBe(
-      "w-full aspect-1/1 bg-slate-200 object-cover",
+      "w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover",
     );
   });
 
@@ -98,7 +101,7 @@ describe("AppImage", () => {
         (
           await getComponent(
             mountStory(stories.DifferentScreenSizesAndRatios, override),
-            AppImage,
+            ResponsiveImage,
           )
         ).vm as any
       ).imgSizes;

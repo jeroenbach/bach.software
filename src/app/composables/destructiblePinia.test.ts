@@ -1,10 +1,11 @@
+import { describe, expect, it, beforeEach } from "vitest";
+import { computed, reactive, ref } from "vue";
+
 import {
   defineDestructibleStore,
   setActivePinia,
   createPinia,
 } from "./destructiblePinia";
-import { describe, expect, it, beforeEach } from "vitest";
-import { computed, reactive, ref } from "vue";
 setActivePinia(createPinia());
 
 const storeDefinition = defineDestructibleStore("test-store", () => {

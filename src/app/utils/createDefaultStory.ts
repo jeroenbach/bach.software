@@ -7,7 +7,7 @@
  */
 export const createDefaultStory =
   <StoryMeta, T extends StoryMeta>(
-    storyfn: (parameterOnlyUsedToDetermineStoryType: StoryMeta) => T
+    storyfn: (parameterOnlyUsedToDetermineStoryType: StoryMeta) => T,
   ) =>
   (changeDefaultfn: (story: T) => void = () => {}) => {
     const story = storyfn(null as StoryMeta);

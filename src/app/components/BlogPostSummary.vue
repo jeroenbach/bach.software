@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { Author } from "~/types/Author";
 import type { BlogPostSummary } from "~/types/BlogPost";
 
 defineProps<{
@@ -16,7 +15,7 @@ defineProps<{
   >
     <div class="w-full lg:w-72">
       <AppLink :to="post.url">
-        <AppImage
+        <ResponsiveImage
           :src="post.imgCoverUrl"
           :alt="post.title"
           :partOfScreenSmall="1"
@@ -31,9 +30,9 @@ defineProps<{
       </AppLink>
     </div>
     <div class="flex flex-col items-start justify-between">
-      <div class="flex items-center gap-x-4 text-xs-em">
+      <div class="flex items-center gap-x-4">
         <time
-          class="text-gray-500 dark:text-gray-500"
+          class="text-xs-em text-gray-500 dark:text-gray-500"
           :datetime="post.datePublished"
           itemprop="datePublished"
         >
@@ -46,7 +45,7 @@ defineProps<{
       <div class="group relative">
         <AppLink :to="post.url">
           <h3
-            class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-300"
+            class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-700 dark:text-gray-50 dark:group-hover:text-gray-200"
             itemprop="headline"
           >
             {{ post.title }}
@@ -55,7 +54,7 @@ defineProps<{
             <ContentRenderer
               :value="post"
               :excerpt="true"
-              class="line-clamp-4 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-400"
+              class="line-clamp-4 text-sm leading-6 group-hover:text-gray-600 dark:group-hover:text-gray-300"
               itemprop="description"
             />
           </AppProse>

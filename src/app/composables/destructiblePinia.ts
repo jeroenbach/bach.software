@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
 import type {
-  _GettersTree,
   DefineSetupStoreOptions,
   _ExtractStateFromSetupStore,
   _ExtractGettersFromSetupStore,
@@ -9,7 +7,6 @@ import type {
   Pinia,
   Store,
   _ActionsTree,
-  _StoreWithState,
   StoreState,
   PiniaCustomStateProperties,
   StoreGetters,
@@ -27,7 +24,6 @@ import type { ComputedRef, Ref, ToRef, ToRefs } from "vue";
  * @deprecated Please use the defineDestructibleStore */
 const defineStore = defineStoreInternal;
 
-// eslint-disable-next-line no-restricted-imports
 export { createPinia, setActivePinia, type Pinia };
 
 type ToComputedRefs<T> = {

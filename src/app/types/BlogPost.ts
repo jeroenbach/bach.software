@@ -1,4 +1,5 @@
 import type { MarkdownRoot, Toc } from "@nuxt/content";
+
 import type { Author } from "~/types/Author";
 
 export interface BlogPostSummary {

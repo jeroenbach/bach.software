@@ -1,5 +1,6 @@
-import { serverQueryContent } from "#content/server";
 import { SitemapStream, streamToPromise } from "sitemap";
+
+import { serverQueryContent } from "#content/server";
 import appConfig from "~/appConfig.json";
 import { createSlug } from "~/utils/url";
 

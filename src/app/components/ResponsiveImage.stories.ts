@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
+
+import ResponsiveImage from "~/components/ResponsiveImage.vue";
 import { createDefaultStory } from "~/utils/createDefaultStory";
 
-import AppImage from "./AppImage.vue";
-
 const meta = {
-  title: "Components/AppImage",
-  // @ts-ignore
-  component: AppImage,
-} satisfies Meta<typeof AppImage>;
+  title: "Components/ResponsiveImage",
+  component: ResponsiveImage,
+} satisfies Meta<typeof ResponsiveImage>;
 
 export default meta;
 export type Story = StoryObj<typeof meta>;
@@ -20,7 +19,7 @@ const defaultStory = createDefaultStory((_: Story) => ({
     class: "w-full",
   } as Story["args"],
   // We have to add a Render function so we can use these stories in tests
-  render: (props) => h(AppImage, props),
+  render: (props) => h(ResponsiveImage, props),
 }));
 
 export const Default: Story = defaultStory();

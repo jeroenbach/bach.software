@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { getBlogPosts } from "~/services/content/blogPostsService";
-
 const { blog, company, config } = useBlogMetadata();
-const { data: posts } = await getBlogPosts({ summary: true });
+const { data: posts } = await useBlogPostsContext({ summary: true });
 
 useMetadata({
   baseUrl: config.value.baseUrl,
@@ -23,10 +21,10 @@ useMetadata({
 <template>
   <PageContent>
     <AppProse>
-      <ContentDoc path="/pages/_posts" />
+      <ContentDocLocaleContext path="/pages/posts" />
     </AppProse>
     <BlogPosts>
-      <BlogPostSummary v-for="post in posts" :post="post" />
+      <BlogPostSummary v-for="post in posts" :key="post._path" :post="post" />
     </BlogPosts>
   </PageContent>
 </template>

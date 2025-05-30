@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
+
 import { buildAuthor } from "~/components/__tests__/authorBuilder";
 import { buildBlog } from "~/components/__tests__/blogBuilder";
 import { buildCompany } from "~/components/__tests__/companyBuilder";

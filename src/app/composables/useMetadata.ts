@@ -1,11 +1,3 @@
-import type { WatchSource } from "vue";
-import type { Author } from "~/types/Author";
-import type { Blog } from "~/types/Blog";
-import type { Company } from "~/types/Company";
-import type { Config } from "~/types/Config";
-import type { BlogPostSummary } from "~/types/BlogPost";
-import type { Page } from "~/types/Page";
-import { createAbsoluteUrl } from "~/utils/url";
 import type {
   Thing,
   WebSite as SchemaWebsite,
@@ -17,6 +9,14 @@ import type {
   Person as SchemaPerson,
   WithContext,
 } from "schema-dts";
+
+import type { Author } from "~/types/Author";
+import type { Blog } from "~/types/Blog";
+import type { Company } from "~/types/Company";
+import type { Config } from "~/types/Config";
+import type { BlogPostSummary } from "~/types/BlogPost";
+import type { Page } from "~/types/Page";
+import { createAbsoluteUrl } from "~/utils/url";
 
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
@@ -32,7 +32,7 @@ export interface Metadata {
    * In case the canonical is different from the url, specify it here
    */
   canonicalUrl?: string;
-  structuredData: any;
+  structuredData: unknown;
 }
 
 /**

@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import { EyeIcon } from "@heroicons/vue/24/outline";
+
 import type { BlogPost } from "~/types/BlogPost";
 
-defineProps<{
+interface Props {
   /**
    * The post to display. Can be null while loading
    */
   post: BlogPost | null;
   baseUrl: string;
   pageReads: number | null;
-}>();
+}
+
+defineProps<Props>();
 </script>
 
 <template>
@@ -31,7 +34,7 @@ defineProps<{
           </template>
         </AuthorInformation>
         <div
-          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:text-gray-400 md:py-1.5"
+          class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:border-gray-400 dark:text-gray-400 md:py-1.5"
         >
           <div
             v-if="pageReads !== null"
@@ -41,7 +44,7 @@ defineProps<{
             <EyeIcon class="inline-block size-4" />
             <span>{{ pageReads }}</span>
           </div>
-          <aside class="ms-auto flex h-8 items-center gap-1">
+          <aside class="ms-auto flex h-8 items-center gap-2">
             <span>{{ $t("Share") }}:</span>
             <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />
           </aside>

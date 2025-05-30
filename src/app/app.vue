@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+// Note: this file cannot contain any async code at the top level,
+// the static site generation didn't work when refreshing a page.
 import appConfig from "~/appConfig.json";
-import type { Config } from "./types/Config";
+import type { Config } from "~/types/Config";
 
 const config = useState<Config>("config", () => appConfig);
-const { notifications } = useNotification();
 const { t, locale } = useI18n();
 
 useSeoMeta({
@@ -32,11 +33,6 @@ useMetadata({
 });
 </script>
 <template>
-  <NotificationContainer />
-  <NotificationMessage
-    v-for="notification in notifications"
-    v-bind="notification"
-  />
   <NuxtLoadingIndicator />
   <NuxtLayout>
     <NuxtPage />
@@ -51,5 +47,10 @@ useMetadata({
 .page-leave-to {
   opacity: 0;
   filter: blur(1rem);
+}
+</style>
+<style lang="scss" global>
+.dark {
+  color-scheme: dark;
 }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Child from "./Child.vue";
-const value = ref("Hello world");
+const value = ref<string | undefined>("Hello world");
 const message = ref({ message: "test", length: 4 });
 </script>
 <template>

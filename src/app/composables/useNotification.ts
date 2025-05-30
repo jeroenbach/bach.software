@@ -1,6 +1,7 @@
-import { defineDestructibleStore } from "~/composables/destructiblePinia";
 import { ref, computed } from "vue";
 import { tryOnUnmounted } from "@vueuse/core";
+
+import { defineDestructibleStore } from "~/composables/destructiblePinia";
 
 export interface Notification {
   notificationId: number;

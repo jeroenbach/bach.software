@@ -39,20 +39,22 @@ const hasMultipleTabs = computed(() => tabs.value?.length > 1);
     aria-orientation="horizontal"
     class="flex items-center overflow-hidden overflow-x-auto rounded-t-md border border-b-0 border-gray-200 pe-4 dark:border-gray-700"
   >
-    <button
-      v-if="hasMultipleTabs"
-      v-for="(tab, index) in tabs"
-      :key="tab.label"
-      @click="activeTabIndex = index"
-      tabindex="-1"
-      class="flex items-center px-4 py-2 text-sm text-gray-700 focus:outline-none dark:text-gray-200"
-      :class="{
-        'bg-gray-100 dark:bg-gray-600': activeTabIndex === index,
-        'hover:bg-gray-50 dark:hover:bg-gray-600/50': activeTabIndex !== index,
-      }"
-    >
-      {{ tab.label }}
-    </button>
+    <template v-if="hasMultipleTabs">
+      <button
+        v-for="(tab, index) in tabs"
+        :key="tab.label"
+        tabindex="-1"
+        class="flex items-center px-4 py-2 text-sm text-gray-700 focus:outline-none dark:text-gray-200"
+        :class="{
+          'bg-gray-100 dark:bg-gray-600': activeTabIndex === index,
+          'hover:bg-gray-50 dark:hover:bg-gray-600/50':
+            activeTabIndex !== index,
+        }"
+        @click="activeTabIndex = index"
+      >
+        {{ tab.label }}
+      </button>
+    </template>
     <span v-else class="p-2 px-4 text-sm">
       {{ activeTab.label }}
     </span>

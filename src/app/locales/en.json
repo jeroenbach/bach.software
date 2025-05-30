@@ -11,11 +11,10 @@
   "Bach": {
     "Software": "Bach.Software"
   },
-  "Blog": "Blog",
   "read": "{n} read | {n} reads",
   "plausible": {
     "current": {
-      "text": "We currently {status} excluding your visits.",
+      "text": "We currently {status} including your visits.",
       "not": "are not",
       "are": "are"
     },

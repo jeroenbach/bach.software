@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { StoryObj } from "@storybook/vue3";
 import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
@@ -50,7 +51,7 @@ export const find = async (
   havePatience: boolean = true,
   count = 1,
 ): Promise<DOMWrapper<Element>> => {
-  let element = wrapper.find(cssQuery);
+  const element = wrapper.find(cssQuery);
 
   if (element?.exists() || count > 10 || !havePatience) return element;
 

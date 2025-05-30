@@ -1,4 +1,5 @@
 import { useDocumentVisibility, useScroll } from "@vueuse/core";
+
 import { useStopWatch } from "@/composables/useStopWatch";
 
 export type ReadProgressOptions = {

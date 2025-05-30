@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { PropType } from "vue";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { defineComponent, nextTick, ref, watch } from "vue";
+
 import { cloneFnJSONExtended, refReactiveDefault } from "./refReactiveDefault";
 
 interface Message {

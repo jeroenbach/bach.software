@@ -36,6 +36,6 @@ export const buildAuthor = (fn?: (author: Author) => void) => {
     _stem: "authors/author",
     _extension: "yaml",
   };
-  fn && fn(author);
+  if (fn) fn(author);
   return author;
 };

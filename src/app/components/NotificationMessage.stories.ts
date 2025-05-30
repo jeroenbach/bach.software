@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
-import { createDefaultStory } from "~/utils/createDefaultStory";
 
 import NotificationMessage from "./NotificationMessage.vue";
 import NotificationContainer from "./NotificationContainer.vue";
+
+import { createDefaultStory } from "~/utils/createDefaultStory";
 
 /** Unfortunately decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
 const wrapper = () =>
@@ -44,7 +45,7 @@ const wrapper = () =>
 
 const meta = {
   title: "Components/NotificationMessage",
-  // @ts-ignore
+  // @ts-expect-error to avoid type error with render function
   component: wrapper,
   args: { onClose: fn() },
 } satisfies Meta<typeof wrapper>;

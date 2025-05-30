@@ -7,11 +7,10 @@ import {
   InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
 import { useAnimate, useTimeoutFn } from "@vueuse/core";
+
 import type { Notification } from "~/composables/useNotification";
 
-interface Props extends Omit<Notification, "notificationId" | "title"> {
-  title?: string;
-}
+type Props = Omit<Notification, "notificationId">;
 
 const props = withDefaults(defineProps<Props>(), {
   severity: "error",
@@ -133,7 +132,7 @@ useTimeoutFn(
           aria-valuemin="0"
           aria-valuemax="100"
           style="width: 0%"
-        ></div>
+        />
       </div>
     </Teleport>
   </ClientOnly>
