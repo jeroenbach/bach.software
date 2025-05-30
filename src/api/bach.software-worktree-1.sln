@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.002.0
+VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bach.Software.API", "Bach.Software.API\Bach.Software.API.csproj", "{1352F1C3-D89E-403D-93F3-3373B3F7AD18}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Infrastructure", "Bach.Software.Infrastructure\Bach.Software.Infrastructure.csproj", "{6E601F6A-46E1-45FA-8B03-DEFB1B3CB4BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Tests", "Bach.Software.Tests\Bach.Software.Tests.csproj", "{6A4723B9-672F-43C5-8C31-F954126BBB53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bach.Software.Application", "Bach.Software.Application\Bach.Software.Application.csproj", "{53E2CAA3-9BB4-4A2D-BBBC-115616336757}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A4723B9-672F-43C5-8C31-F954126BBB53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E2CAA3-9BB4-4A2D-BBBC-115616336757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E2CAA3-9BB4-4A2D-BBBC-115616336757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E2CAA3-9BB4-4A2D-BBBC-115616336757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E2CAA3-9BB4-4A2D-BBBC-115616336757}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

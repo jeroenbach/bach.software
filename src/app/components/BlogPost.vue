@@ -2,6 +2,7 @@
 import { EyeIcon } from "@heroicons/vue/24/outline";
 
 import type { BlogPost } from "~/types/BlogPost";
+import type { PageReads } from "~/services/backend/models";
 
 interface Props {
   /**
@@ -9,7 +10,7 @@ interface Props {
    */
   post: BlogPost | null;
   baseUrl: string;
-  pageReads: number | null;
+  pageReads: PageReads | null;
 }
 
 defineProps<Props>();
@@ -38,11 +39,11 @@ defineProps<Props>();
         >
           <div
             v-if="pageReads !== null"
-            :title="$t('read', { n: pageReads })"
+            :title="$t('read', { n: pageReads.read })"
             class="flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
-            <span>{{ pageReads }}</span>
+            <span>{{ pageReads.read }}</span>
           </div>
           <aside class="ms-auto flex h-8 items-center gap-2">
             <span>{{ $t("Share") }}:</span>

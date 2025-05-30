@@ -1,4 +1,4 @@
-using Bach.Software.Core.Interfaces;
+using Bach.Software.Application.Interfaces;
 using Bach.Software.Infrastructure.PlausibleAnalytics.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;

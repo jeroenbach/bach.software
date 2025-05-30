@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { useAsyncState } from "@vueuse/core";
 
-import { useAzureApi } from "~/services/useAzureApi";
-const { getPageViews } = useAzureApi();
+import { useApiClient } from "~/services/backend";
 
 const { state: pageReads } = useAsyncState(
   async () => {
@@ -21,7 +20,12 @@ const { state: pageReads } = useAsyncState(
       );
     }
 
-    const response = await getPageViews(currentUrl);
+    const backendApiClient = useApiClient();
+    const response = await backendApiClient.analytics.pageReads.get({
+      queryParameters: {
+        url: currentUrl,
+      },
+    });
     return response;
   },
   null,

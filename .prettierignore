@@ -3,5 +3,9 @@ dist/
 .nuxt/
 node_modules/
 
+# Ignore code generation directories
+.kiota/
+src/app/services/backend/
+
 # Ignore specific files
 pnpm-lock.yaml

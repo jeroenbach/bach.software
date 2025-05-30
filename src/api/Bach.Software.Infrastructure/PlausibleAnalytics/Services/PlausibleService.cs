@@ -1,5 +1,6 @@
 using System.Text.Json;
-using Bach.Software.Core.Interfaces;
+using Bach.Software.Application.Interfaces;
+using Bach.Software.Application.Models;
 using Bach.Software.Infrastructure.Plausible.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,7 @@ public class PlausibleService : IAnalyticsService
         _logger = logger;
     }
 
-    public async Task<int> GetPageReads(string url)
+    public async Task<PageReads> GetPageReads(string url)
     {
         using var scope = _logger.BeginScope(new Dictionary<string, object> { { "url", url } });
 
@@ -55,7 +56,14 @@ public class PlausibleService : IAnalyticsService
             throw new InvalidOperationException("Failed to deserialize the response content.");
         }
 
-        return queryResult.Results.FirstOrDefault()?.Metrics.FirstOrDefault() ?? 0;
+
+        return new PageReads
+        {
+            Read = queryResult.Results.FirstOrDefault()?.Metrics.FirstOrDefault() ?? 0,
+            ThreeQuarterRead = 0,
+            HalfRead = 0,
+            QuarterRead = 0,
+        };
     }
 
     private async Task<HttpResponseMessage> SendRequest(string jsonPayload)

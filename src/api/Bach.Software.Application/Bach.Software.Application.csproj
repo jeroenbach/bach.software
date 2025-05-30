@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Bach.Software.Application/Bach.Software.Application.csproj" />
     <ProjectReference Include="../Bach.Software.Core/Bach.Software.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="FluentValidation" />
   </ItemGroup>
 
 </Project>
