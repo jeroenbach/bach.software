@@ -7,6 +7,14 @@ import { AnalyticsRequestBuilderNavigationMetadata, type AnalyticsRequestBuilder
 import { HealthRequestBuilderRequestsMetadata, type HealthRequestBuilder } from './health/index.js';
 // @ts-ignore
 import { apiClientProxifier, ParseNodeFactoryRegistry, SerializationWriterFactoryRegistry, type BaseRequestBuilder, type KeysToExcludeForNavigationMetadata, type NavigationMetadata, type RequestAdapter } from '@microsoft/kiota-abstractions';
+// @ts-ignore
+import { FormParseNodeFactory, FormSerializationWriterFactory } from '@microsoft/kiota-serialization-form';
+// @ts-ignore
+import { JsonParseNodeFactory, JsonSerializationWriterFactory } from '@microsoft/kiota-serialization-json';
+// @ts-ignore
+import { MultipartSerializationWriterFactory } from '@microsoft/kiota-serialization-multipart';
+// @ts-ignore
+import { TextParseNodeFactory, TextSerializationWriterFactory } from '@microsoft/kiota-serialization-text';
 
 /**
  * The main entry point of the SDK, exposes the configuration and the fluent API.
@@ -45,8 +53,15 @@ export function createBackendApiClient(requestAdapter: RequestAdapter) {
         throw new Error("requestAdapter.getSerializationWriterFactory() is not a SerializationWriterFactoryRegistry")
     }
     
+    serializationWriterFactory.registerDefaultSerializer(JsonSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(TextSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(FormSerializationWriterFactory);
+    serializationWriterFactory.registerDefaultSerializer(MultipartSerializationWriterFactory);
     
     const backingStoreFactory = requestAdapter.getBackingStoreFactory();
+    parseNodeFactoryRegistry.registerDefaultDeserializer(JsonParseNodeFactory, backingStoreFactory);
+    parseNodeFactoryRegistry.registerDefaultDeserializer(TextParseNodeFactory, backingStoreFactory);
+    parseNodeFactoryRegistry.registerDefaultDeserializer(FormParseNodeFactory, backingStoreFactory);
     if (requestAdapter.baseUrl === undefined || requestAdapter.baseUrl === null || requestAdapter.baseUrl === "") {
         requestAdapter.baseUrl = "http://localhost:7071/api";
     }

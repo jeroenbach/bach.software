@@ -25,5 +25,10 @@
       "include": "Include",
       "exclude": "Exclude"
     }
+  },
+  "notification": {
+    "error": {
+      "unknown": "An unknown error occurred"
+    }
   }
 }

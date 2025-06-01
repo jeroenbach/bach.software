@@ -12,12 +12,18 @@ import type { Page } from "~/types/Page";
 export const usePagesContext = async (slug: string) => {
   const uniqueId = `pagesContext-${slug}`;
 
-  return await useAsyncData(uniqueId, async () => {
-    const query = queryContent<Page>("pages").where({
-      _path: `/pages/${slug}`,
-      _draft: { $ne: true },
-    });
+  return await useAsyncData(
+    uniqueId,
+    async () => {
+      const query = queryContent<Page>("pages").where({
+        _path: `/pages/${slug}`,
+        _draft: { $ne: true },
+      });
 
-    return await query.findOne();
-  });
+      return await query.findOne();
+    },
+    {
+      default: () => undefined,
+    },
+  );
 };

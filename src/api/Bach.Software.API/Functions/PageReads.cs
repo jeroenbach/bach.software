@@ -35,7 +35,7 @@ public class Analytics
         Visibility = OpenApiVisibilityType.Important)]
     [OpenApiParameter("url", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The URL of the page to get read analytics for.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(Models.PageReads), Description = "The OK response message containing a JSON result.")]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(ProblemDetails), Description = "Description of the error when the request is invalid.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(ValidationProblemDetails), Description = "Description of the error when the request is invalid.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.InternalServerError, contentType: "application/json", bodyType: typeof(ProblemDetails), Description = "Description of the error when the request is invalid.")]
     public async Task<IActionResult> GetPageReads([HttpTrigger(AuthorizationLevel.Function, "get", Route = "analytics/pageReads")] HttpRequest req, string url)
         => await FunctionExceptionHandler.TryCatchAsync(_logger, async () => 

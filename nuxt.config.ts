@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/plausible",
-    "@nuxt/eslint",
+    "@nuxt/eslint", // gives a lot of 'manifest-route-rule' middleware already exists errors
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {

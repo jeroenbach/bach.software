@@ -32,6 +32,33 @@ export function createProblemDetailsFromDiscriminatorValue(parseNode: ParseNode 
     return deserializeIntoProblemDetails;
 }
 /**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ValidationProblemDetails_errors}
+ */
+// @ts-ignore
+export function createValidationProblemDetails_errorsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoValidationProblemDetails_errors;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ValidationProblemDetails_extensions}
+ */
+// @ts-ignore
+export function createValidationProblemDetails_extensionsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoValidationProblemDetails_extensions;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ValidationProblemDetails}
+ */
+// @ts-ignore
+export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoValidationProblemDetails;
+}
+/**
  * The deserialization information for the current model
  * @returns {Record<string, (node: ParseNode) => void>}
  */
@@ -65,6 +92,40 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
  */
 // @ts-ignore
 export function deserializeIntoProblemDetails_extensions(problemDetails_extensions: Partial<ProblemDetails_extensions> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoValidationProblemDetails(validationProblemDetails: Partial<ValidationProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "detail": n => { validationProblemDetails.detail = n.getStringValue(); },
+        "errors": n => { validationProblemDetails.errors = n.getObjectValue<ValidationProblemDetails_errors>(createValidationProblemDetails_errorsFromDiscriminatorValue); },
+        "extensions": n => { validationProblemDetails.extensions = n.getObjectValue<ValidationProblemDetails_extensions>(createValidationProblemDetails_extensionsFromDiscriminatorValue); },
+        "instance": n => { validationProblemDetails.instance = n.getStringValue(); },
+        "status": n => { validationProblemDetails.status = n.getNumberValue(); },
+        "title": n => { validationProblemDetails.title = n.getStringValue(); },
+        "type": n => { validationProblemDetails.type = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoValidationProblemDetails_errors(validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoValidationProblemDetails_extensions(validationProblemDetails_extensions: Partial<ValidationProblemDetails_extensions> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
     }
 }
@@ -165,6 +226,89 @@ export function serializeProblemDetails_extensions(writer: SerializationWriter, 
     if (problemDetails_extensions) {
         writer.writeAdditionalData(problemDetails_extensions.additionalData);
     }
+}
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeValidationProblemDetails(writer: SerializationWriter, validationProblemDetails: Partial<ValidationProblemDetails> | undefined | null = {}) : void {
+    if (validationProblemDetails) {
+        writer.writeStringValue("detail", validationProblemDetails.detail);
+        writer.writeObjectValue<ValidationProblemDetails_errors>("errors", validationProblemDetails.errors, serializeValidationProblemDetails_errors);
+        writer.writeObjectValue<ValidationProblemDetails_extensions>("extensions", validationProblemDetails.extensions, serializeValidationProblemDetails_extensions);
+        writer.writeStringValue("instance", validationProblemDetails.instance);
+        writer.writeNumberValue("status", validationProblemDetails.status);
+        writer.writeStringValue("title", validationProblemDetails.title);
+        writer.writeStringValue("type", validationProblemDetails.type);
+        writer.writeAdditionalData(validationProblemDetails.additionalData);
+    }
+}
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeValidationProblemDetails_errors(writer: SerializationWriter, validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined | null = {}) : void {
+    if (validationProblemDetails_errors) {
+        writer.writeAdditionalData(validationProblemDetails_errors.additionalData);
+    }
+}
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeValidationProblemDetails_extensions(writer: SerializationWriter, validationProblemDetails_extensions: Partial<ValidationProblemDetails_extensions> | undefined | null = {}) : void {
+    if (validationProblemDetails_extensions) {
+        writer.writeAdditionalData(validationProblemDetails_extensions.additionalData);
+    }
+}
+export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
+    /**
+     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
+     */
+    additionalData?: Record<string, unknown>;
+    /**
+     * The detail property
+     */
+    detail?: string | null;
+    /**
+     * The errors property
+     */
+    errors?: ValidationProblemDetails_errors | null;
+    /**
+     * The extensions property
+     */
+    extensions?: ValidationProblemDetails_extensions | null;
+    /**
+     * The instance property
+     */
+    instance?: string | null;
+    /**
+     * The status property
+     */
+    status?: number | null;
+    /**
+     * The title property
+     */
+    title?: string | null;
+    /**
+     * The type property
+     */
+    type?: string | null;
+}
+export interface ValidationProblemDetails_errors extends AdditionalDataHolder, Parsable {
+    /**
+     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
+     */
+    additionalData?: Record<string, unknown>;
+}
+export interface ValidationProblemDetails_extensions extends AdditionalDataHolder, Parsable {
+    /**
+     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
+     */
+    additionalData?: Record<string, unknown>;
 }
 /* tslint:enable */
 /* eslint-enable */

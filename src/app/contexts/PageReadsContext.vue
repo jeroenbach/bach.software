@@ -5,7 +5,7 @@ import { useApiClient } from "~/services/backend";
 
 const { state: pageReads } = useAsyncState(
   async () => {
-    if (!import.meta.client) return null;
+    if (!import.meta.client) return undefined;
 
     const config = useRuntimeConfig();
 
@@ -28,8 +28,11 @@ const { state: pageReads } = useAsyncState(
     });
     return response;
   },
-  null,
-  { immediate: true },
+  undefined,
+  {
+    immediate: true,
+    throwError: true, // show in the console, but not to the user
+  },
 );
 </script>
 <template>

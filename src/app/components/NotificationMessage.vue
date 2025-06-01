@@ -8,7 +8,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import { useAnimate, useTimeoutFn } from "@vueuse/core";
 
-import type { Notification } from "~/composables/useNotification";
+import type { Notification } from "~/composables/useNotificationStore";
 
 type Props = Omit<Notification, "notificationId">;
 
@@ -48,7 +48,7 @@ useTimeoutFn(
       <div
         v-if="!dismissed"
         role="alert"
-        class="pointer-events-auto w-full max-w-96 overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+        class="pointer-events-auto w-full max-w-md overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
         :class="{
           'border-l-4 border-green-300 bg-white dark:bg-gray-800 dark:text-green-400':
             severity === 'success',
@@ -92,7 +92,8 @@ useTimeoutFn(
               >
                 {{ title }}
               </p>
-              <slot>
+              <slot v-if="$slots.default"></slot>
+              <template v-else>
                 <p
                   v-if="description"
                   :class="{
@@ -105,7 +106,28 @@ useTimeoutFn(
                 >
                   {{ description }}
                 </p>
-              </slot>
+                <ul v-if="props.descriptionList?.length">
+                  <li
+                    v-for="({ name, values }, i) in props.descriptionList"
+                    :key="i"
+                    class="ms-5 list-disc"
+                  >
+                    <div class="inline-flex flex-wrap">
+                      <div v-if="name" class="me-1 inline-block">
+                        {{ name }}:
+                      </div>
+                      <div class="grow">
+                        <span
+                          v-for="value in values"
+                          :key="value"
+                          class="block"
+                          >{{ value }}</span
+                        >
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </template>
             </div>
             <div class="flex">
               <span class="sr-only">Close</span>

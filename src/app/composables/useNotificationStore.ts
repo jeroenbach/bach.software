@@ -2,12 +2,20 @@ import { ref, computed } from "vue";
 import { tryOnUnmounted } from "@vueuse/core";
 
 import { defineDestructibleStore } from "~/composables/destructiblePinia";
+import { isProblemDetails } from "~/types/ProblemDetails";
+import { isValidationProblemDetails } from "~/types/ValidationProblemDetails";
+
+export type DescriptionList = Array<{ name: string; values: string[] }>;
 
 export interface Notification {
   notificationId: number;
   severity?: "info" | "warning" | "error" | "success";
   title?: string;
-  description?: string | null;
+  description?: string;
+  /**
+   * A bullet list of extra information.
+   */
+  descriptionList?: DescriptionList;
   options?: {
     /**
      * Specifies the amount of milliseconds that the notification should be shown.
@@ -25,7 +33,7 @@ interface InternalNotification extends Notification {
  * We don't export this version as every component will have its own instance
  * so that we can keep track of the notifications of that instance.
  */
-const useNotificationInternal = defineDestructibleStore(
+const useNotificationStoreInternal = defineDestructibleStore(
   "NotificationStore",
   () => {
     let lastNotificationId = 0;
@@ -44,6 +52,7 @@ const useNotificationInternal = defineDestructibleStore(
             severity: x.severity,
             title: x.title,
             description: x.description,
+            descriptionList: x.descriptionList,
             options: { ...x.options },
           }) as Notification,
       ),
@@ -55,7 +64,8 @@ const useNotificationInternal = defineDestructibleStore(
         instanceId: number,
         severity: Notification["severity"],
         title?: string,
-        description?: string | null,
+        description?: string,
+        descriptionList?: DescriptionList,
         options?: Notification["options"],
       ) => {
         internalNotifications.value.push({
@@ -64,6 +74,7 @@ const useNotificationInternal = defineDestructibleStore(
           instanceId,
           title,
           description,
+          descriptionList,
           options,
         });
       },
@@ -86,14 +97,16 @@ const useNotificationInternal = defineDestructibleStore(
  * The messages will be bound to the component invoking them, so if that component
  * unmounts, also it's messages will be unmounted.
  */
-export const useNotification = () => {
+export const useNotificationStore = () => {
   const {
     notifications,
     add,
     generateInstanceId,
     clear: clearInternal,
     clearAll,
-  } = useNotificationInternal(); // The shared instance
+  } = useNotificationStoreInternal(); // The shared instance
+
+  const { t } = useI18n();
 
   // Here we operate on individual instance bases, so that we can remove all messages added by this instance
   // when it is unmounted. Therefore we keep track of an instance id.
@@ -118,21 +131,35 @@ export const useNotification = () => {
       description?: string,
       options?: Notification["options"],
     ) => {
-      add(instanceId, severity, title, description, options);
+      add(instanceId, severity, title, description, undefined, options);
     },
     /**
-     * Display a notification to the user.
-     * @param severity The severity of the message: info, warning, error, success
-     * @param description The message to display to the user
-     * @param title Optional title of the message
+     * Display a thrown error to the user.
+     * We check the type of the error and
+     * @param error The error that is thrown
      * @param closeIn specify in how many milliseconds to close the message. @default this is turned off.
      */
-    addSimple: (
-      severity: Notification["severity"],
-      title: string,
-      options?: Notification["options"],
-    ) => {
-      add(instanceId, severity, title, null, options);
+    addError: (error: unknown, options?: Notification["options"]) => {
+      let title: string = t("notification.error.unknown");
+      let description: string | undefined = undefined;
+      let validationErrors: { name: string; values: string[] }[] | undefined =
+        undefined;
+
+      if (isProblemDetails(error)) {
+        title = error.title;
+        description = error.detail;
+      }
+
+      if (isValidationProblemDetails(error)) {
+        validationErrors = Object.entries(error.errors.additionalData).map(
+          ([name, values]) => ({
+            name,
+            values,
+          }),
+        );
+      }
+
+      add(instanceId, "error", title, description, validationErrors, options);
     },
     clear,
     clearAll,

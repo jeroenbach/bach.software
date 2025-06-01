@@ -66,10 +66,7 @@ export const useBlogMetadata = () => {
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
-export const useMetadata = (
-  metadata: Metadata | null,
-  options?: MetadataOptions,
-) => {
+export const useMetadata = (metadata?: Metadata, options?: MetadataOptions) => {
   if (!metadata) return;
 
   useSeoMeta(

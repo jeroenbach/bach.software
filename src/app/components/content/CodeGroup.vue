@@ -6,13 +6,15 @@ import {
 import { useClipboard } from "@vueuse/core";
 
 const { t } = useI18n();
-const { addSimple } = useNotification();
+const { add: addNotification } = useNotificationStore();
 const slots = useSlots();
 const { copy: copyInternal, isSupported, copied } = useClipboard();
 
 const copy = (code: string) => {
   copyInternal(code);
-  addSimple("success", t("Copied to clipboard!"), { closeIn: 3000 });
+  addNotification("success", t("Copied to clipboard!"), undefined, {
+    closeIn: 3000,
+  });
 };
 
 const tabs = computed(() => {

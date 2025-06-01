@@ -4,7 +4,7 @@ interface Props {
 }
 
 const { border } = defineProps<Props>();
-const { notifications } = useNotification();
+const { notifications } = useNotificationStore();
 const { data: navigation } = await useContentNavigationContext();
 </script>
 <template>

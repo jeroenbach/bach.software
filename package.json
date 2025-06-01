@@ -12,7 +12,7 @@
   "scripts": {
     "check-updates": "pnpm dlx npm-check-updates -i --format group",
     "dev-setup": "node development-setup.js",
-    "i18n-extract": "vue-i18n-extract report --vueFiles './**/*.?(js|vue)' --languageFiles './src/app/locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
+    "i18n-extract": "vue-i18n-extract report --vueFiles './**/*.?(ts|js|vue)' --languageFiles './src/app/locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
     "build": "nuxt build",
     "generate": "pnpm run i18n-extract && nuxt generate --dotenv .env.local && pnpm storybook:build",
     "preview": "nuxt preview",

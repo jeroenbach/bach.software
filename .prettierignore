@@ -2,6 +2,8 @@
 dist/
 .nuxt/
 node_modules/
+bin/
+obj/
 
 # Ignore code generation directories
 .kiota/
