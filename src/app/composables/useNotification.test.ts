@@ -1,14 +1,27 @@
 import { defineComponent, nextTick, ref } from "vue";
 import { mount } from "@vue/test-utils";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 
-import { useNotification } from "./useNotification";
+import { useNotificationStore } from "./useNotificationStore";
 import { setActivePinia, createPinia } from "./destructiblePinia";
+
+import type { ProblemDetails } from "~/types/ProblemDetails";
+import type { ValidationProblemDetails } from "~/types/ValidationProblemDetails";
+
+const mock = vi.hoisted(() => ({
+  useI18n: () => ({
+    t: vi.fn((key) => key),
+  }),
+}));
+
+mockNuxtImport("useI18n", () => mock.useI18n);
+
 setActivePinia(createPinia());
 
-describe("useNotification", () => {
+describe("useNotificationStore", () => {
   beforeEach(() => {
-    const { clearAll } = useNotification();
+    const { clearAll } = useNotificationStore();
     clearAll();
   });
 
@@ -19,18 +32,19 @@ describe("useNotification", () => {
         add: add1,
         clear: clear1,
         clearAll: clearAll1,
-      } = useNotification();
-      const { notifications: notifications2, add: add2 } = useNotification();
+      } = useNotificationStore();
+      const { notifications: notifications2, add: add2 } =
+        useNotificationStore();
       const {
         notifications: notifications4,
         add: add3,
         clearAll: clearAll3,
-      } = useNotification();
+      } = useNotificationStore();
       const {
         notifications: notifications3,
         add: add4,
         clear: clear4,
-      } = useNotification();
+      } = useNotificationStore();
       clearAll1();
 
       add1("error", "Message added by 1");
@@ -71,10 +85,10 @@ describe("useNotification", () => {
     it("should keep track of its own notifications and when parent is unmounted remove only those", async () => {
       const showParent1 = ref(true);
       const showParent2 = ref(true);
-      const { notifications: notifications } = useNotification();
+      const { notifications: notifications } = useNotificationStore();
       const parent1 = defineComponent({
         data() {
-          const { add } = useNotification();
+          const { add } = useNotificationStore();
           add("error", "Error reported from parent 1");
           add("error", "Another Error reported from parent 1");
           return {};
@@ -83,7 +97,7 @@ describe("useNotification", () => {
       });
       const parent2 = defineComponent({
         data() {
-          const { add } = useNotification();
+          const { add } = useNotificationStore();
           add("warning", "Warning reported from parent 2");
           add("warning", "Another Warning reported from parent 2");
           return {};
@@ -112,7 +126,7 @@ describe("useNotification", () => {
   });
 
   describe("adding & removing notifications", () => {
-    const { notifications, add, clear } = useNotification();
+    const { notifications, add, addError, clear } = useNotificationStore();
 
     beforeEach(() => {
       clear();
@@ -128,6 +142,92 @@ describe("useNotification", () => {
         }),
       );
     });
+
+    it("should display an unknown error", async () => {
+      expect(notifications.value.length).toBe(0);
+
+      try {
+        throw new Error("Some message for the user");
+      } catch (e) {
+        addError(e);
+      }
+
+      expect(notifications.value[0]).toEqual(
+        expect.objectContaining({
+          title: "notification.error.unknown",
+          severity: "error",
+          descriptionList: undefined,
+        }),
+      );
+    });
+
+    it("should display an Problem details error", async () => {
+      expect(notifications.value.length).toBe(0);
+
+      try {
+        throw {
+          status: 500,
+          title: "Internal Server Error",
+          detail: "An unexpected error occurred.",
+          type: "https://example.com/problem/internal-server-error",
+        } as ProblemDetails;
+      } catch (e) {
+        addError(e);
+      }
+
+      expect(notifications.value[0]).toEqual(
+        expect.objectContaining({
+          title: "Internal Server Error",
+          description: "An unexpected error occurred.",
+          descriptionList: undefined,
+          severity: "error",
+        }),
+      );
+    });
+
+    it("should display an Validation Problem details error", async () => {
+      expect(notifications.value.length).toBe(0);
+
+      try {
+        throw {
+          status: 500,
+          title: "Validation Error",
+          type: "https://example.com/problem/internal-server-error",
+          errors: {
+            additionalData: {
+              field1: ["Field1 is required."],
+              field2: [
+                "Field2 must be a valid email address.",
+                "And another error.",
+              ],
+            },
+          },
+        } as ValidationProblemDetails;
+      } catch (e) {
+        addError(e);
+      }
+
+      expect(notifications.value[0]).toEqual(
+        expect.objectContaining({
+          title: "Validation Error",
+          descriptionList: [
+            {
+              name: "field1",
+              values: ["Field1 is required."],
+            },
+            {
+              name: "field2",
+              values: [
+                "Field2 must be a valid email address.",
+                "And another error.",
+              ],
+            },
+          ],
+          severity: "error",
+        }),
+      );
+    });
+
     it("should add info message", async () => {
       expect(notifications.value.length).toBe(0);
       add("info", "Some message for the user");

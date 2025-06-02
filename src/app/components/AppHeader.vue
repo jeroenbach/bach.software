@@ -9,7 +9,7 @@ import {
 import { useScroll } from "@vueuse/core";
 
 import type { NavigationItem } from "~/types/NavigationItem";
-import type { Notification } from "~/composables/useNotification";
+import type { Notification } from "~/composables/useNotificationStore";
 
 interface Props {
   border?: boolean;

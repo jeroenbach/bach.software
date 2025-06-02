@@ -45,51 +45,57 @@ export const useBlogPostsContext = async <
   const { id, summary } = options ?? {};
   const uniqueId = `postsContext-${id}-${summary}`;
 
-  return await useAsyncData(uniqueId, async () => {
-    const query = isFalseOrUndefined(summary)
-      ? queryContent<BlogPost>("posts")
-      : queryContent<BlogPostSummary>("posts").only([
-          "slug",
-          "title",
-          "description",
-          "category",
-          "authorName",
-          "datePublished",
-          "dateModified",
-          "imgCoverUrl",
-          "imgCoverPosition",
-          "readingTime",
-          "_path",
-          "excerpt",
-          "draft",
-        ]);
+  return await useAsyncData(
+    uniqueId,
+    async () => {
+      const query = isFalseOrUndefined(summary)
+        ? queryContent<BlogPost>("posts")
+        : queryContent<BlogPostSummary>("posts").only([
+            "slug",
+            "title",
+            "description",
+            "category",
+            "authorName",
+            "datePublished",
+            "dateModified",
+            "imgCoverUrl",
+            "imgCoverPosition",
+            "readingTime",
+            "_path",
+            "excerpt",
+            "draft",
+          ]);
 
-    if (id) {
-      query.where({ _path: { $eq: `/posts/${id}` } });
-    }
+      if (id) {
+        query.where({ _path: { $eq: `/posts/${id}` } });
+      }
 
-    query.where({ draft: { $ne: true } });
+      query.where({ draft: { $ne: true } });
 
-    query.sort({ datePublished: -1 });
+      query.sort({ datePublished: -1 });
 
-    const postsRaw = await query.find();
-    const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
-    const { data: authors } = await useAuthorsContext(
-      Array.from(authorUserNames),
-    );
+      const postsRaw = await query.find();
+      const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
+      const { data: authors } = await useAuthorsContext(
+        Array.from(authorUserNames),
+      );
 
-    const authorsDictionary = toDictionary(
-      authors.value ?? [],
-      (a) => a.userName,
-    );
+      const authorsDictionary = toDictionary(
+        authors.value ?? [],
+        (a) => a.userName,
+      );
 
-    const posts = postsRaw.map((p) => {
-      const post = p as BlogPostSummary;
-      post.author = authorsDictionary[post.authorName];
-      post.url = `${post._path}-${post.slug ?? createSlug(post.title)}`;
-      return post;
-    });
+      const posts = postsRaw.map((p) => {
+        const post = p as BlogPostSummary;
+        post.author = authorsDictionary[post.authorName];
+        post.url = `${post._path}-${post.slug ?? createSlug(post.title)}`;
+        return post;
+      });
 
-    return (id ? posts?.[0] : posts) as TPostSingleOrMultiple;
-  });
+      return (id ? posts?.[0] : posts) as TPostSingleOrMultiple;
+    },
+    {
+      default: () => undefined,
+    },
+  );
 };

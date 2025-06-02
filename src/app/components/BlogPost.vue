@@ -2,14 +2,15 @@
 import { EyeIcon } from "@heroicons/vue/24/outline";
 
 import type { BlogPost } from "~/types/BlogPost";
+import type { PageReads } from "~/services/backend/models";
 
 interface Props {
   /**
-   * The post to display. Can be null while loading
+   * The post to display. Can be undefined while loading
    */
-  post: BlogPost | null;
+  post?: BlogPost;
   baseUrl: string;
-  pageReads: number | null;
+  pageReads?: PageReads;
 }
 
 defineProps<Props>();
@@ -37,12 +38,12 @@ defineProps<Props>();
           class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:border-gray-400 dark:text-gray-400 md:py-1.5"
         >
           <div
-            v-if="pageReads !== null"
-            :title="$t('read', { n: pageReads })"
+            v-if="isNotNullOrUndefined(pageReads)"
+            :title="$t('read', { n: pageReads.read })"
             class="flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
-            <span>{{ pageReads }}</span>
+            <span>{{ pageReads.read }}</span>
           </div>
           <aside class="ms-auto flex h-8 items-center gap-2">
             <span>{{ $t("Share") }}:</span>
