@@ -17,8 +17,8 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
   modules: [
-    "@nuxtjs/tailwindcss",
     // "@nuxtjs/storybook",
+    "@nuxtjs/tailwindcss",
     "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
@@ -27,9 +27,10 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxt/test-utils/module",
     "dayjs-nuxt",
-    "@primevue/nuxt-module",
+    // "@primevue/nuxt-module",
     "@nuxtjs/plausible",
-    "@nuxt/eslint", // gives a lot of 'manifest-route-rule' middleware already exists errors
+    "@nuxt/eslint", // gives a lot of 'manifest-route-rule' middleware already exists errors */
+    "@nuxtjs/seo",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {
@@ -89,9 +90,6 @@ export default defineNuxtConfig({
       anchorLinks: true,
       remarkPlugins: ["remark-reading-time"],
     },
-    experimental: {
-      search: {},
-    },
     api: {
       baseURL: "/_content",
     },
@@ -120,10 +118,13 @@ export default defineNuxtConfig({
   //   "/api/*": { cache: { maxAge: 60 * 60 } },
   // },
   i18n: {
-    locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
+    locales: [{ code: "en", language: "en-US", file: "en.json" }],
     defaultLocale: "en",
     strategy: "prefix_except_default",
     lazy: true,
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
   dayjs: {
     locales: ["en"],
@@ -137,9 +138,9 @@ export default defineNuxtConfig({
       plausibleDomain: "", // can be overridden by NUXT_PUBLIC_PLAUSIBLE_DOMAIN environment variable
     },
   },
-  nitro: {
-    prerender: {
-      routes: ["/sitemap.xml"],
-    },
-  },
+  // nitro: {
+  //   prerender: {
+  //     routes: ["/sitemap.xml"],
+  //   },
+  // },
 });

@@ -7,30 +7,30 @@ import type { Config } from "~/types/Config";
 const config = useState<Config>("config", () => appConfig);
 const { t, locale } = useI18n();
 
-useSeoMeta({
-  titleTemplate: (titleChunk) => {
-    return titleChunk
-      ? t("_metadata.titleTemplate", { titleChunk })
-      : t("_metadata.titleTemplate_empty");
-  },
-});
-useHead({
-  htmlAttrs: {
-    lang: locale,
-  },
-});
-useMetadata({
-  baseUrl: config.value.baseUrl,
-  title: t("_metadata.title"),
-  description: t("_metadata.description"),
-  imageUrl: "JEROEN-4238-SQUARE.jpeg",
-  imageAlt: t("_metadata.title"),
-  url: "/",
-  structuredData: createWebsiteMetadataContext({
-    name: t("_metadata.title"),
-    url: config.value.baseUrl,
-  }),
-});
+// useSeoMeta({
+//   titleTemplate: (titleChunk) => {
+//     return titleChunk
+//       ? t("_metadata.titleTemplate", { titleChunk })
+//       : t("_metadata.titleTemplate_empty");
+//   },
+// });
+// useHead({
+//   htmlAttrs: {
+//     lang: locale,
+//   },
+// });
+// useMetadata({
+//   baseUrl: config.value.baseUrl,
+//   title: t("_metadata.title"),
+//   description: t("_metadata.description"),
+//   imageUrl: "JEROEN-4238-SQUARE.jpeg",
+//   imageAlt: t("_metadata.title"),
+//   url: "/",
+//   structuredData: createWebsiteMetadataContext({
+//     name: t("_metadata.title"),
+//     url: config.value.baseUrl,
+//   }),
+// });
 </script>
 <template>
   <NuxtLoadingIndicator />
