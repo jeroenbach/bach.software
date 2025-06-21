@@ -11,12 +11,14 @@ import type { Notification } from "~/composables/useNotificationStore";
 
 interface Props extends Omit<Notification, "notificationId" | "title"> {
   title?: string;
+  disableTeleport?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
-  title: undefined,
-  severity: "error",
-});
+const {
+  title = undefined,
+  disableTeleport = false,
+  severity = "error",
+} = defineProps<Props>();
 const emit = defineEmits<{
   (e: "close"): void;
 }>();
@@ -29,11 +31,11 @@ const close = () => {
 </script>
 
 <template>
-  <Teleport to="[alert-bar='main']">
+  <Teleport :disabled="disableTeleport" to="[alert-bar='main']" defer>
     <div
       v-if="!dismissed"
       role="alert"
-      class="pointer-events-auto mb-5 w-full overflow-hidden"
+      class="pointer-events-auto mb-1 w-full overflow-hidden"
       :class="{
         'bg-green-50 dark:bg-gray-800 dark:text-green-400':
           severity === 'success',

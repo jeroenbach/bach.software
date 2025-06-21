@@ -5,14 +5,24 @@ import {
   ComputerDesktopIcon,
 } from "@heroicons/vue/24/outline";
 
-const colorMode = useColorMode();
+export type ColorMode = "light" | "dark" | "system";
+
+interface Props {
+  colorMode: ColorMode;
+}
+
+const { colorMode } = defineProps<Props>();
+const emits = defineEmits<{
+  (e: "update:colorMode", value: ColorMode): void;
+}>();
+
 const toggleColorMode = () => {
-  if (colorMode.preference === "light") {
-    colorMode.preference = "system";
-  } else if (colorMode.preference === "dark") {
-    colorMode.preference = "light";
+  if (colorMode === "light") {
+    emits("update:colorMode", "system");
+  } else if (colorMode === "dark") {
+    emits("update:colorMode", "light");
   } else {
-    colorMode.preference = "dark";
+    emits("update:colorMode", "dark");
   }
 };
 </script>
@@ -20,26 +30,20 @@ const toggleColorMode = () => {
 <template>
   <div class="flex size-6 flex-col overflow-hidden">
     <ClientOnly>
-      <button
+      <AppButton
         title="Switch color mode"
         class="absolute"
         @click="toggleColorMode"
       >
         <AppTransition name="slide-up">
           <ComputerDesktopIcon
-            v-if="$colorMode.preference === 'system'"
+            v-if="colorMode === 'system'"
             class="absolute size-6"
           />
-          <SunIcon
-            v-else-if="$colorMode.preference === 'light'"
-            class="absolute size-6"
-          />
-          <MoonIcon
-            v-else-if="$colorMode.preference === 'dark'"
-            class="absolute size-6"
-          />
+          <SunIcon v-else-if="colorMode === 'light'" class="absolute size-6" />
+          <MoonIcon v-else-if="colorMode === 'dark'" class="absolute size-6" />
         </AppTransition>
-      </button>
+      </AppButton>
     </ClientOnly>
   </div>
 </template>

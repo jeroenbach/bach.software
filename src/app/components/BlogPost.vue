@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { EyeIcon } from "@heroicons/vue/24/outline";
 
+import { formatDate } from "~/utils/date";
+import { isNotNullOrUndefined } from "~/utils/checks";
 import type { BlogPost } from "~/types/BlogPost";
 import type { PageReads } from "~/services/backend/models";
 

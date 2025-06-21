@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { StoryObj } from "@storybook/vue3";
+import type { StoryObj } from "@storybook/vue3-vite";
 import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 
@@ -12,7 +12,7 @@ import { mount } from "@vue/test-utils";
 export const mountStory = <Story extends StoryObj>(
   story: Story,
   argsOverride?: Story["args"],
-) => mount(story.render, { props: { ...story.args, ...(argsOverride ?? {}) } });
+) => mount(story.render, { props: { ...story.args, ...argsOverride } });
 
 export const setInputValue = async (
   wrapper: VueWrapper,

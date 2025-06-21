@@ -4,7 +4,20 @@ import { describe, expect, it } from "vitest";
 import * as stories from "./ResponsiveImage.stories";
 import ResponsiveImage from "./ResponsiveImage.vue";
 
-import { find, mountStory } from "~/utils/test";
+import { find, mountStory as _mountStory } from "~/utils/test";
+
+type Story = stories.Story;
+
+const mountStory = (story: Story, argsOverride?: Story["args"]) =>
+  _mountStory(
+    {
+      ...stories.default,
+      ...story,
+      // We have to add a Render function so we can use these stories in tests
+      render: (props: Record<string, unknown>) => h(ResponsiveImage, props),
+    },
+    argsOverride,
+  );
 
 describe("ResponsiveImage", () => {
   it("should have the same html output", async () => {

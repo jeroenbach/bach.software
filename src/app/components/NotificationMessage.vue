@@ -10,11 +10,15 @@ import { useAnimate, useTimeoutFn } from "@vueuse/core";
 
 import type { Notification } from "~/composables/useNotificationStore";
 
-type Props = Omit<Notification, "notificationId">;
+interface Props extends Omit<Notification, "notificationId"> {
+  disableTeleport?: boolean;
+}
 
-const props = withDefaults(defineProps<Props>(), {
-  severity: "error",
-});
+const {
+  disableTeleport = false,
+  severity = "error",
+  options,
+} = defineProps<Props>();
 
 const progress = ref();
 const dismissed = ref(false);
@@ -23,32 +27,32 @@ const { currentTime } = useAnimate(
   progress,
   { width: "100%" },
   {
-    duration: props.options?.closeIn,
+    duration: options?.closeIn,
     persist: true,
-    immediate: !!props.options?.closeIn,
+    immediate: !!options?.closeIn,
   },
 );
 const percentageComplete = computed(() =>
-  props.options?.closeIn
-    ? ((currentTime.value as number) / props.options?.closeIn) * 100
+  options?.closeIn
+    ? ((currentTime.value as number) / options?.closeIn) * 100
     : 0,
 );
 useTimeoutFn(
   () => {
     dismissed.value = true;
   },
-  props.options?.closeIn ?? 0,
-  { immediate: !!props.options?.closeIn },
+  options?.closeIn ?? 0,
+  { immediate: !!options?.closeIn },
 );
 </script>
 
 <template>
   <ClientOnly>
-    <Teleport to="[notification='main']">
+    <Teleport :disabled="disableTeleport" to="[notification='main']">
       <div
         v-if="!dismissed"
         role="alert"
-        class="pointer-events-auto w-full max-w-md overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+        class="pointer-events-auto mb-1 w-full max-w-md overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
         :class="{
           'border-l-4 border-green-300 bg-white dark:bg-gray-800 dark:text-green-400':
             severity === 'success',
@@ -106,9 +110,9 @@ useTimeoutFn(
                 >
                   {{ description }}
                 </p>
-                <ul v-if="props.descriptionList?.length">
+                <ul v-if="descriptionList?.length">
                   <li
-                    v-for="({ name, values }, i) in props.descriptionList"
+                    v-for="({ name, values }, i) in descriptionList"
                     :key="i"
                     class="ms-5 list-disc"
                   >
