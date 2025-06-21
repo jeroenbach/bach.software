@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref, computed } from "vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import {
   Dialog,
@@ -10,6 +11,7 @@ import { useScroll } from "@vueuse/core";
 
 import type { NavigationItem } from "~/types/NavigationItem";
 import type { Notification } from "~/composables/useNotificationStore";
+import type { ColorMode } from "~/components/ColorModeSwitcher.vue";
 
 interface Props {
   border?: boolean;
@@ -18,6 +20,10 @@ interface Props {
 }
 
 const { border, navigation = [], notifications = [] } = defineProps<Props>();
+
+const colorMode = defineModel<ColorMode>("colorMode", {
+  default: "system",
+});
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -53,7 +59,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
-        <ColorModeSwitcher />
+        <ColorModeSwitcher v-model:colorMode="colorMode" />
       </div>
       <div class="ml-auto flex lg:hidden">
         <button
@@ -124,7 +130,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
-                  <ColorModeSwitcher />
+                  <ColorModeSwitcher v-model:colorMode="colorMode" />
                 </div>
               </div>
             </div>
@@ -140,7 +146,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
     />
   </header>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
 @keyframes reduce-height {
   to {
     height: var(--reduceHeight);

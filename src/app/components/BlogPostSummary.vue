@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import type { BlogPostSummary } from "~/types/BlogPost";
 
-defineProps<{
-  post?: BlogPostSummary;
+const { post } = defineProps<{
+  post: BlogPostSummary;
 }>();
+
+const formattedDatePublished = computed(() => formatDate(post?.datePublished));
 </script>
 
 <template>
@@ -36,7 +38,7 @@ defineProps<{
           :datetime="post.datePublished"
           itemprop="datePublished"
         >
-          {{ formatDate(post.datePublished) }}
+          {{ formattedDatePublished }}
         </time>
         <ChipLink :to="`/posts?category=${post.category}`">{{
           post.category

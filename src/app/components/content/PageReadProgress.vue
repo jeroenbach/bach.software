@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { useReadProgressTracking } from "@/composables/useReadProgressTracking";
-import NotificationMessage from "@/components/NotificationMessage.vue";
+import { useReadProgressTracking } from "~/composables/useReadProgressTracking";
+import NotificationMessage from "~/components/NotificationMessage.vue";
 
 interface Props {
   wordCount: number;

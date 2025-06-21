@@ -1,62 +1,32 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import NotificationMessage from "./NotificationMessage.vue";
-import NotificationContainer from "./NotificationContainer.vue";
-
-import { createDefaultStory } from "~/utils/createDefaultStory";
-
-/** Unfortunately decorators & templates don't work in storybook in combination with Nuxt, therefore a simple render function for grouping */
-const wrapper = () =>
-  h("div", { class: "p-5" }, [
-    h(NotificationContainer),
-    h(NotificationMessage, {
-      title: "Notification title",
-      description: "Notification description",
-      severity: "info",
-      onClose: fn(),
-    }),
-    h(NotificationMessage, {
-      title: "Notification title",
-      description: "Notification description",
-      severity: "success",
-      onClose: fn(),
-    }),
-    h(NotificationMessage, {
-      title: "Notification title",
-      description: "Notification description",
-      severity: "warning",
-      onClose: fn(),
-    }),
-    h(NotificationMessage, {
-      title: "Notification title",
-      description: "Notification description",
-      severity: "error",
-      onClose: fn(),
-    }),
-    h(NotificationMessage, {
-      title: "Notification title",
-      description: "Notification description",
-      severity: "info",
-      options: { closeIn: 5000 },
-      onClose: fn(),
-    }),
-  ]);
 
 const meta = {
   title: "Components/NotificationMessage",
-  // @ts-expect-error to avoid type error with render function
-  component: wrapper,
-  args: { onClose: fn() },
-} satisfies Meta<typeof wrapper>;
+  component: NotificationMessage,
+  args: {},
+  render: (args) => ({
+    components: { NotificationMessage },
+    setup() {
+      return { args };
+    },
+    template: `
+      <NotificationMessage v-bind="args" severity="info" />
+      <NotificationMessage v-bind="args" severity="success" />
+      <NotificationMessage v-bind="args" severity="warning" />
+      <NotificationMessage v-bind="args" severity="error" />
+    `,
+  }),
+} satisfies Meta<typeof NotificationMessage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const defaultStory = createDefaultStory((_: Story) => ({
+export const Default: Story = {
   args: {
-    title: "Notification title",
+    title: "NotificationMessage title",
+    description: "NotificationMessage description",
+    disableTeleport: true,
   },
-}));
-
-export const Default: Story = defaultStory();
+};

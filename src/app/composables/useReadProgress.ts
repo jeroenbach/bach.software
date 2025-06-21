@@ -1,6 +1,6 @@
 import { useDocumentVisibility, useScroll } from "@vueuse/core";
 
-import { useStopWatch } from "@/composables/useStopWatch";
+import { useStopWatch } from "~/composables/useStopWatch";
 
 export type ReadProgressOptions = {
   /** The number of words on the page */

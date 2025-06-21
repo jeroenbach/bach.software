@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { isNotNullOrUndefined } from "~/utils/checks";
-
 type AspectRatio = "1/1" | "2/1" | "1/2" | "16/9"; // Also add them in the template
 export interface Props {
   src?: string;

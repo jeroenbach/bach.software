@@ -1,7 +1,7 @@
 import {
   useReadProgress,
   type ReadProgressOptions,
-} from "@/composables/useReadProgress";
+} from "~/composables/useReadProgress";
 import { useTrackEvent } from "#imports";
 
 export interface ReadProgressTrackingOptions extends ReadProgressOptions {

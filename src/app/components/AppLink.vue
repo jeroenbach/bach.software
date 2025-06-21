@@ -4,6 +4,7 @@ export interface Props {
   text?: string;
   color?: "gray" | "blue" | undefined;
 }
+
 const { color = undefined, to = undefined, text = "" } = defineProps<Props>();
 </script>
 

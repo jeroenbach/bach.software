@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { refReactiveDefault } from "@/composables/refReactiveDefault";
+import { refReactiveDefault } from "~/composables/refReactiveDefault";
 
 const props = defineProps<{ modelValue?: string }>();
 defineEmits(["update:modelValue"]);

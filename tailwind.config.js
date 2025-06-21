@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: "class",
-  content: [],
+  content: [
+    "./index.html",
+    "./src/app/**/*.{vue,js,ts}",
+    "./src/app/.storybook/**/*.{js,ts,vue}",
+  ],
   theme: {
     extend: {
       typography: (theme) => ({
