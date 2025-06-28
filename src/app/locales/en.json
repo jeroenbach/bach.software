@@ -26,9 +26,38 @@
       "exclude": "Exclude"
     }
   },
+  "about": {
+    "greeting": "Hello, my name is",
+    "name": "Jeroen Bach."
+  },
   "notification": {
     "error": {
       "unknown": "An unknown error occurred"
+    }
+  },
+  "footer": {
+    "title": "About Jeroen Bach"
+  },
+  "Loading": {
+    "": {
+      "": {
+        "": "Loading..."
+      }
+    }
+  },
+  "projects": {
+    "sofiaVera": {
+      "title": "projects.sofiaVera.title",
+      "description": "projects.sofiaVera.description"
+    },
+    "travelBags": {
+      "title": "projects.travelBags.title"
+    },
+    "pavo": {
+      "title": "projects.pavo.title"
+    },
+    "beautyPlaza": {
+      "title": "projects.beautyPlaza.title"
     }
   }
 }

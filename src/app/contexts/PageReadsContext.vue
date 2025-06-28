@@ -5,6 +5,7 @@ import { useApiClient } from "~/services/backend";
 
 const { state: pageReads } = useAsyncState(
   async () => {
+    return undefined;
     if (!import.meta.client) return undefined;
 
     const config = useRuntimeConfig();

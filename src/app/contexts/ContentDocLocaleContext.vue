@@ -8,12 +8,12 @@ interface Props {
 const { path } = defineProps<Props>();
 </script>
 <template>
-  <ContentQuery
-    v-slot="{ data }"
-    :path="path"
-    :where="{ _locale: locale }"
-    find="one"
-  >
-    <ContentRenderer :value="data" />
+  <ContentQuery :path="path" :where="{ _locale: locale }" find="one">
+    <template #default="{ data }">
+      <slot :data="data">
+        <ContentRenderer v-if="data" :value="data" />
+        <p v-else>{{ $t("Loading...") }}</p>
+      </slot>
+    </template>
   </ContentQuery>
 </template>

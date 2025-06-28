@@ -2,10 +2,17 @@
 export interface Props {
   to?: string;
   text?: string;
-  color?: "gray" | "blue" | undefined;
+  color?: "gray" | "blue";
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  title?: string;
+  ariaLabel?: string;
 }
 
-const { color = undefined, to = undefined, text = "" } = defineProps<Props>();
+const { target } = defineProps<Props>();
+
+const noopener = computed(() => {
+  return target === "_blank" ? "noopener" : undefined;
+});
 </script>
 
 <template>
@@ -18,6 +25,10 @@ const { color = undefined, to = undefined, text = "" } = defineProps<Props>();
       'bg-gradient-to-r from-sky-600 to-sky-500 bg-clip-text text-transparent hover:from-sky-700 hover:to-sky-600 dark:from-sky-400 dark:to-sky-300 dark:hover:from-sky-500 dark:hover:to-sky-400':
         color === 'blue',
     }"
+    :title="title ?? ariaLabel"
+    :target="target"
+    :rel="noopener"
+    :areaLabel="ariaLabel"
   >
     <slot>
       {{ text }}

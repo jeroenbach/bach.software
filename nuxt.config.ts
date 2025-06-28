@@ -13,12 +13,12 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["./composables", "./utils", "./contexts"],
   },
+  ssr: true,
   srcDir: "src/app",
   compatibilityDate: "2024-11-03",
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
-    // "@nuxtjs/storybook",
     "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
@@ -29,7 +29,6 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/plausible",
-    "@nuxt/eslint", // gives a lot of 'manifest-route-rule' middleware already exists errors
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {

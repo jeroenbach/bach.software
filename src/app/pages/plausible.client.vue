@@ -4,7 +4,7 @@ const plausibleIgnore = useStorage("plausible_ignore", false);
 </script>
 <template>
   <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-    <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+    <div class="mb-8 flex justify-center">
       <div
         class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
       >

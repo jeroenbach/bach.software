@@ -26,9 +26,13 @@ defineProps<{
     <div class="text-sm leading-6">
       <p class="font-semibold text-gray-800 dark:text-gray-300">
         <slot name="topLine">
-          <span v-if="fullName" itemprop="author" data-testid="author-name">{{
-            fullName
-          }}</span>
+          <AppLink
+            v-if="fullName"
+            :to="homePage"
+            itemprop="author"
+            data-testid="author-name"
+            >{{ fullName }}</AppLink
+          >
           <span v-if="fullName && linkedIn"> · </span>
           <AppLink
             v-if="linkedIn"
