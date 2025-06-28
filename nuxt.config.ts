@@ -120,10 +120,14 @@ export default defineNuxtConfig({
   //   "/api/*": { cache: { maxAge: 60 * 60 } },
   // },
   i18n: {
-    locales: [{ code: "en", language: "en-US", file: "./locales/en.json" }],
+    langDir: "../src/app/locales",
+    locales: [{ code: "en", language: "en-US", file: "en.json" }],
     defaultLocale: "en",
     strategy: "prefix_except_default",
     lazy: true,
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
   dayjs: {
     locales: ["en"],
