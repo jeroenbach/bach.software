@@ -51,18 +51,24 @@ const isMultiple = computed(
 const update = (value: unknown) => {
   emit("update:modelValue", value as TSingleOrMultiple);
 };
+
+const optionValueString = computed(() => {
+  return props.optionValue as string;
+});
 </script>
 
 <template>
   <MultiSelect
     v-if="isMultiple"
     v-bind="props"
+    :optionValue="optionValueString"
     :modelValue="modelValue"
     @update:modelValue="update"
   />
   <Select
     v-else
     v-bind="props"
+    :optionValue="optionValueString"
     :modelValue="modelValue"
     @update:modelValue="update"
   />
