@@ -9,10 +9,14 @@ const mock = vi.hoisted(() => ({
   useSeoMeta: vi.fn(),
   useHead: vi.fn(),
 }));
-vi.mock("@unhead/vue", () => ({
-  useSeoMeta: mock.useSeoMeta,
-  useHead: mock.useHead,
-}));
+vi.mock("@unhead/vue", async (importOriginal) => {
+  const actual: Record<string, unknown> = await importOriginal();
+  return {
+    ...actual,
+    useSeoMeta: mock.useSeoMeta,
+    useHead: mock.useHead,
+  };
+});
 
 describe("getMetadataImageUrl", () => {
   it("should render the correct full url of an image", async () => {
