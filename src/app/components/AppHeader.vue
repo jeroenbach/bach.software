@@ -17,13 +17,13 @@ interface Props {
   border?: boolean;
   navigation?: NavigationItem[] | null;
   notifications?: Notification[];
+  colorMode?: ColorMode;
 }
 
 const { border, navigation = [], notifications = [] } = defineProps<Props>();
-
-const colorMode = defineModel<ColorMode>("colorMode", {
-  default: "system",
-});
+const emits = defineEmits<{
+  (e: "update:colorMode", value: ColorMode): void;
+}>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -59,7 +59,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
-        <ColorModeSwitcher v-model:colorMode="colorMode" />
+        <ColorModeSwitcher
+          :colorMode="colorMode"
+          @update:colorMode="emits('update:colorMode', $event)"
+        />
       </div>
       <div class="ml-auto flex lg:hidden">
         <button
@@ -130,7 +133,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
-                  <ColorModeSwitcher v-model:colorMode="colorMode" />
+                  <ColorModeSwitcher
+                    :colorMode="colorMode"
+                    @update:colorMode="emits('update:colorMode', $event)"
+                  />
                 </div>
               </div>
             </div>

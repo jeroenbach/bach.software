@@ -8,10 +8,10 @@ import {
 export type ColorMode = "light" | "dark" | "system";
 
 interface Props {
-  colorMode: ColorMode;
+  colorMode?: ColorMode;
 }
 
-const { colorMode } = defineProps<Props>();
+const { colorMode = "system" } = defineProps<Props>();
 const emits = defineEmits<{
   (e: "update:colorMode", value: ColorMode): void;
 }>();

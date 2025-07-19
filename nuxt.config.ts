@@ -18,7 +18,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
-    // "@nuxtjs/storybook",
     "nuxt-content-twoslash", // this needs to be before `@nuxt/content`
     "@nuxt/content",
     "@nuxt/image",
@@ -29,7 +28,6 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/plausible",
-    "@nuxt/eslint", // gives a lot of 'manifest-route-rule' middleware already exists errors
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {
@@ -110,15 +108,6 @@ export default defineNuxtConfig({
       "2xl": screens.xxl,
     },
   },
-  /** TODO: check if this is needed in the end */
-  // routeRules: {
-  //   // Generated at build time for SEO purpose
-  //   "/": { prerender: true },
-  //   // "/posts": { prerender: true, experimentalNoScripts: true },
-  //   // "/posts/*": { prerender: true },
-  //   // Cached for 1 hour
-  //   "/api/*": { cache: { maxAge: 60 * 60 } },
-  // },
   i18n: {
     langDir: "../src/app/locales",
     locales: [{ code: "en", language: "en-US", file: "en.json" }],
