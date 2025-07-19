@@ -6,13 +6,18 @@ export interface Props {
   githubUrl?: string;
   imgSrc?: string;
   imgAlt?: string;
+  backgroundColor?: "white" | "gray";
 }
-defineProps<Props>();
+const { backgroundColor = "gray" } = defineProps<Props>();
 </script>
 
 <template>
   <footer
-    class="border-t border-t-slate-200 bg-gray-50 py-12 text-base dark:border-gray-500 dark:bg-gray-800 lg:py-20 lg:text-lg"
+    class="border-t border-t-slate-200 py-12 text-base dark:border-gray-500 dark:bg-gray-800 lg:py-20 lg:text-lg"
+    :class="{
+      'bg-white dark:bg-slate-900': backgroundColor === 'white',
+      'bg-gray-50 dark:bg-gray-800': backgroundColor === 'gray',
+    }"
   >
     <PageContent class="flex flex-col gap-y-8 lg:gap-y-12">
       <div v-if="!short" class="flex gap-4 max-md:flex-col lg:gap-6">
