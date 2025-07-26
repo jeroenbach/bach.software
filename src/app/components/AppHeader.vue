@@ -36,7 +36,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 
 <template>
   <header
-    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-400 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
+    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-500 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
     :class="{ 'border-b': border }"
   >
     <nav

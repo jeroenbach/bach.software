@@ -11,5 +11,11 @@ const markdownContent = computed(() => {
 });
 </script>
 <template>
-  <div v-html="markdownContent" />
+  <div class="show-list-bullets" v-html="markdownContent" />
 </template>
+<style>
+.show-list-bullets ul {
+  list-style: disc;
+  padding-left: 1rem;
+}
+</style>
