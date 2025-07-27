@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/plausible",
+    "@nuxt/eslint",
   ],
   components: [{ path: "~/contexts", pathPrefix: false }, "~/components"],
   primevue: {

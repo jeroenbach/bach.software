@@ -7,6 +7,7 @@ import en from "../locales/en.json";
 import AppBackground from "../components/AppBackground.vue";
 
 import NuxtImg from "./mocks/NuxtImg.vue";
+import NuxtImgBuild from "./mocks/NuxtImgBuild.vue";
 import NuxtPicture from "./mocks/NuxtPicture.vue";
 import ContentRenderer from "./mocks/ContentRenderer.vue";
 import "./input.css";
@@ -87,11 +88,16 @@ setup((app) => {
     props: ["to"],
     template: `<a :href='to'><slot /></a>`,
   });
-  app.component("NuxtImg", NuxtImg);
   app.component("NuxtPicture", NuxtPicture);
   app.component("ContentRenderer", ContentRenderer);
   app.component("ClientOnly", ComponentWithSlot);
   app.component("ContentQuery", ComponentWithSlot);
+
+  if (import.meta.env.MODE === "development") {
+    app.component("NuxtImg", NuxtImg);
+  } else {
+    app.component("NuxtImg", NuxtImgBuild);
+  }
 
   registerAppComponents(app);
 });

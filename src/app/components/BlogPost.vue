@@ -20,20 +20,14 @@ defineProps<Props>();
 
 <template>
   <AppProse>
-    <article
-      v-if="post"
-      itemtype="https://schema.org/BlogPosting"
-      itemprop="blogPost"
-    >
-      <h1 itemprop="headline">{{ post.title }}</h1>
+    <article v-if="post">
+      <h1>{{ post.title }}</h1>
       <div class="not-prose">
         <AuthorInformation v-bind="post.author" class="mb-8">
           <template #bottomLine>
-            <span itemprop="timeRequired">{{ post.readingTime?.text }}</span>
+            <span>{{ post.readingTime?.text }}</span>
             <span> · </span>
-            <time itemprop="datePublished">{{
-              formatDate(post.datePublished)
-            }}</time>
+            <time>{{ formatDate(post.datePublished) }}</time>
           </template>
         </AuthorInformation>
         <div

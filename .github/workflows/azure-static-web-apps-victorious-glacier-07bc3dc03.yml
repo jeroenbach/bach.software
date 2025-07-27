@@ -27,19 +27,28 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install
-
       - name: Run linter
         run: pnpm ci:lint
-
       - name: Run Typecheck
         run: pnpm ci:typecheck
-
       - name: Run Tests
         run: pnpm ci:test
-
       - name: Generate Site
         run: pnpm generate
 
+      # Perform Playwright tests
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      # Continue with the deployment steps
       - name: Copy config
         run: cp staticwebapp.config.json .output/public
 
