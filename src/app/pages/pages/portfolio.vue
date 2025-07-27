@@ -5,6 +5,8 @@ definePageMeta({
   layout: "white-footer",
 });
 const { data: page } = await usePagesContext<PortfolioPage>("portfolio");
+
+useMetadata("page", page.value);
 </script>
 <template>
   <PageContent class="pb-8 lg:pb-14">

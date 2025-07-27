@@ -24,6 +24,12 @@ export const usePagesContext = async <TPage extends Page>(slug: string) => {
     },
     {
       default: () => undefined,
+      transform: (data) => {
+        if (!data) return undefined;
+        // Ensure the page has a URL property
+        data.url ??= data._path;
+        return data;
+      },
     },
   );
 };

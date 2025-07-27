@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ["./composables", "./utils", "./contexts"],
+    dirs: ["./composables", "./utils", "./contexts", "./types"],
   },
   srcDir: "src/app",
   compatibilityDate: "2024-11-03",

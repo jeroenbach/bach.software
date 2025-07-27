@@ -11,29 +11,16 @@ import type {
 } from "schema-dts";
 
 import type { Author } from "~/types/Author";
-import type { Blog } from "~/types/Blog";
+import type { BlogPage } from "~/types/BlogPage";
 import type { Company } from "~/types/Company";
-import type { Config } from "~/types/Config";
-import type { BlogPostSummary } from "~/types/BlogPost";
+import type { BlogPost, BlogPostSummary } from "~/types/BlogPost";
 import type { Page } from "~/types/Page";
 import { createAbsoluteUrl } from "~/utils/url";
+import type { Metadata } from "~/types/Metadata";
 
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
 type MetadataOptions = Parameters<typeof useSeoMeta>[1];
-export interface Metadata {
-  baseUrl: string;
-  title: string;
-  description: string;
-  imageUrl?: string;
-  imageAlt?: string;
-  url: string;
-  /**
-   * In case the canonical is different from the url, specify it here
-   */
-  canonicalUrl?: string;
-  structuredData: unknown;
-}
 
 /**
  * Helper function to get an image url for metadata purposes
@@ -43,31 +30,45 @@ export interface Metadata {
 export const getMetadataImageUrl = (relativeUrl: string, baseUrl: string) =>
   createAbsoluteUrl(`/_ipx/w_768&f_jpeg&q_80/${relativeUrl}`, baseUrl);
 
-/**
- * Gets the company and blog metadata from the translation files
- */
-export const useBlogMetadata = () => {
-  const config = useState<Config>("config");
-  const { t } = useI18n();
-  const blog: Blog = {
-    name: t("_metadata.titleTemplate_empty"),
-    description: t("_metadata.description"),
-    url: "/posts",
-  };
-  const company: Company = {
-    name: t("_metadata.titleTemplate_empty"),
-    description: t("_metadata.description"),
-    url: "/",
-  };
-
-  return { blog, company, config };
-};
-
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
-export const useMetadata = (metadata?: Metadata, options?: MetadataOptions) => {
+export const useMetadata = (
+  type: "page" | "blog" | "blogPost",
+  metadata?: Metadata,
+  itemsMetadata?: Metadata[],
+  options?: MetadataOptions,
+) => {
   if (!metadata) return;
+
+  const config = useConfig();
+  const baseUrl = config.value?.baseUrl;
+
+  let url = metadata._path;
+  let structuredData: WithNullableContext<any> = undefined;
+  switch (type) {
+    case "page":
+      const page = metadata as Page;
+      url = page.url ?? page._path;
+      structuredData = createWebPageMetadataContext(baseUrl, page);
+      break;
+    case "blog":
+      const blog = metadata as BlogPage;
+      url = blog.url ?? blog._path;
+      structuredData = createBlogMetadataContext(
+        baseUrl,
+        blog,
+        itemsMetadata as BlogPostSummary[],
+      );
+      break;
+    case "blogPost":
+      const post = metadata as BlogPost;
+      url = post.url ?? post._path;
+      structuredData = createBlogPostingMetadataContext(baseUrl, post);
+      break;
+    default:
+      break;
+  }
 
   useSeoMeta(
     {
@@ -75,29 +76,24 @@ export const useMetadata = (metadata?: Metadata, options?: MetadataOptions) => {
       ogTitle: metadata.title,
       description: metadata.description,
       ogDescription: metadata.description,
-      ogUrl: createAbsoluteUrl(metadata.url, metadata.baseUrl),
+      ogUrl: createAbsoluteUrl(url, baseUrl),
       ogImage:
-        metadata.imageUrl &&
-        getMetadataImageUrl(metadata.imageUrl, metadata.baseUrl),
+        metadata.imageUrl && getMetadataImageUrl(metadata.imageUrl, baseUrl),
       ogImageAlt: metadata.imageAlt,
     },
     options,
   );
-
   useHead({
     script: [
       {
         type: "application/ld+json",
-        innerHTML: JSON.stringify(metadata.structuredData),
+        innerHTML: JSON.stringify(structuredData),
       },
     ],
     link: [
       {
         rel: "canonical",
-        href: createAbsoluteUrl(
-          metadata.canonicalUrl ?? metadata.url,
-          metadata.baseUrl,
-        ),
+        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
       },
     ],
   });
@@ -124,16 +120,15 @@ export const createWebPageMetadataContext = (
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: page.title,
-    url: page._path && createAbsoluteUrl(page._path, baseUrl),
+    url: createAbsoluteUrl(page.url ?? page._path, baseUrl),
     description: page.description,
   };
 };
 
 export const createBlogMetadataContext = (
   baseUrl: string,
-  blog: Blog,
+  blog: BlogPage,
   posts: BlogPostSummary[],
-  publisher?: Company,
 ): WithNullableContext<SchemaBlog> => {
   if (!blog) return undefined;
 
@@ -141,14 +136,16 @@ export const createBlogMetadataContext = (
     ?.map((post) => createBlogPostingMetadata(baseUrl, post))
     .filter(isNotNullOrUndefined);
 
+  const url = createAbsoluteUrl(blog.url ?? blog._path, baseUrl);
+
   return {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "@id": blog.url,
-    mainEntityOfPage: blog.url,
-    name: blog.name,
+    "@id": url,
+    mainEntityOfPage: url,
+    name: blog.title,
     description: blog.description,
-    publisher: publisher && createOrganizationMetadata(publisher),
+    publisher: blog.company && createOrganizationMetadata(blog.company),
     blogPost,
   };
 };
@@ -156,9 +153,8 @@ export const createBlogMetadataContext = (
 export const createBlogPostingMetadataContext = (
   baseUrl: string,
   post: BlogPostSummary,
-  publisher?: Company,
 ): WithNullableContext<SchemaBlogPosting> => {
-  const structuredData = createBlogPostingMetadata(baseUrl, post, publisher);
+  const structuredData = createBlogPostingMetadata(baseUrl, post);
   if (!structuredData) return undefined;
 
   return {
@@ -178,7 +174,6 @@ export const createBlogPostingMetadataContext = (
 export const createBlogPostingMetadata = (
   baseUrl: string,
   post: BlogPostSummary,
-  publisher?: Company,
 ): SchemaBlogPosting | undefined => {
   if (!post) return undefined;
 
@@ -189,8 +184,9 @@ export const createBlogPostingMetadata = (
     dateModified: post.dateModified && toDateWithTimeZone(post.dateModified),
     url: post.url && createAbsoluteUrl(post.url, baseUrl),
     author: createAuthorMetadata(baseUrl, post.author),
-    publisher: publisher && createOrganizationMetadata(publisher),
-    image: post.imgCoverUrl && createImageMetadata(baseUrl, post.imgCoverUrl),
+    publisher:
+      post.author?.company && createOrganizationMetadata(post.author.company),
+    image: post.imageUrl && createImageMetadata(baseUrl, post.imageUrl),
     isAccessibleForFree: true,
     keywords: post.keywords,
   };

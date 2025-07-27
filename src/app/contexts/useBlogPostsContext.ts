@@ -52,19 +52,21 @@ export const useBlogPostsContext = async <
       const query = isFalseOrUndefined(summary)
         ? queryContent<BlogPost>("posts")
         : queryContent<BlogPostSummary>("posts").only([
-            "slug",
+            "_path",
             "title",
             "description",
-            "category",
-            "authorName",
             "datePublished",
             "dateModified",
-            "imgCoverUrl",
-            "imgCoverPosition",
-            "readingTime",
-            "_path",
-            "excerpt",
+            "imageUrl",
+            "imageAlt",
             "draft",
+            "slug",
+            "category",
+            "keywords",
+            "authorName",
+            "imagePosition",
+            "readingTime",
+            "excerpt",
           ]);
 
       if (id) {

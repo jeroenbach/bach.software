@@ -1,27 +1,17 @@
 <script lang="ts" setup>
-const { blog, company, config } = useBlogMetadata();
-const { data: posts } = await useBlogPostsContext({ summary: true });
+import type { BlogPage } from "~/types/BlogPage";
 
-useMetadata({
-  baseUrl: config.value.baseUrl,
-  title: blog.name,
-  description: blog.description,
-  imageUrl: blog.imageUrl,
-  imageAlt: blog.imageAlt,
-  url: blog.url,
-  canonicalUrl: blog.url,
-  structuredData: createBlogMetadataContext(
-    config.value.baseUrl,
-    blog,
-    posts.value ?? [],
-    company,
-  ),
-});
+const [{ data: page }, { data: posts }] = await Promise.all([
+  usePagesContext<BlogPage>("posts"),
+  useBlogPostsContext({ summary: true }),
+]);
+
+useMetadata("blog", page.value, posts.value);
 </script>
 <template>
   <PageContent>
     <AppProse>
-      <ContentDocLocaleContext path="/pages/posts" />
+      <ContentRenderer :value="page" />
     </AppProse>
     <BlogPosts>
       <BlogPostSummary v-for="post in posts" :key="post._path" :post="post" />

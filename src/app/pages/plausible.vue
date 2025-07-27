@@ -11,7 +11,7 @@ useSeoMeta({
     <ClientOnly>
       <div class="mb-8 flex justify-center">
         <div
-          class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+          class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-400 dark:ring-white/10 dark:hover:ring-white/20"
         >
           <i18n-t keypath="plausible.current.text" tag="p">
             <template #status>
@@ -30,10 +30,12 @@ useSeoMeta({
       </div>
     </ClientOnly>
     <div class="text-center">
-      <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+      <h1
+        class="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-6xl"
+      >
         {{ $t("plausible.title") }}
       </h1>
-      <p class="mt-6 text-lg leading-8 text-gray-600">
+      <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
         {{ $t("plausible.description") }}
       </p>
       <div class="mt-10 flex items-center justify-center gap-x-6">

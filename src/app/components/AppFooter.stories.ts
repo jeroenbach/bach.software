@@ -6,7 +6,6 @@ import AppFooter from "./AppFooter.vue";
 import about from "../content/en/pages/3.about.md?raw";
 import footer from "../content/en/pages/_footer.md?raw";
 import authorYaml from "../content/en/authors/jeroenbach.yaml?raw";
-import type { Author } from "~/types/Author";
 
 const author = readYaml<Author>(authorYaml);
 

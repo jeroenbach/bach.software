@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { company, config } = useBlogMetadata();
+const config = useConfig();
 const { id } = useRoute().params as { id: string; slug: string };
 const { data: post } = await useBlogPostsContext({ id });
 const author = post.value?.authorName ?? "";
@@ -9,21 +9,7 @@ const readingTime = post.value?.readingTime?.time ?? 0;
 
 useReadProgressTracking({ wordCount, readingTime }, { author, category });
 
-useMetadata(
-  post.value && {
-    baseUrl: config.value.baseUrl,
-    title: post.value.title,
-    description: post.value.description,
-    imageUrl: post.value.imgCoverUrl,
-    imageAlt: post.value.title,
-    url: post.value.url,
-    structuredData: createBlogPostingMetadataContext(
-      config.value.baseUrl,
-      post.value,
-      company,
-    ),
-  },
-);
+useMetadata("blogPost", post.value);
 </script>
 <template>
   <PageContent>

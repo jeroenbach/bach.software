@@ -3,11 +3,8 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { readMarkdown } from "~/utils/markdown";
 import CurriculumVitaeTable from "~/components/CurriculumVitaeTable.vue";
 import about from "../content/en/pages/3.about.md?raw";
-import type { CurriculumVitaeItem } from "~/types/CurriculumVitaeItem";
 
-const { attributes } = readMarkdown<{
-  curriculumVitae: CurriculumVitaeItem[];
-}>(about);
+const { attributes } = readMarkdown<AboutPage>(about);
 const meta = {
   title: "Components/CurriculumVitaeTable",
   component: CurriculumVitaeTable,

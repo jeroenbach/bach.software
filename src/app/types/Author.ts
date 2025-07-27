@@ -7,4 +7,5 @@ export interface Author {
   linkedIn?: string;
   twitter?: string;
   github?: string;
+  company?: Company;
 }
