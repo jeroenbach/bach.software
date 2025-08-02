@@ -8,8 +8,6 @@ import { defineConfig, devices } from "@playwright/test";
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-process.env.STORYBOOK_URL = "http://localhost:6006";
-
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -40,10 +38,40 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
+
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+
+    /* Test against mobile viewports. */
+    {
+      name: "Mobile Chrome",
+      use: { ...devices["Pixel 5"] },
+    },
+    {
+      name: "Mobile Safari",
+      use: { ...devices["iPhone 12"] },
+    },
+
+    /* Test against branded browsers. */
+    // {
+    //   name: 'Microsoft Edge',
+    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    // },
+    // {
+    //   name: 'Google Chrome',
+    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    // },
   ],
 
   webServer: {
-    command: "pnpm dev & pnpm storybook",
+    command: "pnpm serve & pnpm serve:storybook",
     url: "http://localhost:3000/",
     reuseExistingServer: !process.env.CI,
   },

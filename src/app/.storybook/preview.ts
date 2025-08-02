@@ -7,8 +7,9 @@ import en from "../locales/en.json";
 import AppBackground from "../components/AppBackground.vue";
 
 import NuxtImg from "./mocks/NuxtImg.vue";
-import NuxtImgBuild from "./mocks/NuxtImgBuild.vue";
+import NuxtImgIntegrated from "./mocks/NuxtImgIntegrated.vue";
 import NuxtPicture from "./mocks/NuxtPicture.vue";
+import NuxtPictureIntegrated from "./mocks/NuxtPictureIntegrated.vue";
 import ContentRenderer from "./mocks/ContentRenderer.vue";
 import "./input.css";
 
@@ -55,7 +56,7 @@ const preview: Preview = {
         setup() {
           return { theme };
         },
-        template: `<div class="flex flex-col gap-y-4">
+        template: `<div class="flex flex-col gap-y-4" data-testid="component-story-wrapper">
           <div v-if="theme !== 'dark'" class="flex flex-col flex-1">
             <AppBackground class="flex-1 p-4"><story /></AppBackground>
           </div>
@@ -88,15 +89,19 @@ setup((app) => {
     props: ["to"],
     template: `<a :href='to'><slot /></a>`,
   });
-  app.component("NuxtPicture", NuxtPicture);
   app.component("ContentRenderer", ContentRenderer);
   app.component("ClientOnly", ComponentWithSlot);
   app.component("ContentQuery", ComponentWithSlot);
 
-  if (import.meta.env.MODE === "development") {
+  if (
+    import.meta.env.MODE === "development" ||
+    import.meta.env.VITE_STANDALONE
+  ) {
     app.component("NuxtImg", NuxtImg);
+    app.component("NuxtPicture", NuxtPicture);
   } else {
-    app.component("NuxtImg", NuxtImgBuild);
+    app.component("NuxtImg", NuxtImgIntegrated);
+    app.component("NuxtPicture", NuxtPictureIntegrated);
   }
 
   registerAppComponents(app);

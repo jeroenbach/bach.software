@@ -26,15 +26,16 @@ test.describe("Structured Data Tests", () => {
             url: "https://bach.software/pages/about",
             image: {
               "@type": "ImageObject",
-              url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE.jpg",
+              url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
               height: "768",
               width: "768",
             },
           },
           publisher: {
             "@type": "Organization",
-            "@id": "/",
+            "@id": "https://bach.software",
             name: "Bach.Software",
+            logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
           },
           image: {
             "@type": "ImageObject",
@@ -80,7 +81,7 @@ test.describe("Structured Data Tests", () => {
       if (data["@type"] === "Blog") {
         expect(data).toEqual({
           "@context": "https://schema.org",
-          "@id": "/posts",
+          "@id": "https://bach.software/posts",
           "@type": "Blog",
           blogPost: [
             {
@@ -90,11 +91,18 @@ test.describe("Structured Data Tests", () => {
                 image: {
                   "@type": "ImageObject",
                   height: "768",
-                  url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE.jpg",
+                  url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
                   width: "768",
                 },
                 name: "Jeroen Bach",
                 url: "https://bach.software/pages/about",
+              },
+              keywords: ["Kubernetes", "Azure", "Plausible.io"],
+              publisher: {
+                "@id": "https://bach.software",
+                "@type": "Organization",
+                logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
+                name: "Bach.Software",
               },
               dateModified: "2025-04-06T16:11:24+02:00",
               datePublished: "2025-04-06T16:11:24+02:00",
@@ -116,11 +124,27 @@ test.describe("Structured Data Tests", () => {
                 image: {
                   "@type": "ImageObject",
                   height: "768",
-                  url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE.jpg",
+                  url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
                   width: "768",
                 },
                 name: "Jeroen Bach",
                 url: "https://bach.software/pages/about",
+              },
+              keywords: [
+                "Vue.js",
+                "Vue 3.3",
+                "TypeScript",
+                "Generics",
+                "Reusable components",
+                "Conditional types",
+                "MultiSelect component",
+                "Frontend development",
+              ],
+              publisher: {
+                "@id": "https://bach.software",
+                "@type": "Organization",
+                logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
+                name: "Bach.Software",
               },
               dateModified: "2024-11-04T21:30:00+01:00",
               datePublished: "2024-11-04T21:30:00+01:00",
@@ -137,12 +161,13 @@ test.describe("Structured Data Tests", () => {
             },
           ],
           description:
-            "Jeroen Bach is a Freelance Software Engineer, focussed on full stack development and on helping people write better code.",
-          mainEntityOfPage: "/posts",
-          name: "Bach.Software",
+            "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects—without revealing proprietary code.",
+          mainEntityOfPage: "https://bach.software/posts",
+          name: "Blog",
           publisher: {
-            "@id": "/",
+            "@id": "https://bach.software",
             "@type": "Organization",
+            logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
             name: "Bach.Software",
           },
         });
