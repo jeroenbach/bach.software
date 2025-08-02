@@ -11,8 +11,6 @@ defineProps<{
 <template>
   <div
     class="relative flex items-center gap-x-4"
-    itemscope
-    itemtype="https://schema.org/Person"
     data-testid="author-information"
   >
     <ResponsiveImage
@@ -26,15 +24,14 @@ defineProps<{
     <div class="text-sm leading-6">
       <p class="font-semibold text-gray-800 dark:text-gray-300">
         <slot name="topLine">
-          <span v-if="fullName" itemprop="author" data-testid="author-name">{{
+          <AppLink v-if="fullName" :to="homePage" data-testid="author-name">{{
             fullName
-          }}</span>
+          }}</AppLink>
           <span v-if="fullName && linkedIn"> · </span>
           <AppLink
             v-if="linkedIn"
             :to="linkedIn"
             color="blue"
-            itemprop="url"
             data-testid="author-url"
           >
             {{ $t("Linkedin") }}
@@ -43,7 +40,7 @@ defineProps<{
       </p>
       <p class="text-gray-500 dark:text-gray-400">
         <slot name="bottomLine">
-          <span itemprop="jobTitle" data-testid="author-role">{{ role }}</span>
+          <span data-testid="author-role">{{ role }}</span>
         </slot>
       </p>
     </div>

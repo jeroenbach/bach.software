@@ -7,9 +7,14 @@ import en from "../locales/en.json";
 import AppBackground from "../components/AppBackground.vue";
 
 import NuxtImg from "./mocks/NuxtImg.vue";
+import NuxtImgBuild from "./mocks/NuxtImgBuild.vue";
 import NuxtPicture from "./mocks/NuxtPicture.vue";
 import ContentRenderer from "./mocks/ContentRenderer.vue";
 import "./input.css";
+
+const ComponentWithSlot = {
+  template: `<slot />`,
+};
 
 const i18n = createI18n({
   legacy: false,
@@ -20,23 +25,55 @@ const i18n = createI18n({
 });
 
 const preview: Preview = {
+  globalTypes: {
+    theme: {
+      name: "Theme",
+      dynamicTitle: true,
+      description: "Global theme for components",
+      toolbar: {
+        icon: "circlehollow",
+        items: ["light", "dark", "both"],
+      },
+    },
+  },
+  initialGlobals: {
+    theme: "both",
+  },
   decorators: [
     /**
      * Add the story twice, once for light mode and once for dark mode.
      * This decorator wraps the story in a flex container and applies the AppBackground component.
      */
-    (story, _) => {
-      return {
+    (story, context) => {
+      const LOCAL_STORAGE_KEY = "storybook-theme";
+      const storedTheme = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const currentTheme = context.globals.theme || storedTheme || "both";
+      localStorage.setItem(LOCAL_STORAGE_KEY, currentTheme);
+
+      const decorator = (theme: string) => ({
         components: { story, AppBackground },
+        setup() {
+          return { theme };
+        },
         template: `<div class="flex flex-col gap-y-4">
-          <div class="flex flex-col flex-1">
+          <div v-if="theme !== 'dark'" class="flex flex-col flex-1">
             <AppBackground class="flex-1 p-4"><story /></AppBackground>
           </div>
-          <div class="flex flex-col flex-1 dark">
+          <div v-if="theme !== 'light'" class="flex flex-col flex-1 dark">
             <AppBackground class="flex-1 p-4"><story /></AppBackground>
           </div>
         </div>`,
-      };
+      });
+
+      switch (currentTheme) {
+        case "light":
+          return decorator("light");
+        case "dark":
+          return decorator("dark");
+        case "both":
+        default:
+          return decorator("both");
+      }
     },
   ],
 };
@@ -51,12 +88,16 @@ setup((app) => {
     props: ["to"],
     template: `<a :href='to'><slot /></a>`,
   });
-  app.component("NuxtImg", NuxtImg);
   app.component("NuxtPicture", NuxtPicture);
   app.component("ContentRenderer", ContentRenderer);
-  app.component("ClientOnly", {
-    template: `<slot />`,
-  });
+  app.component("ClientOnly", ComponentWithSlot);
+  app.component("ContentQuery", ComponentWithSlot);
+
+  if (import.meta.env.MODE === "development") {
+    app.component("NuxtImg", NuxtImg);
+  } else {
+    app.component("NuxtImg", NuxtImgBuild);
+  }
 
   registerAppComponents(app);
 });

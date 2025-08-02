@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div data-content-id="content:en:posts:2.md" itemprop="articleBody">
+  <div data-content-id="content:en:posts:2.md">
     <p>
       For quite some time, I've been looking for ways to gather website
       analytics without showing those annoying consent banners. If you've ever

@@ -6,4 +6,6 @@ export interface Author {
   homePage?: string;
   linkedIn?: string;
   twitter?: string;
+  github?: string;
+  company?: Company;
 }

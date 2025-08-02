@@ -12,8 +12,17 @@ const config: StorybookConfig = {
   },
   staticDirs: ["../public", "../assets/images"],
   docs: {},
-  viteFinal: async (config) => {
+  viteFinal: async (config, { configType }) => {
     const mergedConfig = mergeConfig(viteConfig, config);
+
+    if (configType === "DEVELOPMENT") {
+      // Your development configuration goes here
+    }
+    if (configType === "PRODUCTION") {
+      // Your production configuration goes here.
+      mergedConfig.base = "/_storybook/";
+    }
+
     return mergedConfig;
   },
 };

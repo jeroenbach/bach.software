@@ -1,3 +1,4 @@
+import type { Author } from "~/types/Author";
 import type { BlogPost, BlogPostSummary } from "~/types/BlogPost";
 import { toDictionary } from "~/utils/collections";
 
@@ -51,19 +52,21 @@ export const useBlogPostsContext = async <
       const query = isFalseOrUndefined(summary)
         ? queryContent<BlogPost>("posts")
         : queryContent<BlogPostSummary>("posts").only([
-            "slug",
+            "_path",
             "title",
             "description",
-            "category",
-            "authorName",
             "datePublished",
             "dateModified",
-            "imgCoverUrl",
-            "imgCoverPosition",
-            "readingTime",
-            "_path",
-            "excerpt",
+            "imageUrl",
+            "imageAlt",
             "draft",
+            "slug",
+            "category",
+            "keywords",
+            "authorName",
+            "imagePosition",
+            "readingTime",
+            "excerpt",
           ]);
 
       if (id) {
@@ -76,14 +79,12 @@ export const useBlogPostsContext = async <
 
       const postsRaw = await query.find();
       const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
-      const { data: authors } = await useAuthorsContext(
-        Array.from(authorUserNames),
-      );
 
-      const authorsDictionary = toDictionary(
-        authors.value ?? [],
-        (a) => a.userName,
-      );
+      const authors = await queryContent<Author>("authors")
+        .where({ userName: { $in: Array.from(authorUserNames) } })
+        .find();
+
+      const authorsDictionary = toDictionary(authors ?? [], (a) => a.userName);
 
       const posts = postsRaw.map((p) => {
         const post = p as BlogPostSummary;

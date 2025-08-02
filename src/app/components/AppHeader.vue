@@ -17,13 +17,18 @@ interface Props {
   border?: boolean;
   navigation?: NavigationItem[] | null;
   notifications?: Notification[];
+  colorMode?: ColorMode;
 }
 
-const { border, navigation = [], notifications = [] } = defineProps<Props>();
-
-const colorMode = defineModel<ColorMode>("colorMode", {
-  default: "system",
-});
+const {
+  border,
+  navigation = [],
+  notifications = [],
+  colorMode = undefined,
+} = defineProps<Props>();
+const emits = defineEmits<{
+  (e: "update:colorMode", value: ColorMode): void;
+}>();
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -36,7 +41,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 
 <template>
   <header
-    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-400 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
+    class="sticky inset-0 z-20 flex w-full justify-center border-gray-200 bg-white px-4 text-gray-900 dark:border-gray-500 dark:bg-slate-900 dark:text-gray-300 lg:px-6"
     :class="{ 'border-b': border }"
   >
     <nav
@@ -59,7 +64,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
-        <ColorModeSwitcher v-model:colorMode="colorMode" />
+        <ColorModeSwitcher
+          :colorMode="colorMode"
+          @update:colorMode="emits('update:colorMode', $event)"
+        />
       </div>
       <div class="ml-auto flex lg:hidden">
         <button
@@ -130,7 +138,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
-                  <ColorModeSwitcher v-model:colorMode="colorMode" />
+                  <ColorModeSwitcher
+                    :colorMode="colorMode"
+                    @update:colorMode="emits('update:colorMode', $event)"
+                  />
                 </div>
               </div>
             </div>

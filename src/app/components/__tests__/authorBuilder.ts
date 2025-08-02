@@ -1,3 +1,5 @@
+import { buildCompany } from "./companyBuilder";
+
 import type { Author as _Author } from "~/types/Author";
 
 interface Author extends _Author {
@@ -35,6 +37,7 @@ export const buildAuthor = (fn?: (author: Author) => void) => {
     _file: "authors/author.yaml",
     _stem: "authors/author",
     _extension: "yaml",
+    company: buildCompany(),
   };
   if (fn) fn(author);
   return author;

@@ -4,7 +4,8 @@
 import appConfig from "~/appConfig.json";
 import type { Config } from "~/types/Config";
 
-const config = useState<Config>("config", () => appConfig);
+// Set the app config
+useState<Config>("config", () => appConfig);
 const { t, locale } = useI18n();
 
 useSeoMeta({
@@ -18,18 +19,6 @@ useHead({
   htmlAttrs: {
     lang: locale,
   },
-});
-useMetadata({
-  baseUrl: config.value.baseUrl,
-  title: t("_metadata.title"),
-  description: t("_metadata.description"),
-  imageUrl: "JEROEN-4238-SQUARE.jpeg",
-  imageAlt: t("_metadata.title"),
-  url: "/",
-  structuredData: createWebsiteMetadataContext({
-    name: t("_metadata.title"),
-    url: config.value.baseUrl,
-  }),
 });
 </script>
 <template>
