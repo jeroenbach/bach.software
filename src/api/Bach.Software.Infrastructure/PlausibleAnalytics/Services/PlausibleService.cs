@@ -39,8 +39,9 @@ public class PlausibleService : IAnalyticsService
             date_range = "all",
             filters = new[]{
                 new List<object> { "contains", "event:page", new[] { relativeUrl } },
-                new List<object> { "is", "event:goal", new[] {"read"} },
-            }
+                new List<object> { "is", "event:goal", new[] {"read", "three-quarter-read", "half-read", "quarter-read", "peeked", "opened"} },
+            },
+            dimensions = new[] { "event:goal" },
         };
 
         var jsonPayload = JsonSerializer.Serialize(payload);
@@ -56,13 +57,16 @@ public class PlausibleService : IAnalyticsService
             throw new InvalidOperationException("Failed to deserialize the response content.");
         }
 
+        var resultsDict = queryResult.Results.ToDictionary(x => x.Dimensions.First(), x => x.Metrics.First());
 
         return new PageReads
         {
-            Read = queryResult.Results.FirstOrDefault()?.Metrics.FirstOrDefault() ?? 0,
-            ThreeQuarterRead = 0,
-            HalfRead = 0,
-            QuarterRead = 0,
+            Read = resultsDict.GetValueOrDefault("read"),
+            ThreeQuarterRead = resultsDict.GetValueOrDefault("three-quarter-read"),
+            HalfRead = resultsDict.GetValueOrDefault("half-read"),
+            QuarterRead = resultsDict.GetValueOrDefault("quarter-read"),
+            Peeked = resultsDict.GetValueOrDefault("peeked"),
+            Opened = resultsDict.GetValueOrDefault("opened"),
         };
     }
 

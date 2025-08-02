@@ -12,5 +12,8 @@ public class QueryResult
     {
         [JsonPropertyName("metrics")]
         public required List<int> Metrics { get; set; }
+
+        [JsonPropertyName("dimensions")]
+        public required List<string> Dimensions { get; set; }
     }
 }

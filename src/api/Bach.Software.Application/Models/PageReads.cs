@@ -6,4 +6,6 @@ public class PageReads
     public required int ThreeQuarterRead { get; set; }
     public required int HalfRead { get; set; }
     public required int QuarterRead { get; set; }
+    public required int Peeked { get; set; }
+    public required int Opened { get; set; }
 }
