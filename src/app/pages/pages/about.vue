@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type AboutPage } from "~/types/AboutPage";
+import type { AboutPage } from "~/types/AboutPage";
 
 definePageMeta({
   layout: "gray-short-footer",

@@ -45,14 +45,17 @@ export const useMetadata = (
   const baseUrl = config.value?.baseUrl;
 
   let url = metadata._path;
-  let structuredData: WithNullableContext<any> = undefined;
+  let structuredData: WithNullableContext<
+    SchemaWebPage | SchemaBlog | SchemaBlogPosting
+  > = undefined;
   switch (type) {
-    case "page":
+    case "page": {
       const page = metadata as Page;
       url = page.url ?? page._path;
       structuredData = createWebPageMetadataContext(baseUrl, page);
       break;
-    case "blog":
+    }
+    case "blog": {
       const blog = metadata as BlogPage;
       url = blog.url ?? blog._path;
       structuredData = createBlogMetadataContext(
@@ -61,11 +64,13 @@ export const useMetadata = (
         itemsMetadata as BlogPostSummary[],
       );
       break;
-    case "blogPost":
+    }
+    case "blogPost": {
       const post = metadata as BlogPost;
       url = post.url ?? post._path;
       structuredData = createBlogPostingMetadataContext(baseUrl, post);
       break;
+    }
     default:
       break;
   }

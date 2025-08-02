@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
+import about from "../content/en/pages/3.about.md?raw";
+import authorYaml from "../content/en/authors/jeroenbach.yaml?raw";
+
 import AppHero from "~/components/AppHero.vue";
 import { readMarkdown } from "~/utils/markdown";
 import { readYaml } from "~/utils/yaml";
-import about from "../content/en/pages/3.about.md?raw";
-import authorYaml from "../content/en/authors/jeroenbach.yaml?raw";
 import type { Author } from "~/types/Author";
 
 const { bodyHtml } = readMarkdown(about);

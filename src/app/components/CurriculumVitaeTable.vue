@@ -2,7 +2,6 @@
 import type { CurriculumVitaeItem } from "~/types/CurriculumVitaeItem";
 
 interface Props {
-  title?: string;
   curriculumVitae?: CurriculumVitaeItem[];
 }
 

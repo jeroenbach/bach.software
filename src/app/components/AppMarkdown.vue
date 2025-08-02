@@ -11,6 +11,7 @@ const markdownContent = computed(() => {
 });
 </script>
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div class="show-list-bullets" v-html="markdownContent" />
 </template>
 <style>

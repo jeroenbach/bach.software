@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
+import about from "../content/en/pages/3.about.md?raw";
+
 import { readMarkdown } from "~/utils/markdown";
 import CurriculumVitaeTable from "~/components/CurriculumVitaeTable.vue";
-import about from "../content/en/pages/3.about.md?raw";
 
 const { attributes } = readMarkdown<AboutPage>(about);
 const meta = {

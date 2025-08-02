@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Props } from "~/components/AppFooter.vue";
+import type { Props } from "~/components/AppFooter.vue";
 const { data: about } = await usePagesContext("about");
 const { data: footer } = await usePagesContext("_footer");
 const { data: author } = await useAuthorsContext("jeroenbach");

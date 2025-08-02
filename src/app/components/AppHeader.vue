@@ -20,7 +20,12 @@ interface Props {
   colorMode?: ColorMode;
 }
 
-const { border, navigation = [], notifications = [] } = defineProps<Props>();
+const {
+  border,
+  navigation = [],
+  notifications = [],
+  colorMode = undefined,
+} = defineProps<Props>();
 const emits = defineEmits<{
   (e: "update:colorMode", value: ColorMode): void;
 }>();

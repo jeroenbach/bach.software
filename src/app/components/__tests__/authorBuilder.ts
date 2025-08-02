@@ -1,5 +1,6 @@
-import type { Author as _Author } from "~/types/Author";
 import { buildCompany } from "./companyBuilder";
+
+import type { Author as _Author } from "~/types/Author";
 
 interface Author extends _Author {
   title?: string;

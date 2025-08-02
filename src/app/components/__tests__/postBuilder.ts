@@ -1,6 +1,6 @@
 import { buildAuthor } from "./authorBuilder";
 
-import type { BlogPost as _Post } from "~/types/BlogPost";
+import type { BlogPost } from "~/types/BlogPost";
 
 export const buildPost = (fn?: (post: BlogPost) => void) => {
   const post: BlogPost = {

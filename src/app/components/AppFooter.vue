@@ -8,7 +8,15 @@ export interface Props {
   imgAlt?: string;
   backgroundColor?: "white" | "gray";
 }
-const { backgroundColor = "gray" } = defineProps<Props>();
+const {
+  title = undefined,
+  short = false,
+  linkedInUrl = undefined,
+  githubUrl = undefined,
+  imgSrc = undefined,
+  imgAlt = undefined,
+  backgroundColor = "gray",
+} = defineProps<Props>();
 </script>
 
 <template>

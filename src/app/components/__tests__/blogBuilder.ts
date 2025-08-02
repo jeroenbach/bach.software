@@ -1,5 +1,6 @@
-import type { BlogPage } from "~/types/BlogPage";
 import { buildCompany } from "./companyBuilder";
+
+import type { BlogPage } from "~/types/BlogPage";
 
 export const buildBlog = (fn?: (blog: BlogPage) => void) => {
   const blog: BlogPage = {

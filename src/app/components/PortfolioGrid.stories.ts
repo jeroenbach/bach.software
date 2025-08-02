@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
+import portfolioPage from "../content/en/pages/2.portfolio.md?raw";
+
 import { readMarkdown } from "~/utils/markdown";
 import PortfolioGrid from "~/components/PortfolioGrid.vue";
-import portfolioPage from "../content/en/pages/2.portfolio.md?raw";
 import type { PortfolioItem } from "~/types/PortfolioItem";
 
 const { attributes } = readMarkdown<{

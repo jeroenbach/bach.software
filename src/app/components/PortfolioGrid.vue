@@ -4,7 +4,7 @@ import type { PortfolioItem } from "~/types/PortfolioItem";
 interface Props {
   portfolio?: PortfolioItem[];
 }
-const { portfolio } = defineProps<Props>();
+const { portfolio = [] } = defineProps<Props>();
 </script>
 <template>
   <div v-if="portfolio" class="bg-gray-50 dark:bg-gray-900">

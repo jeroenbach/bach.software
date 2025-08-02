@@ -2,13 +2,20 @@
 export interface Props {
   to?: string;
   text?: string;
-  color?: "gray" | "blue";
+  color?: "gray" | "blue" | "default";
   target?: "_blank" | "_self" | "_parent" | "_top";
   title?: string;
   ariaLabel?: string;
 }
 
-const { target } = defineProps<Props>();
+const {
+  to = undefined,
+  text = undefined,
+  color = "default",
+  target = "_self",
+  title = undefined,
+  ariaLabel = undefined,
+} = defineProps<Props>();
 
 const noopener = computed(() => {
   return target === "_blank" ? "noopener" : undefined;
