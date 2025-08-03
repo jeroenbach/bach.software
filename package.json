@@ -22,7 +22,7 @@
     "dev:static-web-app": "cp staticwebapp.config.json .output/public && swa start .output/public --api-location src/api/Bach.Software.API",
     "ssg": "nuxt generate && pnpm run serve",
     "serve": "pnpm dlx serve ./.output/public/",
-    "serve:storybook": "pnpm dlx serve ./.output/public/_storybook/",
+    "serve:storybook": "pnpm dlx http-server ./.output/public/_storybook/standalone/ -p 6006",
     "test": "TZ=Europe/Amsterdam vitest -w",
     "playwright": "playwright test --config=playwright.config.ts",
     "lint": "pnpm lint:eslint && pnpm lint:prettier",
@@ -31,11 +31,13 @@
     "lint:prettier": "prettier . --check",
     "check": "pnpm ci:lint && pnpm ci:typecheck",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
-    "ci:playwright": "playwright test --config=playwright.config.ts",
+    "ci:playwright": "playwright test --config=playwright.config.ci.ts",
     "ci:lint": "pnpm lint",
     "ci:typecheck": "nuxi typecheck",
     "storybook": "storybook dev --config-dir ./src/app/.storybook --port 6006 --no-open",
-    "storybook:build": "storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/"
+    "storybook:build": "pnpm run storybook:build:integrated && pnpm run storybook:build:standalone",
+    "storybook:build:integrated": "storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/",
+    "storybook:build:standalone": "VITE_STANDALONE=true storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/standalone"
   },
   "dependencies": {
     "@headlessui/vue": "1.7.23",

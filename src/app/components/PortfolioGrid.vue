@@ -43,7 +43,7 @@ const { portfolio = [] } = defineProps<Props>();
                   class="absolute inset-x-10 bottom-0 top-10 h-full overflow-hidden rounded-[2.5rem] drop-shadow-2xl"
                 >
                   <ResponsiveImage
-                    src="portfolio/iphone-sofia-vera.png"
+                    src="/portfolio/iphone-sofia-vera.png"
                     :alt="portfolioItem.title"
                     aspectRatio="1/2"
                     :partOfScreen="1"
@@ -56,7 +56,7 @@ const { portfolio = [] } = defineProps<Props>();
             <template v-else-if="portfolioItem.imgOption === 'travelBags'">
               <div class="relative flex flex-1 items-end">
                 <ResponsiveImage
-                  src="portfolio/TravelBags.jpg"
+                  src="/portfolio/TravelBags.jpg"
                   :alt="portfolioItem.title"
                   aspectRatio="2/1"
                   :partOfScreen="1"
@@ -72,7 +72,7 @@ const { portfolio = [] } = defineProps<Props>();
                   class="absolute inset-0 bg-gradient-to-b from-white from-15% to-50% dark:from-gray-800"
                 ></div>
                 <ResponsiveImage
-                  src="portfolio/Pavo.jpg"
+                  src="/portfolio/Pavo.jpg"
                   :alt="portfolioItem.title"
                   aspectRatio="2/1"
                   :partOfScreen="1"
@@ -88,7 +88,7 @@ const { portfolio = [] } = defineProps<Props>();
                   class="absolute bottom-0 left-10 right-0 top-10 overflow-hidden rounded-tl-xl bg-white shadow-2xl"
                 >
                   <ResponsiveImage
-                    src="portfolio/BeautyPlaza.jpg"
+                    src="/portfolio/BeautyPlaza.jpg"
                     :alt="portfolioItem.title"
                     class="h-full object-left"
                     aspectRatio="1/1"

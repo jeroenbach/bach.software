@@ -140,8 +140,8 @@ describe("useReadProgress", () => {
 
   it.each([
     {
-      wordCount: 1375,
-      timeElapsed: 300_000, // 1375 / 275 * 60 * 1000
+      wordCount: 1325,
+      timeElapsed: 300_000, // 1325 / 265 * 60 * 1000
       description: "long article",
     },
     {

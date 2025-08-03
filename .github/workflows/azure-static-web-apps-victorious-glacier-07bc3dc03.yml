@@ -26,20 +26,23 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Run Tests
-        run: pnpm ci:test
-
       - name: Run linter
         run: pnpm ci:lint
 
       - name: Run Typecheck
         run: pnpm ci:typecheck
 
+      - name: Run Tests
+        run: pnpm ci:test
+
   build_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build Job
     steps:
+      - name: Set timezone
+        run: sudo timedatectl set-timezone Europe/Amsterdam
+
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -57,22 +60,35 @@ jobs:
       - name: Copy config
         run: cp staticwebapp.config.json .output/public
 
-      # - name: Upload generated site
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: generated-site
-      #     path: .output/public
+      - name: Zip generated site (no compression)
+        run: |
+          cd .output
+          zip -r -0 ../generated-site.zip public
 
-      # deploy_job:
-      #   needs: build_job
-      #   runs-on: ubuntu-latest
-      #   name: Deploy Job
-      #   steps:
-      #     - name: Download generated site
-      #       uses: actions/download-artifact@v4
-      #       with:
-      #         name: generated-site
-      #         path: .output/public
+      - name: Upload zipped site
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-site-zip
+          path: generated-site.zip
+
+  deploy_job:
+    needs: build_job
+    runs-on: ubuntu-latest
+    name: Deploy Job
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+
+      - name: Download zipped site
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-site-zip
+          path: .
+
+      - name: Unzip generated site
+        run: unzip generated-site.zip -d .output
 
       - name: Deploy
         id: builddeploy
@@ -86,40 +102,43 @@ jobs:
           output_location: "" # Built app content directory - optional
           skip_app_build: true
 
-  # playwright_job:
-  #   needs: build_job
-  #   runs-on: ubuntu-latest
-  #   name: Perform Playwright Tests
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: true
-  #         lfs: false
+  playwright_job:
+    needs: build_job
+    runs-on: ubuntu-latest
+    name: Perform Playwright Tests
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
 
-  #     - name: Install pnpm
-  #       uses: pnpm/action-setup@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-  #     - name: Install Dependencies
-  #       run: pnpm install
+      - name: Install Dependencies
+        run: pnpm install
 
-  #     - name: Download generated site
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: generated-site
-  #         path: .output/public
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
 
-  #     - name: Install Playwright Browsers
-  #       run: pnpm exec playwright install --with-deps
+      - name: Download zipped site
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-site-zip
+          path: .
 
-  #     - name: Run Playwright tests
-  #       run: pnpm ci:playwright
+      - name: Unzip generated site
+        run: unzip generated-site.zip -d .output
 
-  #     - uses: actions/upload-artifact@v4
-  #       if: ${{ !cancelled() }}
-  #       with:
-  #         name: playwright-report
-  #         path: playwright-report/
-  #         retention-days: 30
+      - name: Run Playwright tests
+        run: pnpm ci:playwright
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
