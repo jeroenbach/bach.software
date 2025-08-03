@@ -20,7 +20,7 @@ const config: StorybookConfig = {
     }
     if (configType === "PRODUCTION") {
       // Your production configuration goes here.
-      mergedConfig.base = "/_storybook/";
+      mergedConfig.base = process.env.VITE_STANDALONE ? "/" : "/_storybook/";
     }
 
     return mergedConfig;
