@@ -141,8 +141,9 @@ jobs:
           path: playwright-report/
           retention-days: 5
 
-      - name: Test Playwright artifacts
+      - name: Upload test-results
         uses: actions/upload-artifact@v4
+        if: ${{ always() && !cancelled() }}
         with:
           name: test-results
           path: test-results/
