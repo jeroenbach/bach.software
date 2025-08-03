@@ -83,6 +83,7 @@ export default defineNuxtConfig({
         // Theme used if `html.dark`
         dark: "github-dark",
       },
+      langs: ["typescript", "javascript", "json", "c#", "csharp"],
     },
     markdown: {
       anchorLinks: true,

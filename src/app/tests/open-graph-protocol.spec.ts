@@ -18,10 +18,10 @@ test.describe("Open Graph Protocol Tests", () => {
     await expect(page).toHaveTitle("Blog - Bach.Software");
     expect(await getMetadataProperty(page, "og:title")).toBe("Blog");
     expect(await getMetadataName(page, "description")).toBe(
-      "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects—without revealing proprietary code.",
+      "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects, without revealing proprietary code.",
     );
     expect(await getMetadataProperty(page, "og:description")).toBe(
-      "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects—without revealing proprietary code.",
+      "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects, without revealing proprietary code.",
     );
     expect(await getMetadataProperty(page, "og:url")).toBe(
       "https://bach.software/posts",

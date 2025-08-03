@@ -86,6 +86,39 @@ test.describe("Structured Data Tests", () => {
           blogPost: [
             {
               "@type": "BlogPosting",
+              headline:
+                "Track how many people read your articles, using Plausible.io, Vue.js and Azure functions",
+              datePublished: "2025-08-15T00:45:00+02:00",
+              dateModified: "2025-08-15T00:45:00+02:00",
+              url: "https://bach.software/posts/3-track-how-many-people-read-your-articles-using-plausible_io-vue_js-and-azure-functions",
+              author: {
+                "@type": "Person",
+                name: "Jeroen Bach",
+                url: "https://bach.software/pages/about",
+                image: {
+                  "@type": "ImageObject",
+                  url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
+                  height: "768",
+                  width: "768",
+                },
+              },
+              publisher: {
+                "@type": "Organization",
+                "@id": "https://bach.software",
+                name: "Bach.Software",
+                logo: "https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg",
+              },
+              image: {
+                "@type": "ImageObject",
+                url: "https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/3/cover.jpeg",
+                height: "768",
+                width: "768",
+              },
+              isAccessibleForFree: true,
+              keywords: ["Vue.js", "C#"],
+            },
+            {
+              "@type": "BlogPosting",
               author: {
                 "@type": "Person",
                 image: {
@@ -161,7 +194,7 @@ test.describe("Structured Data Tests", () => {
             },
           ],
           description:
-            "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects—without revealing proprietary code.",
+            "Insights and techniques for writing great software, based on real-world experience. Sharing opinionated solutions and generalized patterns from client projects, without revealing proprietary code.",
           mainEntityOfPage: "https://bach.software/posts",
           name: "Blog",
           publisher: {

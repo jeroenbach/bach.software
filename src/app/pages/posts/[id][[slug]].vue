@@ -8,17 +8,12 @@ const wordCount = post.value?.readingTime?.words ?? 0;
 const readingTime = post.value?.readingTime?.time ?? 0;
 
 useReadProgressTracking({ wordCount, readingTime }, { author, category });
+const { pageReads } = usePageReadsContext();
 
 useMetadata("blogPost", post.value);
 </script>
 <template>
   <PageContent>
-    <PageReadsContext v-slot="{ pageReads }">
-      <BlogPost
-        :post="post"
-        :baseUrl="config?.baseUrl"
-        :pageReads="pageReads"
-      />
-    </PageReadsContext>
+    <BlogPost :post="post" :baseUrl="config?.baseUrl" :pageReads="pageReads" />
   </PageContent>
 </template>
