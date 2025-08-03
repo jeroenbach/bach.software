@@ -13,8 +13,8 @@ export type ReadProgressOptions = {
   readingTime?: number;
   /**
    * The average reading speed in words per minute
-   * Medium.com uses roughly 275 words per minute as a reading speed.
-   * @default 275
+   * Medium.com uses roughly 265 words per minute as a reading speed.
+   * @default 265
    */
   averageReadingSpeed?: number;
   /**
@@ -52,7 +52,7 @@ export const useReadProgress = (
   const _options = {
     wordCount: 0,
     minimumTime: 30_000,
-    averageReadingSpeed: 275,
+    averageReadingSpeed: 265,
     updateInterval: 500,
     ...options,
   };

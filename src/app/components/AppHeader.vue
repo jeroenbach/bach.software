@@ -172,34 +172,40 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
   }
 }
 
-header {
+html {
   --height: 4rem;
-  --reduceHeight: calc(var(--height) * 0.65);
-  height: var(--height);
-  animation: reduce-height 1s linear both paused;
-  animation-delay: calc(v-bind(scrollHeader) * -1s);
+  scroll-padding-top: var(--height); /* or whatever height your header is */
 
-  &:not(.border-b) {
-    animation:
-      reduce-height 1s linear both paused,
-      border-appear 1s linear both paused;
-    animation-delay: calc(v-bind(scrollHeader) * -1s);
-  }
-
-  .logo {
-    --height: 2rem;
-    --reduceHeight: calc(var(--height) * 0.85);
+  header {
+    --reduceHeight: calc(var(--height) * 0.65);
     height: var(--height);
     animation: reduce-height 1s linear both paused;
     animation-delay: calc(v-bind(scrollHeader) * -1s);
+
+    &:not(.border-b) {
+      animation:
+        reduce-height 1s linear both paused,
+        border-appear 1s linear both paused;
+      animation-delay: calc(v-bind(scrollHeader) * -1s);
+    }
+
+    .logo {
+      --height: 2rem;
+      --reduceHeight: calc(var(--height) * 0.85);
+      height: var(--height);
+      animation: reduce-height 1s linear both paused;
+      animation-delay: calc(v-bind(scrollHeader) * -1s);
+    }
   }
 }
 
 @media (min-width: 1024px) {
-  header {
+  html {
     --height: 5rem;
-    .logo {
-      --height: 2.5rem;
+    header {
+      .logo {
+        --height: 2.5rem;
+      }
     }
   }
 }

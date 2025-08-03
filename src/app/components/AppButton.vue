@@ -1,7 +1,11 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const emits = defineEmits<{
+  (e: "click"): void;
+}>();
+</script>
 
 <template>
-  <button>
+  <button @click="emits('click')">
     <slot />
   </button>
 </template>

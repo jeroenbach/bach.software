@@ -28,5 +28,13 @@
     "error": {
       "unknown": "An unknown error occurred"
     }
+  },
+  "pageReadProgress": {
+    "openButton": "Show me my stats",
+    "wordCount": "Word count: {wordCount}",
+    "readingTime": "We estimate you need {readingTimeInMinutes} minutes to read this article",
+    "timeProgress": "Time progress: {timeSpentPercentage}%",
+    "scrollProgress": "Scroll progress: {scrollPercentage}%",
+    "readingStage": "Reading stage: {totalProgress}"
   }
 }

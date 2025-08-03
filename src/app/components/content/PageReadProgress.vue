@@ -11,6 +11,8 @@ interface Props {
 
 const { wordCount, readingTime } = defineProps<Props>();
 
+const showProgress = ref(false);
+
 const {
   totalProgress,
   timeSpentPercentage,
@@ -28,15 +30,28 @@ const readingTimeInMinutes = computed(() => {
 </script>
 
 <template>
-  <NotificationMessage severity="info">
+  <AppButton
+    class="rounded-full bg-sky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+    @click="showProgress = !showProgress"
+    >{{ $t("pageReadProgress.openButton") }}</AppButton
+  >
+  <NotificationMessage v-if="showProgress" severity="info">
     <div class="flex flex-col">
-      <span>Word count: {{ wordCount }}</span>
-      <span
-        >You need {{ readingTimeInMinutes }} minutes to read the article</span
-      >
-      <span>Time progress: {{ timeSpentPercentage?.toFixed(1) }}%</span>
-      <span>Scroll progress: {{ scrollPercentage?.toFixed(1) }}%</span>
-      <span>Reading stage: {{ totalProgress }}</span>
+      <span>{{ $t("pageReadProgress.wordCount", { wordCount }) }}</span>
+      <span>{{
+        $t("pageReadProgress.readingTime", { readingTimeInMinutes })
+      }}</span>
+      <span>{{
+        $t("pageReadProgress.timeProgress", {
+          timeSpentPercentage: timeSpentPercentage?.toFixed(1),
+        })
+      }}</span>
+      <span>{{
+        $t("pageReadProgress.scrollProgress", {
+          scrollPercentage: scrollPercentage?.toFixed(1),
+        })
+      }}</span>
+      <span>{{ $t("pageReadProgress.readingStage", { totalProgress }) }}</span>
     </div>
   </NotificationMessage>
 </template>
