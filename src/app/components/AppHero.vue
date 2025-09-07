@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 export interface Props {
-  intro?: string;
-  title?: string;
-  subTitle?: string;
-  text?: string;
-  imgSrc?: string;
-  imgAlt?: string;
+  intro?: string
+  title?: string
+  subTitle?: string
+  text?: string
+  imgSrc?: string
+  imgAlt?: string
 }
 defineProps<Props>();
 </script>
+
 <template>
   <div
     class="mx-auto flex gap-x-10 gap-y-12 py-24 max-md:flex-col lg:gap-x-28 lg:py-28"

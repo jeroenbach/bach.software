@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import portfolioPage from "../content/en/pages/2.portfolio.md?raw";
+import type { PortfolioItem } from '~/types/PortfolioItem';
 
-import { readMarkdown } from "~/utils/markdown";
-import PortfolioGrid from "~/components/PortfolioGrid.vue";
-import type { PortfolioItem } from "~/types/PortfolioItem";
+import PortfolioGrid from '~/components/PortfolioGrid.vue';
+import { readMarkdown } from '~/utils/markdown';
+import portfolioPage from '../content/en/pages/2.portfolio.md?raw';
 
 const { attributes } = readMarkdown<{
-  portfolio: PortfolioItem[];
+  portfolio: PortfolioItem[]
 }>(portfolioPage);
 const meta = {
-  title: "Components/PortfolioGrid",
+  title: 'Components/PortfolioGrid',
   component: PortfolioGrid,
   args: {
     portfolio: attributes.portfolio || [],
   },
-  render: (args) => ({
+  render: args => ({
     components: { PortfolioGrid },
     setup() {
       return { args, attributes };
@@ -28,5 +28,5 @@ export default meta;
 export type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {} as Story["args"],
+  args: {} as Story['args'],
 };

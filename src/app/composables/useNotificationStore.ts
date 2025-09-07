@@ -1,31 +1,31 @@
-import { ref, computed } from "vue";
-import { tryOnUnmounted } from "@vueuse/core";
+import { tryOnUnmounted } from '@vueuse/core';
+import { computed, ref } from 'vue';
 
-import { defineDestructibleStore } from "~/composables/destructiblePinia";
-import { isProblemDetails } from "~/types/ProblemDetails";
-import { isValidationProblemDetails } from "~/types/ValidationProblemDetails";
+import { defineDestructibleStore } from '~/composables/destructiblePinia';
+import { isProblemDetails } from '~/types/ProblemDetails';
+import { isValidationProblemDetails } from '~/types/ValidationProblemDetails';
 
-export type DescriptionList = Array<{ name: string; values: string[] }>;
+export type DescriptionList = Array<{ name: string, values: string[] }>;
 
 export interface Notification {
-  notificationId: number;
-  severity?: "info" | "warning" | "error" | "success";
-  title?: string;
-  description?: string;
+  notificationId: number
+  severity?: 'info' | 'warning' | 'error' | 'success'
+  title?: string
+  description?: string
   /**
    * A bullet list of extra information.
    */
-  descriptionList?: DescriptionList;
+  descriptionList?: DescriptionList
   options?: {
     /**
      * Specifies the amount of milliseconds that the notification should be shown.
      */
-    closeIn?: number;
-  };
+    closeIn?: number
+  }
 }
 
 interface InternalNotification extends Notification {
-  instanceId: number;
+  instanceId: number
 }
 
 /**
@@ -34,7 +34,7 @@ interface InternalNotification extends Notification {
  * so that we can keep track of the notifications of that instance.
  */
 const useNotificationStoreInternal = defineDestructibleStore(
-  "NotificationStore",
+  'NotificationStore',
   () => {
     let lastNotificationId = 0;
     let lastInstanceId = 0;
@@ -46,7 +46,7 @@ const useNotificationStoreInternal = defineDestructibleStore(
     // Hide the internal working of the messages by removing the instance Id
     const notifications = computed(() =>
       internalNotifications.value.map(
-        (x) =>
+        x =>
           ({
             notificationId: x.notificationId,
             severity: x.severity,
@@ -62,11 +62,11 @@ const useNotificationStoreInternal = defineDestructibleStore(
       notifications,
       add: (
         instanceId: number,
-        severity: Notification["severity"],
+        severity: Notification['severity'],
         title?: string,
         description?: string,
         descriptionList?: DescriptionList,
-        options?: Notification["options"],
+        options?: Notification['options'],
       ) => {
         internalNotifications.value.push({
           notificationId: generateNotificationId(),
@@ -82,7 +82,7 @@ const useNotificationStoreInternal = defineDestructibleStore(
       generateInstanceId,
       clear: (instanceId: number) => {
         internalNotifications.value = internalNotifications.value.filter(
-          (x) => x.instanceId !== instanceId,
+          x => x.instanceId !== instanceId,
         );
       },
       clearAll: () => {
@@ -97,7 +97,7 @@ const useNotificationStoreInternal = defineDestructibleStore(
  * The messages will be bound to the component invoking them, so if that component
  * unmounts, also it's messages will be unmounted.
  */
-export const useNotificationStore = () => {
+export function useNotificationStore() {
   const {
     notifications,
     add,
@@ -121,15 +121,15 @@ export const useNotificationStore = () => {
     /**
      * Display a notification to the user.
      * @param severity The severity of the message: info, warning, error, success
-     * @param description The message to display to the user
      * @param title Optional title of the message
-     * @param closeIn specify in how many milliseconds to close the message. @default this is turned off.
+     * @param description The message to display to the user
+     * @param options Optional configuration for the notification
      */
     add: (
-      severity: Notification["severity"],
+      severity: Notification['severity'],
       title: string,
       description?: string,
-      options?: Notification["options"],
+      options?: Notification['options'],
     ) => {
       add(instanceId, severity, title, description, undefined, options);
     },
@@ -137,13 +137,12 @@ export const useNotificationStore = () => {
      * Display a thrown error to the user.
      * We check the type of the error and
      * @param error The error that is thrown
-     * @param closeIn specify in how many milliseconds to close the message. @default this is turned off.
+     * @param options Optional configuration for the notification
      */
-    addError: (error: unknown, options?: Notification["options"]) => {
-      let title: string = t("notification.error.unknown");
-      let description: string | undefined = undefined;
-      let validationErrors: { name: string; values: string[] }[] | undefined =
-        undefined;
+    addError: (error: unknown, options?: Notification['options']) => {
+      let title: string = t('notification.error.unknown');
+      let description: string | undefined;
+      let validationErrors: { name: string, values: string[] }[] | undefined;
 
       if (isProblemDetails(error)) {
         title = error.title;
@@ -159,9 +158,9 @@ export const useNotificationStore = () => {
         );
       }
 
-      add(instanceId, "error", title, description, validationErrors, options);
+      add(instanceId, 'error', title, description, validationErrors, options);
     },
     clear,
     clearAll,
   };
-};
+}

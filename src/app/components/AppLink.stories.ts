@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import AppLink from "./AppLink.vue";
+import AppLink from './AppLink.vue';
 
 const meta = {
-  title: "Components/AppLink",
+  title: 'Components/AppLink',
   component: AppLink,
-  render: (args) => ({
+  render: args => ({
     components: { AppLink },
     setup() {
       return { args };
@@ -21,23 +21,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    text: "Default AppLink",
-    to: "#",
+    text: 'Default AppLink',
+    to: '#',
   },
 };
 
 export const Blue: Story = {
   args: {
     ...Default.args,
-    text: "Blue AppLink",
-    color: "blue",
+    text: 'Blue AppLink',
+    color: 'blue',
   },
 };
 
 export const Gray: Story = {
   args: {
     ...Default.args,
-    text: "Gray AppLink",
-    color: "gray",
+    text: 'Gray AppLink',
+    color: 'gray',
   },
 };

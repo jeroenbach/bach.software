@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import about from "../content/en/pages/3.about.md?raw";
+import CurriculumVitaeTable from '~/components/CurriculumVitaeTable.vue';
 
-import { readMarkdown } from "~/utils/markdown";
-import CurriculumVitaeTable from "~/components/CurriculumVitaeTable.vue";
+import { readMarkdown } from '~/utils/markdown';
+import about from '../content/en/pages/3.about.md?raw';
 
 const { attributes } = readMarkdown<AboutPage>(about);
 const meta = {
-  title: "Components/CurriculumVitaeTable",
+  title: 'Components/CurriculumVitaeTable',
   component: CurriculumVitaeTable,
   args: {
     curriculumVitae: attributes.curriculumVitae || [],
   },
-  render: (args) => ({
+  render: args => ({
     components: { CurriculumVitaeTable },
     setup() {
       return { args };
@@ -25,5 +25,5 @@ export default meta;
 export type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {} as Story["args"],
+  args: {} as Story['args'],
 };

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { EyeIcon } from "@heroicons/vue/24/outline";
+import type { PageReads } from '~/services/backend/models';
 
-import { formatDate } from "~/utils/date";
-import { isNotNullOrUndefined } from "~/utils/checks";
-import type { BlogPost } from "~/types/BlogPost";
-import type { PageReads } from "~/services/backend/models";
+import type { BlogPost } from '~/types/BlogPost';
+import { EyeIcon } from '@heroicons/vue/24/outline';
+import { isNotNullOrUndefined } from '~/utils/checks';
+import { formatDate } from '~/utils/date';
 
 interface Props {
   /**
    * The post to display. Can be undefined while loading
    */
-  post?: BlogPost;
-  baseUrl: string;
-  pageReads?: PageReads;
+  post?: BlogPost
+  baseUrl: string
+  pageReads?: PageReads
 }
 
 defineProps<Props>();

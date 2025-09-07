@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 defineProps<{
-  fullName?: string;
-  role?: string;
-  imageUrl?: string;
-  homePage?: string;
-  linkedIn?: string;
+  fullName?: string
+  role?: string
+  imageUrl?: string
+  homePage?: string
+  linkedIn?: string
 }>();
 </script>
 
@@ -24,9 +24,11 @@ defineProps<{
     <div class="text-sm leading-6">
       <p class="font-semibold text-gray-800 dark:text-gray-300">
         <slot name="topLine">
-          <AppLink v-if="fullName" :to="homePage" data-testid="author-name">{{
-            fullName
-          }}</AppLink>
+          <AppLink v-if="fullName" :to="homePage" data-testid="author-name">
+            {{
+              fullName
+            }}
+          </AppLink>
           <span v-if="fullName && linkedIn"> · </span>
           <AppLink
             v-if="linkedIn"

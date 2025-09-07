@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ColorMode } from "~/components/ColorModeSwitcher.vue";
+import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
 
 interface Props {
-  border?: boolean;
+  border?: boolean
 }
 
 const { border } = defineProps<Props>();
@@ -11,6 +11,7 @@ const { data: navigation } = await useContentNavigationContext();
 
 const colorMode = useColorMode();
 </script>
+
 <template>
   <AppHeader
     :navigation="navigation"

@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import NotificationMessage from "./NotificationMessage.vue";
+import NotificationMessage from './NotificationMessage.vue';
 
 const meta = {
-  title: "Components/NotificationMessage",
+  title: 'Components/NotificationMessage',
   component: NotificationMessage,
   args: {},
-  render: (args) => ({
+  render: args => ({
     components: { NotificationMessage },
     setup() {
       return { args };
@@ -25,8 +25,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: "NotificationMessage title",
-    description: "NotificationMessage description",
+    title: 'NotificationMessage title',
+    description: 'NotificationMessage description',
     disableTeleport: true,
   },
 };

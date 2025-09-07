@@ -1,10 +1,10 @@
-import fm from "front-matter";
-import { marked } from "marked";
+import fm from 'front-matter';
+import { marked } from 'marked';
 
-export const readMarkdown = <TAttributes>(markdown: string) => {
+export function readMarkdown<TAttributes>(markdown: string) {
   const { attributes, body } = fm(markdown) as {
-    attributes: TAttributes;
-    body: string;
+    attributes: TAttributes
+    body: string
   };
   const bodyHtml = marked(body);
   return {
@@ -12,4 +12,4 @@ export const readMarkdown = <TAttributes>(markdown: string) => {
     body,
     bodyHtml,
   };
-};
+}

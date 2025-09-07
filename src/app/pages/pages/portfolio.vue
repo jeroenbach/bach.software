@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { PortfolioPage } from "~/types/PortfolioPage";
+import type { PortfolioPage } from '~/types/PortfolioPage';
 
 definePageMeta({
-  layout: "white-footer",
+  layout: 'white-footer',
 });
-const { data: page } = await usePagesContext<PortfolioPage>("portfolio");
+const { data: page } = await usePagesContext<PortfolioPage>('portfolio');
 
-useMetadata("page", page.value);
+useMetadata('page', page.value);
 </script>
+
 <template>
   <div>
     <PageContent class="pb-8 lg:pb-14">

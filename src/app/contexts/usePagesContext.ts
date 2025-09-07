@@ -1,4 +1,4 @@
-import type { Page } from "~/types/Page";
+import type { Page } from '~/types/Page';
 
 /**
  * Fetches a single page based on the provided slug.
@@ -9,13 +9,13 @@ import type { Page } from "~/types/Page";
  * @param {string} [slug] - An optional slug to filter the page.
  * @returns {Promise<Page | null>} A promise that resolves to a single page or null.
  */
-export const usePagesContext = async <TPage extends Page>(slug: string) => {
+export async function usePagesContext<TPage extends Page>(slug: string) {
   const uniqueId = `pagesContext-${slug}`;
 
   return await useAsyncData(
     uniqueId,
     async () => {
-      const query = queryContent<TPage>("pages").where({
+      const query = queryContent<TPage>('pages').where({
         _path: `/pages/${slug}`,
         _draft: { $ne: true },
       });
@@ -25,11 +25,12 @@ export const usePagesContext = async <TPage extends Page>(slug: string) => {
     {
       default: () => undefined,
       transform: (data) => {
-        if (!data) return undefined;
+        if (!data)
+          return undefined;
         // Ensure the page has a URL property
         data.url ??= data._path;
         return data;
       },
     },
   );
-};
+}

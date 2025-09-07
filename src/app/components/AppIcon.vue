@@ -1,9 +1,10 @@
 <script setup lang="ts">
 interface Props {
-  icon: "X" | "Linkedin" | "Whatsapp" | "Email" | "GitHub";
+  icon: 'X' | 'Linkedin' | 'Whatsapp' | 'Email' | 'GitHub'
 }
 defineProps<Props>();
 </script>
+
 <template>
   <svg
     v-if="icon === 'X'"

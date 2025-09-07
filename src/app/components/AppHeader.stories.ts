@@ -1,19 +1,19 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { ref } from "vue";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 
-import AppHeader from "./AppHeader.vue";
+import AppHeader from './AppHeader.vue';
 
 const meta = {
-  title: "Components/Header",
+  title: 'Components/Header',
   component: AppHeader,
   args: {
-    navigation: [{ label: "Blog", to: "#" }],
-    colorMode: "system",
+    navigation: [{ label: 'Blog', to: '#' }],
+    colorMode: 'system',
   },
-  render: (args) => ({
+  render: args => ({
     components: { AppHeader },
     setup() {
-      const colorMode = ref("system");
+      const colorMode = ref('system');
       return { args, colorMode };
     },
     template: `<AppHeader v-bind="args" v-model="colorMode"  />`,

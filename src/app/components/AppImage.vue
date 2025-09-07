@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 interface Props {
-  src?: string;
-  alt?: string;
-  width?: number;
-  height?: number;
-  sizes?: string;
-  class?: string;
-  loading?: "lazy" | "eager";
+  src?: string
+  alt?: string
+  width?: number
+  height?: number
+  sizes?: string
+  class?: string
+  loading?: 'lazy' | 'eager'
 }
 const props = defineProps<Props>();
 </script>

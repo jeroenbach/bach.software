@@ -1,27 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import about from "../content/en/pages/3.about.md?raw";
-import authorYaml from "../content/en/authors/jeroenbach.yaml?raw";
+import type { Author } from '~/types/Author';
+import AppHero from '~/components/AppHero.vue';
 
-import AppHero from "~/components/AppHero.vue";
-import { readMarkdown } from "~/utils/markdown";
-import { readYaml } from "~/utils/yaml";
-import type { Author } from "~/types/Author";
+import { readMarkdown } from '~/utils/markdown';
+import { readYaml } from '~/utils/yaml';
+import authorYaml from '../content/en/authors/jeroenbach.yaml?raw';
+import about from '../content/en/pages/3.about.md?raw';
 
 const { bodyHtml } = readMarkdown(about);
 const author = readYaml<Author>(authorYaml);
 
 const meta = {
-  title: "Components/AppHero",
+  title: 'Components/AppHero',
   component: AppHero,
   args: {
-    intro: "Hello, my name is",
+    intro: 'Hello, my name is',
     title: `${author.fullName}.`,
     subTitle: `${author.role}.`,
     imgSrc: author.imageUrl,
     imgAlt: author.fullName,
   },
-  render: (args) => ({
+  render: args => ({
     components: { AppHero },
     setup() {
       return { args, bodyHtml };
@@ -36,5 +36,5 @@ export default meta;
 export type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {} as Story["args"],
+  args: {} as Story['args'],
 };

@@ -1,19 +1,18 @@
-import { isProblemDetails, type ProblemDetails } from "~/types/ProblemDetails";
+import type { ProblemDetails } from '~/types/ProblemDetails';
+import { isProblemDetails } from '~/types/ProblemDetails';
 
 export interface AdditionalErrorDataHolder {
-  additionalData: Record<string, string[]>;
+  additionalData: Record<string, string[]>
 }
 
 export interface ValidationProblemDetails extends ProblemDetails {
-  errors: AdditionalErrorDataHolder;
+  errors: AdditionalErrorDataHolder
 }
 
-export const isValidationProblemDetails = (
-  error: unknown,
-): error is ValidationProblemDetails => {
+export function isValidationProblemDetails(error: unknown): error is ValidationProblemDetails {
   return (
-    isProblemDetails(error) &&
-    "errors" in error &&
-    typeof error.errors === "object"
+    isProblemDetails(error)
+    && 'errors' in error
+    && typeof error.errors === 'object'
   );
-};
+}

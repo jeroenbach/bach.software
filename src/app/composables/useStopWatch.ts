@@ -1,17 +1,17 @@
-import { useIntervalFn } from "@vueuse/core";
-import { ref } from "vue";
+import { useIntervalFn } from '@vueuse/core';
+import { ref } from 'vue';
 
 /**
  * Options for configuring the stopwatch behavior
  */
-export type StopWatchOptions = {
+export interface StopWatchOptions {
   /** The interval in milliseconds between timer updates (default: 100) */
-  interval?: number;
+  interval?: number
   /** Whether the timer should start immediately (default: true) */
-  immediate?: boolean;
-};
+  immediate?: boolean
+}
 
-export const useStopWatch = (options: StopWatchOptions = {}) => {
+export function useStopWatch(options: StopWatchOptions = {}) {
   const _options = {
     interval: 100,
     immediate: false,
@@ -32,4 +32,4 @@ export const useStopWatch = (options: StopWatchOptions = {}) => {
     isActive,
     timer,
   };
-};
+}

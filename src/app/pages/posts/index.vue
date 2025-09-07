@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import type { BlogPage } from "~/types/BlogPage";
+import type { BlogPage } from '~/types/BlogPage';
 
 const [{ data: page }, { data: posts }] = await Promise.all([
-  usePagesContext<BlogPage>("posts"),
+  usePagesContext<BlogPage>('posts'),
   useBlogPostsContext({ summary: true }),
 ]);
 
-useMetadata("blog", page.value, posts.value);
+useMetadata('blog', page.value, posts.value);
 </script>
+
 <template>
   <PageContent>
     <AppProse>

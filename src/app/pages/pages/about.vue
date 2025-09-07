@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { AboutPage } from "~/types/AboutPage";
+import type { AboutPage } from '~/types/AboutPage';
 
 definePageMeta({
-  layout: "gray-short-footer",
+  layout: 'gray-short-footer',
 });
 
-const { data: page } = await usePagesContext<AboutPage>("about");
-const { data: author } = await useAuthorsContext("jeroenbach");
-useMetadata("page", page.value);
+const { data: page } = await usePagesContext<AboutPage>('about');
+const { data: author } = await useAuthorsContext('jeroenbach');
+useMetadata('page', page.value);
 </script>
+
 <template>
   <div class="flex flex-col px-4 lg:px-6">
     <AppHero

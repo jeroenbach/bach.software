@@ -2,10 +2,11 @@
 // Note: this file cannot contain any async code at the top level,
 // the static site generation didn't work when refreshing a page.
 export interface Props {
-  background?: "white" | "gray";
+  background?: 'white' | 'gray'
 }
-const { background = "white" } = defineProps<Props>();
+const { background = 'white' } = defineProps<Props>();
 </script>
+
 <template>
   <div
     class="text-gray-700 dark:text-gray-300"

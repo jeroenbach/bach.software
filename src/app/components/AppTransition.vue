@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 defineProps<{
-  name: "slide-up";
+  name: 'slide-up'
 }>();
 </script>
 
@@ -9,6 +9,7 @@ defineProps<{
     <slot />
   </Transition>
 </template>
+
 <style lang="scss" scoped>
 /** slide-up */
 .slide-up-enter-active,

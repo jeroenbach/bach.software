@@ -1,5 +1,5 @@
-import type { Config } from "~/types/Config";
+import type { Config } from '~/types/Config';
 
-export const useConfig = () => {
-  return useState<Config>("config");
-};
+export function useConfig() {
+  return useState<Config>('config');
+}

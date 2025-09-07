@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
+import type { Notification } from '~/composables/useNotificationStore';
+import type { NavigationItem } from '~/types/NavigationItem';
 import {
   Dialog,
   DialogPanel,
-  TransitionRoot,
   TransitionChild,
-} from "@headlessui/vue";
-import { useScroll } from "@vueuse/core";
+  TransitionRoot,
+} from '@headlessui/vue';
 
-import type { NavigationItem } from "~/types/NavigationItem";
-import type { Notification } from "~/composables/useNotificationStore";
-import type { ColorMode } from "~/components/ColorModeSwitcher.vue";
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useScroll } from '@vueuse/core';
+import { computed, ref } from 'vue';
 
 interface Props {
-  border?: boolean;
-  navigation?: NavigationItem[] | null;
-  notifications?: Notification[];
-  colorMode?: ColorMode;
+  border?: boolean
+  navigation?: NavigationItem[] | null
+  notifications?: Notification[]
+  colorMode?: ColorMode
 }
 
 const {
@@ -27,7 +27,7 @@ const {
   colorMode = undefined,
 } = defineProps<Props>();
 const emits = defineEmits<{
-  (e: "update:colorMode", value: ColorMode): void;
+  (e: 'update:colorMode', value: ColorMode): void
 }>();
 
 const mobileMenuOpen = ref(false);
@@ -157,6 +157,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
     />
   </header>
 </template>
+
 <style lang="scss">
 @keyframes reduce-height {
   to {

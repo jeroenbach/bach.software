@@ -1,20 +1,20 @@
 <script lang="ts" setup>
-type Icon = "X" | "Linkedin" | "Whatsapp" | "Email";
-type Setting = {
-  url: string;
-};
+type Icon = 'X' | 'Linkedin' | 'Whatsapp' | 'Email';
+interface Setting {
+  url: string
+}
 interface Props {
-  url: string;
-  text?: string;
-  icons?: Icon[];
+  url: string
+  text?: string
+  icons?: Icon[]
 }
 const {
   url,
-  text = "",
-  icons = ["X", "Linkedin", "Whatsapp", "Email"],
+  text = '',
+  icons = ['X', 'Linkedin', 'Whatsapp', 'Email'],
 } = defineProps<Props>();
 const urlEncoded = encodeURIComponent(url);
-const textEncoded = encodeURIComponent(text ?? "");
+const textEncoded = encodeURIComponent(text ?? '');
 const properties = computed<{ [key in Icon]?: Setting }>(() => ({
   X: {
     url: `https://twitter.com/intent/tweet?url=${urlEncoded}&text=${textEncoded}`,
@@ -30,6 +30,7 @@ const properties = computed<{ [key in Icon]?: Setting }>(() => ({
   },
 }));
 </script>
+
 <template>
   <div class="sharing-buttons flex flex-wrap gap-1">
     <AppLink

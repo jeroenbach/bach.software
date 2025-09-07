@@ -1,3 +1,3 @@
 export interface PostExampleProps {
-  label?: string;
+  label?: string
 }

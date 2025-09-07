@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import ChipLink from "./ChipLink.vue";
+import ChipLink from './ChipLink.vue';
 
 const meta = {
-  title: "Components/ChipLink",
+  title: 'Components/ChipLink',
   component: ChipLink,
-  render: (args) => ({
+  render: args => ({
     components: { ChipLink },
     setup() {
       return { args };
@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    text: "Default ChipLink",
-    to: "#",
+    text: 'Default ChipLink',
+    to: '#',
   },
 };

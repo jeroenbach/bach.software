@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { useStorage } from "@vueuse/core";
-const plausibleIgnore = useStorage("plausible_ignore", false);
+import { useStorage } from '@vueuse/core';
+
+const plausibleIgnore = useStorage('plausible_ignore', false);
 
 useSeoMeta({
-  robots: "noindex, nofollow",
+  robots: 'noindex, nofollow',
 });
 </script>
+
 <template>
   <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
     <ClientOnly>

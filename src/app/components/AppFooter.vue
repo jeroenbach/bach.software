@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 export interface Props {
-  title?: string;
-  short?: boolean;
-  linkedInUrl?: string;
-  githubUrl?: string;
-  imgSrc?: string;
-  imgAlt?: string;
-  backgroundColor?: "white" | "gray";
+  title?: string
+  short?: boolean
+  linkedInUrl?: string
+  githubUrl?: string
+  imgSrc?: string
+  imgAlt?: string
+  backgroundColor?: 'white' | 'gray'
 }
 const {
   title = undefined,
@@ -15,7 +15,7 @@ const {
   githubUrl = undefined,
   imgSrc = undefined,
   imgAlt = undefined,
-  backgroundColor = "gray",
+  backgroundColor = 'gray',
 } = defineProps<Props>();
 </script>
 
@@ -53,12 +53,12 @@ const {
         </div>
       </div>
       <div class="mx-auto flex gap-4 lg:gap-6">
-        <AppLink :to="linkedInUrl"
-          ><AppIcon class="size-7" icon="Linkedin"
-        /></AppLink>
-        <AppLink :to="githubUrl"
-          ><AppIcon class="size-7" icon="GitHub"
-        /></AppLink>
+        <AppLink :to="linkedInUrl">
+          <AppIcon class="size-7" icon="Linkedin" />
+        </AppLink>
+        <AppLink :to="githubUrl">
+          <AppIcon class="size-7" icon="GitHub" />
+        </AppLink>
       </div>
       <div class="mx-auto max-w-lg text-sm/7">
         <slot name="footer" />

@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import Alert from "./AlertBar.vue";
+import Alert from './AlertBar.vue';
 
 const meta = {
-  title: "Components/Alert",
+  title: 'Components/Alert',
   component: Alert,
   args: {
-    title: "Alert title",
-    description: "Alert description",
+    title: 'Alert title',
+    description: 'Alert description',
     disableTeleport: true,
   },
-  render: (args) => ({
+  render: args => ({
     components: { Alert },
     setup() {
       return { args };
