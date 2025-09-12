@@ -3,7 +3,7 @@ const { slug } = useRoute().params as { slug: string };
 
 const { data: page } = await usePagesContext(slug);
 
-useMetadata("page", page.value);
+useMetadata('page', page.value);
 </script>
 
 <template>

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { BlogPostSummary } from "~/types/BlogPost";
+import type { BlogPostSummary } from '~/types/BlogPost';
 
 const { post } = defineProps<{
-  post: BlogPostSummary;
+  post: BlogPostSummary
 }>();
 
 const formattedDatePublished = computed(() => formatDate(post?.datePublished));
@@ -33,9 +33,11 @@ const formattedDatePublished = computed(() => formatDate(post?.datePublished));
         >
           {{ formattedDatePublished }}
         </time>
-        <ChipLink :to="`/posts?category=${post.category}`">{{
-          post.category
-        }}</ChipLink>
+        <ChipLink :to="`/posts?category=${post.category}`">
+          {{
+            post.category
+          }}
+        </ChipLink>
       </div>
       <div class="group relative">
         <AppLink :to="post.url">

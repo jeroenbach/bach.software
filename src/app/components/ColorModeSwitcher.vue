@@ -1,30 +1,32 @@
 <script lang="ts" setup>
 import {
+  ComputerDesktopIcon,
   MoonIcon,
   SunIcon,
-  ComputerDesktopIcon,
-} from "@heroicons/vue/24/outline";
+} from '@heroicons/vue/24/outline';
 
-export type ColorMode = "light" | "dark" | "system";
+export type ColorMode = 'light' | 'dark' | 'system';
 
 interface Props {
-  colorMode?: ColorMode;
+  colorMode?: ColorMode
 }
 
-const { colorMode = "system" } = defineProps<Props>();
+const { colorMode = 'system' } = defineProps<Props>();
 const emits = defineEmits<{
-  (e: "update:colorMode", value: ColorMode): void;
+  (e: 'update:colorMode', value: ColorMode): void
 }>();
 
-const toggleColorMode = () => {
-  if (colorMode === "light") {
-    emits("update:colorMode", "system");
-  } else if (colorMode === "dark") {
-    emits("update:colorMode", "light");
-  } else {
-    emits("update:colorMode", "dark");
+function toggleColorMode() {
+  if (colorMode === 'light') {
+    emits('update:colorMode', 'system');
   }
-};
+  else if (colorMode === 'dark') {
+    emits('update:colorMode', 'light');
+  }
+  else {
+    emits('update:colorMode', 'dark');
+  }
+}
 </script>
 
 <template>

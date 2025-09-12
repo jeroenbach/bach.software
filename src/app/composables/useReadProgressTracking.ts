@@ -1,41 +1,47 @@
+import type { ReadProgressOptions } from '~/composables/useReadProgress';
+import { useTrackEvent } from '#imports';
 import {
+
   useReadProgress,
-  type ReadProgressOptions,
-} from "~/composables/useReadProgress";
-import { useTrackEvent } from "#imports";
+} from '~/composables/useReadProgress';
 
 export interface ReadProgressTrackingOptions extends ReadProgressOptions {
   /**
    * In case you don't want to track the actual event, like for demo purposes
-   * */
-  disableEventTracking?: boolean;
+   */
+  disableEventTracking?: boolean
 }
 
-export type Progress =
-  | "opened"
-  | "peeked"
-  | "quarter-read"
-  | "half-read"
-  | "three-quarter-read"
-  | "read";
+export type Progress
+  = | 'opened'
+    | 'peeked'
+    | 'quarter-read'
+    | 'half-read'
+    | 'three-quarter-read'
+    | 'read';
 
-const getProgress = (percentage: number): Progress => {
-  if (percentage >= 100) return "read";
-  if (percentage >= 75) return "three-quarter-read";
-  if (percentage >= 50) return "half-read";
-  if (percentage >= 25) return "quarter-read";
-  if (percentage >= 10) return "peeked";
-  return "opened";
-};
+function getProgress(percentage: number): Progress {
+  if (percentage >= 100)
+    return 'read';
+  if (percentage >= 75)
+    return 'three-quarter-read';
+  if (percentage >= 50)
+    return 'half-read';
+  if (percentage >= 25)
+    return 'quarter-read';
+  if (percentage >= 10)
+    return 'peeked';
+  return 'opened';
+}
 
 /**
  * Tracks the reading progress of a user based on scroll and time spent.
  * This composable is a wrapper around `useReadProgress` and adds tracking capabilities with plausible.io,
  * sending tracking events automatically.
  *
- * @param {ReadProgressTrackingOptions} [options={}] - Options for configuring read progress tracking.
+ * @param {ReadProgressTrackingOptions} [options] - Options for configuring read progress tracking.
  * @param {MaybeRefOrGetter<Record<string, any>>} [extraTrackingProps] - Additional properties to include in tracking events.
- * @returns {Object} An object containing the following properties:
+ * @returns {object} An object containing the following properties:
  * - `hasRead`: A boolean indicating if the content has been read.
  * - `scrollPercentage`: A computed ref representing the scroll percentage.
  * - `timeSpentPercentage`: A computed ref representing the percentage of time spent.
@@ -43,10 +49,7 @@ const getProgress = (percentage: number): Progress => {
  * - `timeProgress`: A computed ref representing the progress based on time spent.
  * - `scrollProgress`: A computed ref representing the progress based on scroll percentage.
  */
-export const useReadProgressTracking = (
-  options: ReadProgressTrackingOptions = {},
-  extraTrackingProps?: MaybeRefOrGetter<Record<string, unknown>>,
-) => {
+export function useReadProgressTracking(options: ReadProgressTrackingOptions = {}, extraTrackingProps?: MaybeRefOrGetter<Record<string, unknown>>) {
   const {
     hasRead,
     scrollPercentage,
@@ -69,9 +72,11 @@ export const useReadProgressTracking = (
   watch(
     totalProgress,
     (progress, oldProgress) => {
-      if (progress === oldProgress) return;
+      if (progress === oldProgress)
+        return;
 
-      if (options.disableEventTracking) return;
+      if (options.disableEventTracking)
+        return;
 
       const trackingProps = toValue(extraTrackingProps) ?? {};
       useTrackEvent(progress, {
@@ -82,7 +87,7 @@ export const useReadProgressTracking = (
         },
       });
     },
-    { immediate: true, flush: "sync" },
+    { immediate: true, flush: 'sync' },
   );
 
   return {
@@ -95,4 +100,4 @@ export const useReadProgressTracking = (
     totalProgress,
     minimumReadingTime,
   };
-};
+}

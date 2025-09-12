@@ -1,27 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import about from "../content/en/pages/3.about.md?raw";
-import footer from "../content/en/pages/_footer.md?raw";
-import authorYaml from "../content/en/authors/jeroenbach.yaml?raw";
+import { readMarkdown } from '~/utils/markdown';
+import { readYaml } from '~/utils/yaml';
+import authorYaml from '../content/en/authors/jeroenbach.yaml?raw';
 
-import AppFooter from "./AppFooter.vue";
+import about from '../content/en/pages/3.about.md?raw';
 
-import { readYaml } from "~/utils/yaml";
-import { readMarkdown } from "~/utils/markdown";
+import footer from '../content/en/pages/_footer.md?raw';
+import AppFooter from './AppFooter.vue';
 
 const author = readYaml<Author>(authorYaml);
 
 const meta = {
-  title: "Components/Footer",
+  title: 'Components/Footer',
   component: AppFooter,
   args: {
     short: false,
-    linkedInUrl: "#",
-    githubUrl: "#",
+    linkedInUrl: '#',
+    githubUrl: '#',
     imgSrc: author.imageUrl,
     imgAlt: author.fullName,
   },
-  render: (args) => ({
+  render: args => ({
     components: { AppFooter },
     setup() {
       const { bodyHtml: aboutHtml } = readMarkdown(about);

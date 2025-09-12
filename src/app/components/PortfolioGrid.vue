@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { PortfolioItem } from "~/types/PortfolioItem";
+import type { PortfolioItem } from '~/types/PortfolioItem';
 
 interface Props {
-  portfolio?: PortfolioItem[];
+  portfolio?: PortfolioItem[]
 }
 const { portfolio = [] } = defineProps<Props>();
 </script>
+
 <template>
   <div v-if="portfolio" class="bg-gray-50 dark:bg-gray-900">
     <div class="mx-auto max-w-2xl px-6 py-8 lg:max-w-7xl lg:px-8 lg:py-12">
@@ -70,7 +71,7 @@ const { portfolio = [] } = defineProps<Props>();
               <div class="relative flex flex-1 items-end">
                 <div
                   class="absolute inset-0 bg-gradient-to-b from-white from-15% to-50% dark:from-gray-800"
-                ></div>
+                />
                 <ResponsiveImage
                   src="/portfolio/Pavo.jpg"
                   :alt="portfolioItem.title"

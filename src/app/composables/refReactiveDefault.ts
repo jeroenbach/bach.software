@@ -1,10 +1,10 @@
-import type { WatchSource } from "vue";
-import { watch } from "vue";
-import { cloneFnJSON, extendRef, useCloned } from "@vueuse/core";
+import type { WatchSource } from 'vue';
+import { cloneFnJSON, extendRef, useCloned } from '@vueuse/core';
+import { watch } from 'vue';
 
 export function cloneFnJSONExtended<T>(source: T): T {
   // In the following cases it doesn't make sense to clone the object
-  if (source == null || typeof source !== "object")
+  if (source == null || typeof source !== 'object')
     // object & array
     return source;
 
@@ -17,7 +17,7 @@ export interface RefReactiveDefaultOptions<T = unknown> {
    *
    * By default, it uses `JSON.parse(JSON.stringify(value))` to clone.
    */
-  clone?: (source: T) => T;
+  clone?: (source: T) => T
 
   /**
    * Watch nested properties inside the object for changes. This is turned on by default.
@@ -40,13 +40,13 @@ export interface RefReactiveDefaultOptions<T = unknown> {
    * internalValue.value = { details: 'updated value, sync with props.defaultValue is removed' };
    *
    */
-  deep?: boolean;
+  deep?: boolean
 
   /**
    * if resetOnDefaultChange is true the value will be reset when the default value changes
    * otherwise it ignores the update on the default value
    */
-  resetOnDefaultChange?: boolean;
+  resetOnDefaultChange?: boolean
 }
 
 /**
@@ -66,8 +66,8 @@ export function refReactiveDefault<T>(
 
   const { cloned, sync: syncDefault } = useCloned(reactiveDefault, {
     manual: true,
-    clone: deep ? clone : (d) => d, // Only clone when the deep flag is true, otherwise we use the same value/object as the default
-    flush: "sync",
+    clone: deep ? clone : d => d, // Only clone when the deep flag is true, otherwise we use the same value/object as the default
+    flush: 'sync',
   });
 
   let isWatching = false;
@@ -88,7 +88,7 @@ export function refReactiveDefault<T>(
         syncDefaultInternal();
       },
       {
-        flush: "sync",
+        flush: 'sync',
         deep,
       },
     );
@@ -96,7 +96,8 @@ export function refReactiveDefault<T>(
     const unlinkFromClone = watch(
       cloned,
       () => {
-        if (isInternalModification) return; // ignore internal modifications
+        if (isInternalModification)
+          return; // ignore internal modifications
 
         if (!resetOnDefaultChange) {
           unlinkFromDefault();
@@ -105,7 +106,7 @@ export function refReactiveDefault<T>(
         }
       },
       {
-        flush: "sync",
+        flush: 'sync',
         deep,
       },
     );

@@ -3,6 +3,7 @@
  * The container / placeholder where alerts can teleport there messages
  */
 </script>
+
 <template>
   <div
     aria-live="assertive"

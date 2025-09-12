@@ -1,39 +1,39 @@
 <script lang="ts" setup>
-type AspectRatio = "1/1" | "2/1" | "1/2" | "16/9"; // Also add them in the template
+type AspectRatio = '1/1' | '2/1' | '1/2' | '16/9'; // Also add them in the template
 export interface Props {
-  src?: string;
-  alt?: string;
-  caption?: string;
+  src?: string
+  alt?: string
+  caption?: string
   /**
    * Percentile part of the screen width
    */
-  partOfScreen?: number;
-  partOfScreenExtraSmall?: number;
-  partOfScreenSmall?: number;
-  partOfScreenMedium?: number;
-  partOfScreenLarge?: number;
-  partOfScreenExtraLarge?: number;
-  partOfScreen2ExtraLarge?: number;
+  partOfScreen?: number
+  partOfScreenExtraSmall?: number
+  partOfScreenSmall?: number
+  partOfScreenMedium?: number
+  partOfScreenLarge?: number
+  partOfScreenExtraLarge?: number
+  partOfScreen2ExtraLarge?: number
   /**
    * The aspect ratio of the image
    */
-  aspectRatio?: AspectRatio;
-  aspectRatioExtraSmall?: AspectRatio;
-  aspectRatioSmall?: AspectRatio;
-  aspectRatioMedium?: AspectRatio;
-  aspectRatioLarge?: AspectRatio;
-  aspectRatioExtraLarge?: AspectRatio;
-  aspectRatio2ExtraLarge?: AspectRatio;
+  aspectRatio?: AspectRatio
+  aspectRatioExtraSmall?: AspectRatio
+  aspectRatioSmall?: AspectRatio
+  aspectRatioMedium?: AspectRatio
+  aspectRatioLarge?: AspectRatio
+  aspectRatioExtraLarge?: AspectRatio
+  aspectRatio2ExtraLarge?: AspectRatio
   /**
    * If you need to override the partOfScreen and set the sizes directly
    */
-  sizes?: string;
-  class?: unknown;
+  sizes?: string
+  class?: unknown
 }
 const props = defineProps<Props>();
 
 const id = useId();
-const loadingBackground = "bg-slate-50 dark:bg-slate-900";
+const loadingBackground = 'bg-slate-50 dark:bg-slate-900';
 const imgClass = computed(() => {
   const ratios = [
     isNullOrUndefined(props.aspectRatio) ? null : `aspect-${props.aspectRatio}`,
@@ -59,16 +59,17 @@ const imgClass = computed(() => {
 
   // Add a default aspect ratio if none is provided
   if (ratios.length === 0) {
-    ratios.push("aspect-1/1");
+    ratios.push('aspect-1/1');
   }
 
-  return [props.class, ratios.join(" "), loadingBackground, "object-cover"]
+  return [props.class, ratios.join(' '), loadingBackground, 'object-cover']
     .filter(isNotNullOrUndefinedOrEmpty)
-    .join(" ");
+    .join(' ');
 });
 
 const imgSizes = computed(() => {
-  if (isNotNullOrUndefined(props.sizes)) return props.sizes;
+  if (isNotNullOrUndefined(props.sizes))
+    return props.sizes;
 
   const _sizes: { [key in ScreenSize]: number | undefined } = {
     xs: !isNumber(props.partOfScreenExtraSmall)
@@ -93,19 +94,20 @@ const imgSizes = computed(() => {
 
   return Object.entries(_sizes)
     .map(([key, value]) => {
-      if (isNullOrUndefined(value)) return null;
+      if (isNullOrUndefined(value))
+        return null;
 
       return `${key}:${Math.round(value * screensUntil[key as ScreenSize])}px`;
     })
     .filter(isNotNullOrUndefined)
-    .join(" ");
+    .join(' ');
 });
 
 // Unfortunately removing this using vue doesn't work, so we need to do it in pure JS
 function removeLoadingBackground(e: Event) {
   const img = e.target as HTMLImageElement;
   if (img) {
-    const classes = loadingBackground.split(" ");
+    const classes = loadingBackground.split(' ');
     classes.forEach((cls) => {
       if (img.classList.contains(cls)) {
         img.classList.remove(cls);
@@ -128,10 +130,10 @@ function removeLoadingBackground(e: Event) {
       :alt="alt"
       :sizes="imgSizes"
       :imgAttrs="{
-        itemprop: 'thumbnailUrl',
+        'itemprop': 'thumbnailUrl',
         'aria-describedby': caption ? `${id}_figcaption` : undefined,
-        class: imgClass,
-        onLoad: removeLoadingBackground,
+        'class': imgClass,
+        'onLoad': removeLoadingBackground,
       }"
     />
     <div v-if="false">

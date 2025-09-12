@@ -1,6 +1,6 @@
-import type { Author } from "~/types/Author";
-import type { BlogPost, BlogPostSummary } from "~/types/BlogPost";
-import { toDictionary } from "~/utils/collections";
+import type { Author } from '~/types/Author';
+import type { BlogPost, BlogPostSummary } from '~/types/BlogPost';
+import { toDictionary } from '~/utils/collections';
 
 /**
  * Fetches blog posts data based on the provided options.
@@ -8,7 +8,7 @@ import { toDictionary } from "~/utils/collections";
  * @template TSingle - Determines if a single post or multiple posts should be fetched.
  * @template TSummary - Determines if the full post or a summary of the post should be fetched.
  *
- * @param {Object} [options] - Options for fetching blog posts.
+ * @param {object} [options] - Options for fetching blog posts.
  * @param {TSingle} [options.id] - The ID of a single post to fetch.
  * @param {TSummary} [options.summary] - Whether to fetch a summary of the post(s).
  *
@@ -26,13 +26,13 @@ import { toDictionary } from "~/utils/collections";
  * // Fetch the full data of a single blog post by ID
  * const singlePost = await useBlogPostsContext({ id: 'post-id' });
  */
-export const useBlogPostsContext = async <
+export async function useBlogPostsContext<
   TSingle extends string | undefined = undefined,
   TSummary extends boolean | undefined = undefined,
 >(options?: {
-  id?: TSingle;
-  summary?: TSummary;
-}) => {
+  id?: TSingle
+  summary?: TSummary
+}) {
   // Check whether we want the full or the summary object
   type TPost = undefined extends TSummary
     ? BlogPost
@@ -50,23 +50,23 @@ export const useBlogPostsContext = async <
     uniqueId,
     async () => {
       const query = isFalseOrUndefined(summary)
-        ? queryContent<BlogPost>("posts")
-        : queryContent<BlogPostSummary>("posts").only([
-            "_path",
-            "title",
-            "description",
-            "datePublished",
-            "dateModified",
-            "imageUrl",
-            "imageAlt",
-            "draft",
-            "slug",
-            "category",
-            "keywords",
-            "authorName",
-            "imagePosition",
-            "readingTime",
-            "excerpt",
+        ? queryContent<BlogPost>('posts')
+        : queryContent<BlogPostSummary>('posts').only([
+            '_path',
+            'title',
+            'description',
+            'datePublished',
+            'dateModified',
+            'imageUrl',
+            'imageAlt',
+            'draft',
+            'slug',
+            'category',
+            'keywords',
+            'authorName',
+            'imagePosition',
+            'readingTime',
+            'excerpt',
           ]);
 
       if (id) {
@@ -78,13 +78,13 @@ export const useBlogPostsContext = async <
       query.sort({ datePublished: -1 });
 
       const postsRaw = await query.find();
-      const authorUserNames = new Set(postsRaw.map((p) => p.authorName));
+      const authorUserNames = new Set(postsRaw.map(p => p.authorName));
 
-      const authors = await queryContent<Author>("authors")
+      const authors = await queryContent<Author>('authors')
         .where({ userName: { $in: Array.from(authorUserNames) } })
         .find();
 
-      const authorsDictionary = toDictionary(authors ?? [], (a) => a.userName);
+      const authorsDictionary = toDictionary(authors ?? [], a => a.userName);
 
       const posts = postsRaw.map((p) => {
         const post = p as BlogPostSummary;
@@ -99,4 +99,4 @@ export const useBlogPostsContext = async <
       default: () => undefined,
     },
   );
-};
+}

@@ -10,9 +10,10 @@
     TOptionValue extends keyof TOptionType = any
   "
 >
-import { computed } from "vue";
-import MultiSelect, { type MultiSelectProps } from "primevue/multiselect";
-import Select from "primevue/select";
+import type { MultiSelectProps } from 'primevue/multiselect';
+import MultiSelect from 'primevue/multiselect';
+import Select from 'primevue/select';
+import { computed } from 'vue';
 
 // Check whether we need to return the entire option object
 // or just a property of that object
@@ -30,16 +31,16 @@ type TSingleOrMultiple = undefined extends TMultiple
 
 // Use the MultiSelectProps type from PrimeVue, but with some better typing
 interface Props
-  extends Omit<MultiSelectProps, "modelValue" | "options" | "optionValue"> {
-  modelValue?: TSingleOrMultiple;
-  optionValue?: TOptionValue;
-  options?: TOptionType[];
-  multiple?: TMultiple;
+  extends Omit<MultiSelectProps, 'modelValue' | 'options' | 'optionValue'> {
+  modelValue?: TSingleOrMultiple
+  optionValue?: TOptionValue
+  options?: TOptionType[]
+  multiple?: TMultiple
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  (e: "update:modelValue", value: TSingleOrMultiple): void;
+  (e: 'update:modelValue', value: TSingleOrMultiple): void
 }>();
 
 // Note: an empty attribute will result in an empty string "" value,
@@ -48,9 +49,9 @@ const isMultiple = computed(
   () => props.multiple !== false && props.multiple !== undefined,
 );
 
-const update = (value: unknown) => {
-  emit("update:modelValue", value as TSingleOrMultiple);
-};
+function update(value: unknown) {
+  emit('update:modelValue', value as TSingleOrMultiple);
+}
 
 const optionValueString = computed(() => {
   return props.optionValue as string;

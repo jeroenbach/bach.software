@@ -1,25 +1,26 @@
 type NullOrUndefined = null | undefined;
-type NullOrUndefinedOrEmpty = NullOrUndefined | "";
+type NullOrUndefinedOrEmpty = NullOrUndefined | '';
 
-export const isNullOrUndefined = <T>(
-  value: T | NullOrUndefined,
-): value is NullOrUndefined => value === null || value === undefined;
+export function isNullOrUndefined<T>(value: T | NullOrUndefined): value is NullOrUndefined {
+  return value === null || value === undefined;
+}
 
-export const isNullOrUndefinedOrEmpty = <T>(
-  value: T | NullOrUndefinedOrEmpty,
-): value is NullOrUndefinedOrEmpty => isNullOrUndefined(value) || value === "";
+export function isNullOrUndefinedOrEmpty<T>(value: T | NullOrUndefinedOrEmpty): value is NullOrUndefinedOrEmpty {
+  return isNullOrUndefined(value) || value === '';
+}
 
-export const isNotNullOrUndefined = <T>(
-  value: T | NullOrUndefined,
-): value is T => !isNullOrUndefined(value);
+export function isNotNullOrUndefined<T>(value: T | NullOrUndefined): value is T {
+  return !isNullOrUndefined(value);
+}
 
-export const isNotNullOrUndefinedOrEmpty = <T>(
-  value: T | NullOrUndefinedOrEmpty,
-): value is T => !isNullOrUndefinedOrEmpty(value);
+export function isNotNullOrUndefinedOrEmpty<T>(value: T | NullOrUndefinedOrEmpty): value is T {
+  return !isNullOrUndefinedOrEmpty(value);
+}
 
-export const isFalseOrUndefined = <T>(
-  value: T | undefined | false,
-): value is undefined | false => value === false || value === undefined;
+export function isFalseOrUndefined<T>(value: T | undefined | false): value is undefined | false {
+  return value === false || value === undefined;
+}
 
-export const isNumber = (value: unknown): value is number =>
-  typeof value === "number";
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}

@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import {
-  ClipboardDocumentIcon,
   ClipboardDocumentCheckIcon,
-} from "@heroicons/vue/24/outline";
-import { useClipboard } from "@vueuse/core";
+  ClipboardDocumentIcon,
+} from '@heroicons/vue/24/outline';
+import { useClipboard } from '@vueuse/core';
 
 const { t } = useI18n();
 const { add: addNotification } = useNotificationStore();
 const slots = useSlots();
 const { copy: copyInternal, isSupported, copied } = useClipboard();
 
-const copy = (code: string) => {
+function copy(code: string) {
   copyInternal(code);
-  addNotification("success", t("Copied to clipboard!"), undefined, {
+  addNotification('success', t('Copied to clipboard!'), undefined, {
     closeIn: 3000,
   });
-};
+}
 
 const tabs = computed(() => {
   const _slots = slots?.default?.() ?? [];

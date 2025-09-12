@@ -1,33 +1,33 @@
 <script lang="ts" setup>
+import type { Notification } from '~/composables/useNotificationStore';
+
 import {
   CheckCircleIcon,
-  XMarkIcon,
   ExclamationTriangleIcon,
-  XCircleIcon,
   InformationCircleIcon,
-} from "@heroicons/vue/24/outline";
+  XCircleIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/outline';
 
-import type { Notification } from "~/composables/useNotificationStore";
-
-interface Props extends Omit<Notification, "notificationId" | "title"> {
-  title?: string;
-  disableTeleport?: boolean;
+interface Props extends Omit<Notification, 'notificationId' | 'title'> {
+  title?: string
+  disableTeleport?: boolean
 }
 
 const {
   title = undefined,
   disableTeleport = false,
-  severity = "error",
+  severity = 'error',
 } = defineProps<Props>();
 const emit = defineEmits<{
-  (e: "close"): void;
+  (e: 'close'): void
 }>();
 
 const dismissed = ref(false);
-const close = () => {
+function close() {
   dismissed.value = true;
-  emit("close");
-};
+  emit('close');
+}
 </script>
 
 <template>

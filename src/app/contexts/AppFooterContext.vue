@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { Props } from "~/components/AppFooter.vue";
-const { data: about } = await usePagesContext("about");
-const { data: footer } = await usePagesContext("_footer");
-const { data: author } = await useAuthorsContext("jeroenbach");
-export type { Props };
+import type { Props } from '~/components/AppFooter.vue';
 
 defineProps<Props>();
+const { data: about } = await usePagesContext('about');
+const { data: footer } = await usePagesContext('_footer');
+const { data: author } = await useAuthorsContext('jeroenbach');
+export type { Props };
 </script>
+
 <template>
   <AppFooter
     v-bind="$props"

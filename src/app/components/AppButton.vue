@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const emits = defineEmits<{
-  (e: "click"): void;
+  (e: 'click'): void
 }>();
 </script>
 

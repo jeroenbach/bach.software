@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type { Props } from "~/components/AppLink.vue";
+import type { Props } from '~/components/AppLink.vue';
+
 const props = defineProps<Props>();
 </script>
 

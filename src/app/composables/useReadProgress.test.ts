@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ref } from "vue";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ref } from 'vue';
 
-import { useReadProgress } from "./useReadProgress";
+import { useReadProgress } from './useReadProgress';
 
 const mock = vi.hoisted(() => ({
   useScroll: vi.fn(() => ({ y: ref(0) })),
-  useDocumentVisibility: vi.fn(() => ref("visible")),
+  useDocumentVisibility: vi.fn(() => ref('visible')),
 }));
 
-vi.mock("@vueuse/core", async () => {
-  const actual = (await vi.importActual("@vueuse/core")) as any;
+vi.mock('@vueuse/core', async () => {
+  const actual = (await vi.importActual('@vueuse/core')) as any;
   return {
     ...actual,
     useScroll: mock.useScroll,
@@ -18,23 +17,23 @@ vi.mock("@vueuse/core", async () => {
   };
 });
 
-describe("useReadProgress", () => {
+describe('useReadProgress', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     // Mock document dimensions
-    Object.defineProperty(document.documentElement, "scrollHeight", {
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
       value: 1000,
       configurable: true,
     });
-    Object.defineProperty(document.documentElement, "clientHeight", {
+    Object.defineProperty(document.documentElement, 'clientHeight', {
       value: 200,
       configurable: true,
     });
   });
 
-  it("should initialize with default values", () => {
-    const { hasRead, scrollPercentage, timeSpentPercentage, timeSpent } =
-      useReadProgress();
+  it('should initialize with default values', () => {
+    const { hasRead, scrollPercentage, timeSpentPercentage, timeSpent }
+      = useReadProgress();
 
     expect(hasRead.value).toBe(false);
     expect(scrollPercentage.value).toBe(0);
@@ -42,14 +41,14 @@ describe("useReadProgress", () => {
     expect(timeSpent.value).toBe(0);
   });
 
-  describe("scroll percentage", () => {
+  describe('scroll percentage', () => {
     it.each([
-      { scrollY: 0, percentage: 0, description: "no scroll" },
-      { scrollY: 400, percentage: 50, description: "half scroll" },
-      { scrollY: 600, percentage: 75, description: "three quarter scroll" },
-      { scrollY: 800, percentage: 100, description: "full scroll" },
+      { scrollY: 0, percentage: 0, description: 'no scroll' },
+      { scrollY: 400, percentage: 50, description: 'half scroll' },
+      { scrollY: 600, percentage: 75, description: 'three quarter scroll' },
+      { scrollY: 800, percentage: 100, description: 'full scroll' },
     ])(
-      "should calculate $description as $percentage percentage",
+      'should calculate $description as $percentage percentage',
       async ({ scrollY, percentage }) => {
         const mockScroll = ref(scrollY);
         mock.useScroll.mockReturnValueOnce({ y: mockScroll });
@@ -60,19 +59,19 @@ describe("useReadProgress", () => {
     );
 
     it.each([
-      { scrollHeight: 200, clientHeight: 200, description: "same heights" },
+      { scrollHeight: 200, clientHeight: 200, description: 'same heights' },
       {
         scrollHeight: 180,
         clientHeight: 200,
-        description: "scroll less than client",
+        description: 'scroll less than client',
       },
     ])(
-      "should set percentage to 100 when $description",
+      'should set percentage to 100 when $description',
       async ({ scrollHeight, clientHeight }) => {
-        Object.defineProperty(document.documentElement, "scrollHeight", {
+        Object.defineProperty(document.documentElement, 'scrollHeight', {
           value: scrollHeight,
         });
-        Object.defineProperty(document.documentElement, "clientHeight", {
+        Object.defineProperty(document.documentElement, 'clientHeight', {
           value: clientHeight,
         });
 
@@ -85,8 +84,8 @@ describe("useReadProgress", () => {
     );
   });
 
-  it("should track time spent when screen is visible", async () => {
-    const mockVisibility = ref("visible");
+  it('should track time spent when screen is visible', async () => {
+    const mockVisibility = ref('visible');
     mock.useDocumentVisibility.mockReturnValueOnce(mockVisibility);
 
     const { timeSpent } = useReadProgress();
@@ -96,13 +95,13 @@ describe("useReadProgress", () => {
     vi.advanceTimersByTime(5_000);
     expect(timeSpent.value).toBe(5_000);
 
-    mockVisibility.value = "hidden";
+    mockVisibility.value = 'hidden';
 
     // Advance time by 5 seconds
     vi.advanceTimersByTime(5_000);
     expect(timeSpent.value).toBe(5_000);
 
-    mockVisibility.value = "visible";
+    mockVisibility.value = 'visible';
 
     // Advance time by 5 seconds
     vi.advanceTimersByTime(5_000);
@@ -114,16 +113,16 @@ describe("useReadProgress", () => {
       wordCount: 1375,
       readingTime: 2 * 60 * 1000, // 2 minutes
       timeElapsed: 2 * 60 * 1000,
-      description: "long article",
+      description: 'long article',
     },
     {
       wordCount: 20,
       readingTime: 1000, // 1 second
       timeElapsed: 30 * 1000, // 30 seconds minimum
-      description: "short article",
+      description: 'short article',
     },
   ])(
-    "should use provided readingTime on $description",
+    'should use provided readingTime on $description',
     async ({ wordCount, readingTime, timeElapsed }) => {
       const { timeSpentPercentage } = useReadProgress({
         wordCount,
@@ -142,15 +141,15 @@ describe("useReadProgress", () => {
     {
       wordCount: 1325,
       timeElapsed: 300_000, // 1325 / 265 * 60 * 1000
-      description: "long article",
+      description: 'long article',
     },
     {
       wordCount: 20,
       timeElapsed: 30_000, // minimum time
-      description: "short article",
+      description: 'short article',
     },
   ])(
-    "should calculate time percentage based on $description",
+    'should calculate time percentage based on $description',
     async ({ wordCount, timeElapsed }) => {
       const { timeSpentPercentage } = useReadProgress({ wordCount });
 
@@ -162,7 +161,7 @@ describe("useReadProgress", () => {
     },
   );
 
-  it("should respect minimumTime even for short articles", async () => {
+  it('should respect minimumTime even for short articles', async () => {
     const { timeSpentPercentage } = useReadProgress({
       wordCount: 100, // Very short article
       minimumTime: 45_000, // But require 45 seconds minimum
@@ -180,22 +179,22 @@ describe("useReadProgress", () => {
       scroll: 800,
       time: 30_000,
       expected: true,
-      description: "both conditions are met",
+      description: 'both conditions are met',
     },
     {
       scroll: 799,
       time: 30_000,
       expected: false,
-      description: "not scrolled enough",
+      description: 'not scrolled enough',
     },
     {
       scroll: 800,
       time: 29_999,
       expected: false,
-      description: "not enough time",
+      description: 'not enough time',
     },
   ])(
-    "should set read to $expected, when $description",
+    'should set read to $expected, when $description',
     async ({ scroll, time, expected }) => {
       const mockScroll = ref(0);
       mock.useScroll.mockReturnValueOnce({ y: mockScroll });

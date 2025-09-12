@@ -1,33 +1,33 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
+  darkMode: 'class',
   content: [
-    "./index.html",
-    "./src/app/**/*.{vue,js,ts,md,mdx}",
-    "./src/app/.storybook/**/*.{js,ts,vue}",
+    './index.html',
+    './src/app/**/*.{vue,js,ts,md,mdx}',
+    './src/app/.storybook/**/*.{js,ts,vue}',
   ],
   theme: {
     extend: {
-      typography: (theme) => ({
+      typography: theme => ({
         DEFAULT: {
           css: {
-            "--tw-prose-pre-code": theme("colors.gray[400]"),
-            "--tw-prose-pre-bg": theme("colors.stone[50]"),
-            "--tw-prose-invert-pre-bg": theme("colors.slate[700]"),
+            '--tw-prose-pre-code': theme('colors.gray[400]'),
+            '--tw-prose-pre-bg': theme('colors.stone[50]'),
+            '--tw-prose-invert-pre-bg': theme('colors.slate[700]'),
           },
         },
       }),
       fontSize: {
-        "xs-em": "0.75em",
-        "sm-em": "0.875em",
+        'xs-em': '0.75em',
+        'sm-em': '0.875em',
       },
       aspectRatio: {
-        "16/9": "16 / 9",
-        "2/1": "2 / 1",
-        "1/2": "1 / 2",
-        "1/1": "1 / 1",
+        '16/9': '16 / 9',
+        '2/1': '2 / 1',
+        '1/2': '1 / 2',
+        '1/1': '1 / 1',
       },
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("tailwindcss-primeui")],
+  plugins: [require('@tailwindcss/typography'), require('tailwindcss-primeui')],
 };

@@ -1,4 +1,4 @@
-export type ScreenSize = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type ScreenSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 export const screens: { [key in ScreenSize]: number } = {
   xs: 320,

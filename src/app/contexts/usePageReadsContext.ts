@@ -1,14 +1,15 @@
-import { useAsyncState } from "@vueuse/core";
+import { useAsyncState } from '@vueuse/core';
 
-import { useApiClient } from "~/services/backend";
+import { useApiClient } from '~/services/backend';
 
 /**
  * Composable to the read analytics for the current page.
  */
-export const usePageReadsContext = () => {
+export function usePageReadsContext() {
   const { state: pageReads, isLoading: isLoadingPageReads } = useAsyncState(
     async () => {
-      if (!import.meta.client) return undefined;
+      if (!import.meta.client)
+        return undefined;
 
       const config = useRuntimeConfig();
       let currentUrl = window.location.href;
@@ -38,4 +39,4 @@ export const usePageReadsContext = () => {
   );
 
   return { pageReads, isLoadingPageReads };
-};
+}

@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { CurriculumVitaeItem } from "~/types/CurriculumVitaeItem";
+import type { CurriculumVitaeItem } from '~/types/CurriculumVitaeItem';
 
 interface Props {
-  curriculumVitae?: CurriculumVitaeItem[];
+  curriculumVitae?: CurriculumVitaeItem[]
 }
 
 defineProps<Props>();
 </script>
+
 <template>
   <ol class="mx-auto flex max-w-prose flex-col gap-12">
     <li
@@ -33,14 +34,16 @@ defineProps<Props>();
           <li v-for="technology in technologies" :key="technology">
             <AppChip
               class="bg-gradient-to-r from-gray-200 to-gray-100 font-medium text-sky-600 dark:from-gray-700 dark:to-gray-600 dark:text-sky-400"
-              >{{ technology }}</AppChip
             >
+              {{ technology }}
+            </AppChip>
           </li>
         </ul>
       </div>
     </li>
   </ol>
 </template>
+
 <style lang="scss" scoped>
 .curriculum-vitae-markdown :deep(li) {
   margin-top: 0.625rem;

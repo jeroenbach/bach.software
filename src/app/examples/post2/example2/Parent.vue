@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import Child from "./Child.vue";
-const value = ref("Hello world");
+import Child from './Child.vue';
+
+const value = ref('Hello world');
 </script>
+
 <template>
   <div class="flex flex-col">
     <label>Updating these components work</label>

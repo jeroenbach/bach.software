@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 export interface Props {
-  to?: string;
-  text?: string;
-  color?: "gray" | "blue" | "default";
-  target?: "_blank" | "_self" | "_parent" | "_top";
-  title?: string;
-  ariaLabel?: string;
+  to?: string
+  text?: string
+  color?: 'gray' | 'blue' | 'default'
+  target?: '_blank' | '_self' | '_parent' | '_top'
+  title?: string
+  ariaLabel?: string
 }
 
 const {
   to = undefined,
   text = undefined,
-  color = "default",
-  target = "_self",
+  color = 'default',
+  target = '_self',
   title = undefined,
   ariaLabel = undefined,
 } = defineProps<Props>();
 
 const noopener = computed(() => {
-  return target === "_blank" ? "noopener" : undefined;
+  return target === '_blank' ? 'noopener' : undefined;
 });
 </script>
 

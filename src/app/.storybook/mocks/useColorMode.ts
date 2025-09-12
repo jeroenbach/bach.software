@@ -1,5 +1,5 @@
 export function useColorMode() {
-  const preference = "system";
+  const preference = 'system';
 
   return {
     preference,

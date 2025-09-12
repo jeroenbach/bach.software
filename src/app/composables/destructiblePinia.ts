@@ -1,30 +1,31 @@
 import type {
-  DefineSetupStoreOptions,
-  _ExtractStateFromSetupStore,
-  _ExtractGettersFromSetupStore,
-  _ExtractActionsFromSetupStore,
-  StoreGeneric,
-  Pinia,
-  Store,
   _ActionsTree,
-  StoreState,
+  _ExtractActionsFromSetupStore,
+  _ExtractGettersFromSetupStore,
+  _ExtractStateFromSetupStore,
+  DefineSetupStoreOptions,
+  Pinia,
   PiniaCustomStateProperties,
+  Store,
+  StoreGeneric,
   StoreGetters,
-} from "pinia";
+  StoreState,
+} from 'pinia';
+import type { ComputedRef, Ref, ToRef, ToRefs } from 'vue';
 import {
-  defineStore as defineStoreInternal,
-  storeToRefs,
   createPinia,
+  defineStore as defineStoreInternal,
   setActivePinia,
-} from "pinia";
-import type { ComputedRef, Ref, ToRef, ToRefs } from "vue";
+  storeToRefs,
+} from 'pinia';
 
 /**
  * Please use the defineDestructibleStore;
- * @deprecated Please use the defineDestructibleStore */
+ * @deprecated Please use the defineDestructibleStore
+ */
 const defineStore = defineStoreInternal;
 
-export { createPinia, setActivePinia, type Pinia };
+export { createPinia, type Pinia, setActivePinia };
 
 type ToComputedRefs<T> = {
   [K in keyof T]: ToRef<T[K]> extends Ref<infer U>
@@ -37,28 +38,28 @@ type ToComputedRefs<T> = {
  */
 export type StoreToRefs<SS> = ToRefs<
   StoreState<SS> & PiniaCustomStateProperties<StoreState<SS>>
-> &
-  ToComputedRefs<StoreGetters<SS>>;
+>
+& ToComputedRefs<StoreGetters<SS>>;
 
 /**
  * Conditional return type, either destructable or not.
  */
 type StoreReturnType<T, Id extends string, SS> = T extends true
-  ? _ExtractActionsFromSetupStore<SS> &
-      StoreToRefs<
-        Store<
-          Id,
-          _ExtractStateFromSetupStore<SS>,
-          _ExtractGettersFromSetupStore<SS>,
-          _ActionsTree
-        >
-      >
-  : Store<
+  ? _ExtractActionsFromSetupStore<SS>
+  & StoreToRefs<
+    Store<
       Id,
       _ExtractStateFromSetupStore<SS>,
       _ExtractGettersFromSetupStore<SS>,
-      _ExtractActionsFromSetupStore<SS>
-    >;
+      _ActionsTree
+    >
+  >
+  : Store<
+    Id,
+    _ExtractStateFromSetupStore<SS>,
+    _ExtractGettersFromSetupStore<SS>,
+    _ExtractActionsFromSetupStore<SS>
+  >;
 
 /**
  * Return type of `defineDestructibleStore()`. Function that allows instantiating a store.
@@ -75,31 +76,27 @@ export declare interface StoreDefinition<Id extends string, SS> {
     options?: { makeDestructable: true },
     pinia?: Pinia | null | undefined,
     hot?: StoreGeneric,
-  ): StoreReturnType<true, Id, SS>;
+  ): StoreReturnType<true, Id, SS>
   (
     options?: { makeDestructable: false },
     pinia?: Pinia | null | undefined,
     hot?: StoreGeneric,
-  ): StoreReturnType<false, Id, SS>;
+  ): StoreReturnType<false, Id, SS>
 
   /**
    * Id of the store. Used by map helpers.
    */
-  $id: Id;
+  $id: Id
   /* Excluded from this release type: _pinia */
 }
 
 /** Creates a store that is invokeable in a destructable matter (an object with properties that are Refs) or as a reactive object */
-export const defineDestructibleStore = <Id extends string, SS>(
-  id: Id,
-  storeSetup: () => SS,
-  options?: DefineSetupStoreOptions<
-    Id,
-    _ExtractStateFromSetupStore<SS>,
-    _ExtractGettersFromSetupStore<SS>,
-    _ExtractActionsFromSetupStore<SS>
-  >,
-) => {
+export function defineDestructibleStore<Id extends string, SS>(id: Id, storeSetup: () => SS, options?: DefineSetupStoreOptions<
+  Id,
+  _ExtractStateFromSetupStore<SS>,
+  _ExtractGettersFromSetupStore<SS>,
+  _ExtractActionsFromSetupStore<SS>
+>) {
   const definition = defineStore(id, storeSetup, options);
 
   const intializer = (
@@ -124,4 +121,4 @@ export const defineDestructibleStore = <Id extends string, SS>(
   intializer.$id = id;
 
   return intializer as StoreDefinition<Id, SS>;
-};
+}

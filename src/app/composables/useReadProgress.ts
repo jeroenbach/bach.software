@@ -1,44 +1,44 @@
-import { useDocumentVisibility, useScroll } from "@vueuse/core";
+import { useDocumentVisibility, useScroll } from '@vueuse/core';
 
-import { useStopWatch } from "~/composables/useStopWatch";
+import { useStopWatch } from '~/composables/useStopWatch';
 
-export type ReadProgressOptions = {
+export interface ReadProgressOptions {
   /** The number of words on the page */
-  wordCount?: number;
+  wordCount?: number
   /**
    * The amount of time the reader needs to read the article in ms.
    * This is used to calculate the time spent percentage.
    * If not provided, it will be calculated based on the word count and average reading speed.
    */
-  readingTime?: number;
+  readingTime?: number
   /**
    * The average reading speed in words per minute
    * Medium.com uses roughly 265 words per minute as a reading speed.
    * @default 265
    */
-  averageReadingSpeed?: number;
+  averageReadingSpeed?: number
   /**
    * The minimum time in milliseconds that needs to be spent even if the calculated minimum time based
    * on the word count is lower.
    * @default 30_000
    */
-  minimumTime?: number;
+  minimumTime?: number
   /** The interval in milliseconds to update the read status @default 500 */
-  updateInterval?: number;
-};
+  updateInterval?: number
+}
 
-export type ReadProgress = {
+export interface ReadProgress {
   /** Indicates whether the user has read the page */
-  hasRead: Ref<boolean>;
+  hasRead: Ref<boolean>
   /** The percentage of the page that has been scrolled */
-  scrollPercentage: Ref<number>;
+  scrollPercentage: Ref<number>
   /** The percentage of the time spent compared to the time it takes to read the article */
-  timeSpentPercentage: Ref<number>;
+  timeSpentPercentage: Ref<number>
   /** The time spent on the page in milliseconds */
-  timeSpent: Ref<number>;
+  timeSpent: Ref<number>
   /** The time needed to read the page in milliseconds */
-  minimumReadingTime: number;
-};
+  minimumReadingTime: number
+}
 
 /**
  * Tracks the read progress of a page based on scroll position and time spent.
@@ -46,9 +46,7 @@ export type ReadProgress = {
  * @param options - Configuration options for tracking read progress.
  * @returns An object representing the read progress.
  */
-export const useReadProgress = (
-  options: ReadProgressOptions = {},
-): ReadProgress => {
+export function useReadProgress(options: ReadProgressOptions = {}): ReadProgress {
   const _options = {
     wordCount: 0,
     minimumTime: 30_000,
@@ -58,7 +56,7 @@ export const useReadProgress = (
   };
 
   // If we are not in the browser, return default values
-  if (!import.meta.client)
+  if (!import.meta.client) {
     return {
       hasRead: ref(false),
       scrollPercentage: ref(0),
@@ -66,6 +64,7 @@ export const useReadProgress = (
       timeSpent: ref(0),
       minimumReadingTime: 0,
     };
+  }
 
   const visibility = useDocumentVisibility();
   const { y: scrollY } = useScroll(window, {
@@ -86,13 +85,14 @@ export const useReadProgress = (
   watch(
     visibility,
     () => {
-      if (visibility.value === "visible") {
+      if (visibility.value === 'visible') {
         resume();
-      } else {
+      }
+      else {
         pause();
       }
     },
-    { immediate: true, flush: "sync" },
+    { immediate: true, flush: 'sync' },
   );
 
   // Calculate how far the user has scrolled down
@@ -106,21 +106,22 @@ export const useReadProgress = (
         0,
       );
       const currentScrollPercentage = (scrollY.value / scrollingSpace) * 100;
-      if (isNaN(currentScrollPercentage)) {
+      if (Number.isNaN(currentScrollPercentage)) {
         // In case we can't scroll, we set the percentage to 100
         scrollPercentage.value = 100;
-      } else if (scrollPercentage.value < currentScrollPercentage) {
+      }
+      else if (scrollPercentage.value < currentScrollPercentage) {
         scrollPercentage.value = currentScrollPercentage;
       }
     },
-    { immediate: true, flush: "sync" },
+    { immediate: true, flush: 'sync' },
   );
 
   // If a readingTime is specified, we use that value, otherwise we calculate it based on the word count
   // and the average reading speed.
-  let minimumReadingTime =
-    _options.readingTime ??
-    (_options.wordCount / _options.averageReadingSpeed) * 60 * 1000; // milliseconds
+  let minimumReadingTime
+    = _options.readingTime
+      ?? (_options.wordCount / _options.averageReadingSpeed) * 60 * 1000; // milliseconds
 
   // Reading time can never be less then the minimumTime (which is by default 30 seconds).
   minimumReadingTime = Math.max(_options.minimumTime, minimumReadingTime);
@@ -140,4 +141,4 @@ export const useReadProgress = (
     timeSpent,
     minimumReadingTime,
   };
-};
+}

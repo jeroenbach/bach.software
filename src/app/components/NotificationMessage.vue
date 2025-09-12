@@ -1,22 +1,22 @@
 <script lang="ts" setup>
+import type { Notification } from '~/composables/useNotificationStore';
 import {
   CheckCircleIcon,
-  XMarkIcon,
   ExclamationTriangleIcon,
-  XCircleIcon,
   InformationCircleIcon,
-} from "@heroicons/vue/24/outline";
-import { useAnimate, useTimeoutFn } from "@vueuse/core";
+  XCircleIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/outline';
 
-import type { Notification } from "~/composables/useNotificationStore";
+import { useAnimate, useTimeoutFn } from '@vueuse/core';
 
-interface Props extends Omit<Notification, "notificationId"> {
-  disableTeleport?: boolean;
+interface Props extends Omit<Notification, 'notificationId'> {
+  disableTeleport?: boolean
 }
 
 const {
   disableTeleport = false,
-  severity = "error",
+  severity = 'error',
   options,
 } = defineProps<Props>();
 
@@ -25,7 +25,7 @@ const dismissed = ref(false);
 
 const { currentTime } = useAnimate(
   progress,
-  { width: "100%" },
+  { width: '100%' },
   {
     duration: options?.closeIn,
     persist: true,
@@ -96,7 +96,7 @@ useTimeoutFn(
               >
                 {{ title }}
               </p>
-              <slot v-if="$slots.default"></slot>
+              <slot v-if="$slots.default" />
               <template v-else>
                 <p
                   v-if="description"
@@ -125,8 +125,7 @@ useTimeoutFn(
                           v-for="value in values"
                           :key="value"
                           class="block"
-                          >{{ value }}</span
-                        >
+                        >{{ value }}</span>
                       </div>
                     </div>
                   </li>

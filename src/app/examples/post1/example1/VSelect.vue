@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="TMultiple extends boolean | undefined">
-import { computed } from "vue";
+import { computed } from 'vue';
 
 // Lets return the correct type based on the TMultiple value.
 // - TMultiple === undefined => string
@@ -12,14 +12,14 @@ type TSingleOrMultiple = undefined extends TMultiple
     : string[];
 
 interface Props {
-  modelValue?: TSingleOrMultiple;
-  options?: { key: string; value: string }[];
-  multiple?: TMultiple;
+  modelValue?: TSingleOrMultiple
+  options?: { key: string, value: string }[]
+  multiple?: TMultiple
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  (e: "update:modelValue", value: TSingleOrMultiple): void;
+  (e: 'update:modelValue', value: TSingleOrMultiple): void
 }>();
 
 // Note: an empty attribute will result in an empty string "" value,
@@ -29,7 +29,7 @@ const isMultiple = computed(
 );
 
 const value = ref(props.modelValue);
-watch(value, (v) => emit("update:modelValue", v));
+watch(value, v => emit('update:modelValue', v));
 </script>
 
 <template>
