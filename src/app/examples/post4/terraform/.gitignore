@@ -1,0 +1,26 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+
+# Terraform crash log files
+crash.log
+
+# Terraform provider override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform module directories
+.terraform/
+
+# Local .terraform directories
+**/.terraform/*
+
+# Helm chart dependencies
+charts/
+
+# Local environment & config files
+.env
