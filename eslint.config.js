@@ -5,6 +5,7 @@ export default antfu({
   stylistic: true,
   nuxt: true,
   ignores: [
+    'src/api/**',
     'src/app/services/backend/**',
     '**/*.md',
   ],
