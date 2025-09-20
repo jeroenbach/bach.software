@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-FOLDER="/src/app/examples/post4/terraform"
-BRANCH="main"
-REPO_NAME="bach.software"
-OWNER="jeroenbach"
-
 # Download and extract the specified folder from the repository
-curl -L "https://github.com/$OWNER/$REPO_NAME/archive/refs/heads/$BRANCH.zip" -o "${REPO_NAME}-terraform.zip"
-unzip -q "${REPO_NAME}-terraform.zip" "${REPO_NAME}-${BRANCH}/${FOLDER}/*"
+curl -L "https://github.com/jeroenbach/bach.software/archive/refs/heads/main.zip" -o "bach.software-terraform.zip"
+unzip -q "bach.software-terraform.zip" "bach.software-main/src/app/examples/post4/terraform/*"
 
-# Move the extracted folder to current directory
-mv "${REPO_NAME}-${BRANCH}/${FOLDER}" "./$(basename "$FOLDER")"
-rm -rf "${REPO_NAME}-terraform.zip" "${REPO_NAME}-${BRANCH}"
+# Move the extracted folder to current directory and remove the zip and extracted folder
+mv "bach.software-main/src/app/examples/post4/terraform" "./terraform"
+rm -rf "bach.software-terraform.zip" "bach.software-main"
+
+# Navigate to the terraform directory
+cd "./terraform"
