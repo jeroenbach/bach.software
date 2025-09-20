@@ -18,7 +18,7 @@ test.describe('Structured Data Tests', () => {
           'headline':
             'Ditching the Cookie Banners: Run Plausible Analytics on Azure Kubernetes',
           'datePublished': '2025-04-06T16:11:24+02:00',
-          'dateModified': '2025-04-06T16:11:24+02:00',
+          'dateModified': '2025-09-23T13:00:00+02:00',
           'url': 'https://bach.software/posts/2-ditching-the-cookie-banners:-run-plausible-analytics-on-azure-kubernetes',
           'author': {
             '@type': 'Person',
@@ -88,6 +88,42 @@ test.describe('Structured Data Tests', () => {
           'blogPost': [
             {
               '@type': 'BlogPosting',
+              'author': {
+                '@type': 'Person',
+                'image': {
+                  '@type': 'ImageObject',
+                  'height': '768',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'width': '768',
+                },
+                'name': 'Jeroen Bach',
+                'url': 'https://bach.software/pages/about',
+              },
+              'dateModified': '2025-09-20T16:34:55+02:00',
+              'datePublished': '2025-09-20T16:34:55+02:00',
+              'headline': 'Deploy a production-ready Kubernetes Cluster on Azure with Terraform',
+              'image': {
+                '@type': 'ImageObject',
+                'height': '768',
+                'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/4/cover.jpeg',
+                'width': '768',
+              },
+              'isAccessibleForFree': true,
+              'keywords': [
+                'Kubernetes',
+                'Azure',
+                'Terraform',
+              ],
+              'publisher': {
+                '@id': 'https://bach.software',
+                '@type': 'Organization',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'name': 'Bach.Software',
+              },
+              'url': 'https://bach.software/posts/4-deploy-a-production-ready-kubernetes-cluster-on-azure-with-terraform',
+            },
+            {
+              '@type': 'BlogPosting',
               'headline':
                 'Track how many people read your articles, using Plausible.io, Vue.js and Azure functions',
               'datePublished': '2025-08-15T00:45:00+02:00',
@@ -139,7 +175,7 @@ test.describe('Structured Data Tests', () => {
                 'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
                 'name': 'Bach.Software',
               },
-              'dateModified': '2025-04-06T16:11:24+02:00',
+              'dateModified': '2025-09-23T13:00:00+02:00',
               'datePublished': '2025-04-06T16:11:24+02:00',
               'headline':
                 'Ditching the Cookie Banners: Run Plausible Analytics on Azure Kubernetes',
