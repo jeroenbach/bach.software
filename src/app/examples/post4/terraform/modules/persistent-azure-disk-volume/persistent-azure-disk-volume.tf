@@ -1,3 +1,10 @@
+# Trigger recreation when snapshot IDs change
+resource "null_resource" "snapshot_trigger" {
+  triggers = {
+    snapshot = var.snapshot_id
+  }
+}
+
 resource "azurerm_managed_disk" "create" {
   name                 = var.pv_name
   location             = var.azure_location
@@ -8,6 +15,10 @@ resource "azurerm_managed_disk" "create" {
   disk_size_gb         = var.disk_size_gb
 
   lifecycle {
+    replace_triggered_by = [
+      null_resource.snapshot_trigger
+    ]
+
     # This prevents Terraform from deleting the disk when the resource is destroyed
     # in case you want to add this security, uncomment the line below
     # prevent_destroy = true
@@ -34,6 +45,12 @@ resource "kubernetes_persistent_volume" "create" {
     storage_class_name = "default" # Ensure this matches the PVC
   }
 
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.snapshot_trigger
+    ]
+  }
+
   depends_on = [azurerm_managed_disk.create]
 }
 
@@ -52,6 +69,12 @@ resource "kubernetes_persistent_volume_claim" "create" {
     }
     volume_name        = kubernetes_persistent_volume.create.metadata[0].name
     storage_class_name = "default" # Ensure this matches the PV
+  }
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.snapshot_trigger
+    ]
   }
 
   depends_on = [kubernetes_persistent_volume.create]

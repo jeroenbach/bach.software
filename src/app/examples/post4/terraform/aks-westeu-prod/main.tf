@@ -46,7 +46,7 @@ module "aks_cluster" {
     content = module.aks_cluster.azure_load_balancer_external_ip
     type    = "A"
     ttl     = 1
-    proxied = true
+    proxied = false
 
-    depends_on = [ module.plausible ]
+    depends_on = [ module.aks_cluster ]
   }
