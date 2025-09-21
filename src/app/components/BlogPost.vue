@@ -15,7 +15,12 @@ interface Props {
   pageReads?: PageReads
 }
 
-defineProps<Props>();
+const { pageReads } = defineProps<Props>();
+/**
+ * We've seen that the threeQuarterRead property gives a much higher count than the read property.
+ * Probably this is the actual time most users take to read the article.
+ */
+const readCount = computed(() => pageReads?.threeQuarterRead);
 </script>
 
 <template>
@@ -34,12 +39,12 @@ defineProps<Props>();
           class="flex border-y border-gray-200 px-3 py-1 text-xs text-gray-500 dark:border-gray-400 dark:text-gray-400 md:py-1.5"
         >
           <div
-            v-if="isNotNullOrUndefined(pageReads)"
-            :title="$t('read', { n: pageReads.read })"
+            v-if="isNotNullOrUndefined(readCount)"
+            :title="$t('read', { n: readCount })"
             class="flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
-            <span>{{ pageReads.read }}</span>
+            <span>{{ readCount }}</span>
           </div>
           <aside class="ms-auto flex h-8 items-center gap-2">
             <span>{{ $t("Share") }}:</span>
