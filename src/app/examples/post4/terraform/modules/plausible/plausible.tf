@@ -1,3 +1,11 @@
+# Trigger recreation when snapshot IDs change
+resource "null_resource" "snapshot_trigger" {
+  triggers = {
+    postgresql_snapshot = var.postgresql_restore_snapshot_id
+    clickhouse_snapshot = var.clickhouse_restore_snapshot_id
+  }
+}
+
 resource "helm_release" "plausible" {
   name             = var.name
   namespace        = var.namespace
@@ -5,6 +13,12 @@ resource "helm_release" "plausible" {
   chart            = "plausible-analytics"
   create_namespace = true
   version          = var.chart_version
+
+  lifecycle {
+    replace_triggered_by = [
+      null_resource.snapshot_trigger
+    ]
+  }
 
   values = [
     <<EOF
@@ -55,5 +69,9 @@ ingress:
 EOF
   ]
 
-  depends_on = [kubernetes_namespace.plausible_analytics, module.create_pv_postgresql, module.create_pv_clickhouse]
+  depends_on = [
+    kubernetes_namespace.plausible_analytics,
+    module.create_pv_postgresql,
+    module.create_pv_clickhouse
+  ]
 }
