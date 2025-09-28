@@ -44,7 +44,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm dev & pnpm storybook',
+    command: 'NODE_ENV=test pnpm dev & pnpm storybook',
     url: 'http://localhost:3000/',
     reuseExistingServer: !process.env.CI,
   },

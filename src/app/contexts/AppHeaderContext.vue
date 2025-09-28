@@ -10,6 +10,9 @@ const { notifications } = useNotificationStore();
 const { data: navigation } = await useContentNavigationContext();
 
 const colorMode = useColorMode();
+function updateColorMode(value: ColorMode) {
+  colorMode.preference = value;
+}
 </script>
 
 <template>
@@ -18,6 +21,6 @@ const colorMode = useColorMode();
     :notifications="notifications"
     :border="border"
     :colorMode="colorMode.preference as ColorMode"
-    @update:colorMode="colorMode.preference = $event"
+    @update:colorMode="updateColorMode"
   />
 </template>

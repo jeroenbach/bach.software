@@ -1,6 +1,6 @@
 import type { Author } from '~/types/Author';
 import type { BlogPost, BlogPostSummary } from '~/types/BlogPost';
-import { toDictionary } from '~/utils/collections';
+import { toMap } from '~/utils/toMap';
 
 /**
  * Fetches blog posts data based on the provided options.
@@ -84,11 +84,11 @@ export async function useBlogPostsContext<
         .where({ userName: { $in: Array.from(authorUserNames) } })
         .find();
 
-      const authorsDictionary = toDictionary(authors ?? [], a => a.userName);
+      const authorsDictionary = toMap(authors, a => a.userName);
 
       const posts = postsRaw.map((p) => {
         const post = p as BlogPostSummary;
-        post.author = authorsDictionary[post.authorName];
+        post.author = authorsDictionary.get(post.authorName)!;
         post.url = `${post._path}-${post.slug ?? createSlug(post.title)}`;
         return post;
       });
