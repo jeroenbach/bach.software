@@ -67,7 +67,7 @@ function copyCode() {
 <template>
   <div
     class="transition-all duration-300 ease-in-out w-full left-1/2 -translate-x-1/2 relative"
-    :class="{ 'w-screen px-4 lg:px-6': fullScreen }"
+    :class="{ 'w-screen px-3 lg:px-6': fullScreen }"
   >
     <div
       role="tablist"

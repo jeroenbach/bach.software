@@ -49,7 +49,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
       aria-label="Global"
     >
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
-        <AppLink to="/" class="-m-1.5 p-1.5 text-lg">
+        <AppLink tabindex="-1" :to="navigation?.[0]?.to" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
           <AppImage class="logo inline dark:hidden" src="/logo.svg" />
           <AppImage class="logo hidden dark:inline" src="/logo-light.svg" />
