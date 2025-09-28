@@ -18,6 +18,7 @@ useSeoMeta({
 useHead({
   htmlAttrs: {
     lang: locale,
+    class: 'overflow-x-hidden',
   },
 });
 </script>

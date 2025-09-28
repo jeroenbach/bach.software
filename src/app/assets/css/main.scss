@@ -1,14 +1,12 @@
 /** Improve twoslash popout */
-.shiki.twoslash-floating {
-  .twoslash-popup-code {
-    background-color: theme('backgroundColor.white');
-    // font-size: 0.9em;
-    padding: 0.2em 0.6em;
-
-    @at-root .dark & {
-      background-color: theme('backgroundColor.slate.800');
-    }
+.v-popper--theme-twoslash.twoslash-floating {
+  font-size: 0.8em;
+  background-color: theme('backgroundColor.white');
+  // z-index: 50;
+  @at-root .dark & {
+    background-color: theme('backgroundColor.slate.800');
   }
+
   .v-popper__arrow-inner {
     display: none;
   }
@@ -48,6 +46,20 @@
   .dark {
     input {
       color: theme('textColor.gray.700');
+    }
+  }
+}
+
+/** Add highlight to code blocks */
+.shiki.has-highlighted {
+  .line {
+    opacity: 0.4;
+    &.highlighted {
+      &,
+      & > * {
+        opacity: 1;
+        background-color: theme('backgroundColor.yellow.50');
+      }
     }
   }
 }
