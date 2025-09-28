@@ -19,7 +19,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
-    'nuxt-content-twoslash', // this needs to be before `@nuxt/content`
     '@nuxt/content',
     '@nuxt/image',
     '@nuxtjs/color-mode',
@@ -89,6 +88,9 @@ export default defineNuxtConfig({
         'json',
         'c#',
         'csharp',
+        'vue',
+        'html',
+        'css',
         'terraform',
         'bash',
         'sh',
@@ -107,9 +109,6 @@ export default defineNuxtConfig({
     },
     locales: ['en'],
     defaultLocale: 'en',
-  },
-  twoslash: {
-    enableInDev: true,
   },
   image: {
     dir: 'assets/images',

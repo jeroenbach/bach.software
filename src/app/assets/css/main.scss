@@ -1,17 +1,3 @@
-/** Improve twoslash popout */
-.v-popper--theme-twoslash.twoslash-floating {
-  font-size: 0.8em;
-  background-color: theme('backgroundColor.white');
-  // z-index: 50;
-  @at-root .dark & {
-    background-color: theme('backgroundColor.slate.800');
-  }
-
-  .v-popper__arrow-inner {
-    display: none;
-  }
-}
-
 /** Improve prose styling */
 .prose {
   div.code-group pre {
