@@ -1,3 +1,9 @@
+/** Set a custom font when running e2e tests */
+@use '@fontsource/inter'; /* fonts are only downloaded when used */
+html.e2e-font {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
 /** Improve prose styling */
 .prose {
   div.code-group pre {
@@ -45,6 +51,18 @@
       & > * {
         opacity: 1;
         background-color: theme('backgroundColor.yellow.50');
+      }
+    }
+  }
+}
+.dark {
+  .shiki.has-highlighted {
+    .line {
+      &.highlighted {
+        &,
+        & > * {
+          background-color: theme('backgroundColor.slate.600');
+        }
       }
     }
   }

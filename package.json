@@ -39,6 +39,7 @@
     "storybook:build:standalone": "VITE_STANDALONE=true storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/standalone"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "@headlessui/vue": "1.7.23",
     "@heroicons/vue": "2.2.0",
     "@microsoft/kiota-abstractions": "1.0.0-preview.93",
