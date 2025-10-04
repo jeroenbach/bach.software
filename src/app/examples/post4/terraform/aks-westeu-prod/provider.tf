@@ -64,3 +64,19 @@ provider "kubernetes" {
 provider "cloudflare" {
   api_token = var.cloudflare_api_token != "" ? var.cloudflare_api_token : null
 }
+
+# =============================================================================
+# INPUT VARIABLES
+# =============================================================================
+variable "azure_subscription_id" {
+  description = "The subscription ID for the Azure account."
+  type        = string
+}
+variable "cloudflare_api_token" {
+  description = "The api token for Cloudflare. If not provided we don't update the dns."
+  type        = string
+}
+variable "cloudflare_zone_id" {
+  description = "The zone ID for Cloudflare DNS. If not provided we don't update the dns."
+  type        = string
+}

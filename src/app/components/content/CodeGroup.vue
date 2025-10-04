@@ -13,6 +13,9 @@ const slots = useSlots();
 const { copy: copyInternal, isSupported, copied } = useClipboard();
 
 function copy(code: string) {
+  if (isNullOrUndefinedOrEmpty(code))
+    return;
+
   copyInternal(code);
   addNotification('success', t('Copied to clipboard!'), undefined, {
     closeIn: 3000,
@@ -57,11 +60,6 @@ function tabClick(index: number) {
 function maximizeClick() {
   fullScreen.value = !fullScreen.value;
 }
-
-function copyCode() {
-  if (activeTab.value?.code)
-    copy(activeTab.value.code);
-}
 </script>
 
 <template>
@@ -101,7 +99,7 @@ function copyCode() {
             class="p-2"
             aria-label="Copy code to clipboard"
             tabindex="-1"
-            @click="copyCode"
+            @click="copy(activeTab?.code)"
           >
             <ClipboardDocumentIcon v-if="!copied" class="size-4 text-gray-500" />
             <ClipboardDocumentCheckIcon v-else class="size-4 text-gray-500" />

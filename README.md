@@ -246,6 +246,28 @@ pnpm playwright        # Run E2E tests
 - Cross-browser compatibility
 - Real user interactions
 
+We also do screenshot testing for visual regressions. As the ci pipeline runs ubuntu, we included a ci:playwright:docker command
+to run the tests in a docker container with the same environment as the ci pipeline. This way the screenshots don't have any font or layout discrepancies.
+
+You can install colima to run docker lockally on macOS.
+
+```bash
+brew install colima docker docker-compose
+colima start
+```
+
+From here you can run the playwright tests in docker with:
+
+```bash
+pnpm ci:playwright:docker
+``` 
+
+And update the snapshots with:
+
+```bash
+pnpm ci:playwright:docker:update
+```
+
 ### Component Documentation (Storybook)
 
 ```bash

@@ -3,7 +3,7 @@ import DefaultLayout from '~/layouts/default.vue';
 </script>
 
 <template>
-  <DefaultLayout background="gray" backgroundFooter="white">
+  <DefaultLayout>
     <slot />
   </DefaultLayout>
 </template>

@@ -21,13 +21,40 @@ useHead({
     class: 'overflow-x-hidden',
   },
 });
+const route = useRoute();
+const background = computed<'gray' | 'white'>(() => {
+  switch (route.meta.layout) {
+    case 'gray':
+    case 'gray-short-footer':
+      return 'gray';
+    default:
+      return 'white';
+  }
+});
+const backgroundFooter = computed<'gray' | 'white'>(() => {
+  switch (route.meta.layout) {
+    case 'gray-short-footer':
+    case 'white-footer':
+      return 'white';
+    default:
+      return 'gray';
+  }
+});
+const shortFooter = computed(() => route.meta.layout === 'gray-short-footer');
 </script>
 
 <template>
-  <NuxtLoadingIndicator />
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <AppBackground :background="background" class="flex min-h-screen flex-col">
+    <NuxtLoadingIndicator />
+    <AppHeaderContext :border="background === 'gray'" />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <AppFooterContext
+      :short="shortFooter"
+      :backgroundColor="backgroundFooter"
+    />
+  </AppBackground>
 </template>
 
 <style lang="scss" scoped>
