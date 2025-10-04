@@ -31,6 +31,8 @@
     "check": "pnpm ci:lint && pnpm ci:typecheck",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
     "ci:playwright": "playwright test --config=playwright.config.ci.ts",
+    "ci:playwright:docker": "colima start && docker run --rm -v $(pwd):/work -w /work -e CI=true -e COREPACK_INTEGRITY_KEYS= mcr.microsoft.com/playwright:v1.48.2-jammy /bin/bash -c 'corepack enable && pnpm ci:playwright'",
+    "ci:playwright:docker:update": "colima start && docker run --rm -v $(pwd):/work -w /work -e CI=true -e COREPACK_INTEGRITY_KEYS= mcr.microsoft.com/playwright:v1.48.2-jammy /bin/bash -c 'corepack enable && pnpm ci:playwright  --update-snapshots'",
     "ci:lint": "pnpm lint",
     "ci:typecheck": "nuxi typecheck",
     "storybook": "storybook dev --config-dir ./src/app/.storybook --port 6006 --no-open",
@@ -39,7 +41,6 @@
     "storybook:build:standalone": "VITE_STANDALONE=true storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/standalone"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.2.8",
     "@headlessui/vue": "1.7.23",
     "@heroicons/vue": "2.2.0",
     "@microsoft/kiota-abstractions": "1.0.0-preview.93",

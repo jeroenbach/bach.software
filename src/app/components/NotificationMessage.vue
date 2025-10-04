@@ -20,6 +20,10 @@ const {
   options,
 } = defineProps<Props>();
 
+const emits = defineEmits<{
+  (e: 'close'): void
+}>();
+
 const progress = ref();
 const dismissed = ref(false);
 
@@ -44,6 +48,11 @@ useTimeoutFn(
   options?.closeIn ?? 0,
   { immediate: !!options?.closeIn },
 );
+
+function close() {
+  dismissed.value = true;
+  emits('close');
+}
 </script>
 
 <template>
@@ -136,7 +145,7 @@ useTimeoutFn(
               <span class="sr-only">Close</span>
               <button
                 class="flex size-6 rounded-lg text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
-                @click="dismissed = true"
+                @click="close"
               >
                 <XMarkIcon class="m-auto size-5" />
               </button>
