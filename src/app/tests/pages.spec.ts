@@ -24,8 +24,8 @@ test('portfolio-page', async ({ page }) => {
   await createScreenshot(page);
 });
 
-test('post1-page', async ({ page }) => {
-  await page.goto(`/posts/1-mastering-conditional-property-types-with-vue-3_3-generics`);
+test('post2-page', async ({ page }) => {
+  await page.goto(`/posts/2-ditching-the-cookie-banners:-run-plausible-analytics-on-azure-kubernetes`);
 
   await createScreenshot(page);
 });

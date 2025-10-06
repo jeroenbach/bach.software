@@ -95,6 +95,11 @@ jobs:
   playwright_job:
     needs: build_job
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.0-jammy
+      options: --user root
+    env:
+      HOME: /root
     name: Perform Playwright Tests
     steps:
       - uses: actions/checkout@v3
@@ -119,8 +124,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+      - name: Install unzip
+        run: apt-get update && apt-get install -y unzip
+
+      # - name: Install Playwright Browsers
+      #   run: pnpm exec playwright install --with-deps
 
       - name: Download zipped site
         uses: actions/download-artifact@v4
