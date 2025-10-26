@@ -1,6 +1,6 @@
 export interface Metadata {
-  _path: string
-  title?: string
+  path: string
+  title: string
   description: string
   datePublished: string
   dateModified: string

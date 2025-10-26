@@ -1,7 +1,4 @@
-import type { CurriculumVitaeItem } from '~/types/CurriculumVitaeItem';
 import type { Page } from '~/types/Page';
 
-export interface AboutPage extends Page {
-  greeting?: string
-  curriculumVitae?: CurriculumVitaeItem[]
+export interface AboutPage extends Omit<Page, 'company' | 'portfolio' | 'curriculumVitae'> {
 }

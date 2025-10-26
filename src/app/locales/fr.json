@@ -1,0 +1,40 @@
+{
+  "_metadata": {
+    "titleTemplate": "{titleChunk} - Bach.Software",
+    "titleTemplate_empty": "Bach.Software"
+  },
+  "Copied to clipboard!": "Copié dans le presse-papiers!",
+  "Linkedin": "Linkedin",
+  "Share": "Partager",
+  "Bach": {
+    "Software": "Bach.Software"
+  },
+  "read": "{n} lecture | {n} lectures",
+  "plausible": {
+    "current": {
+      "text": "Nous {status} actuellement vos visites.",
+      "not": "n'incluons pas",
+      "are": "incluons"
+    },
+    "title": "Exclusion Plausible",
+    "description": "Cliquez sur le bouton ci-dessous pour basculer votre exclusion dans les analyses pour ce site",
+    "button": {
+      "text": "{action} mes visites",
+      "include": "Inclure",
+      "exclude": "Exclure"
+    }
+  },
+  "notification": {
+    "error": {
+      "unknown": "Une erreur inconnue s'est produite"
+    }
+  },
+  "pageReadProgress": {
+    "openButton": "Afficher mes statistiques",
+    "wordCount": "Nombre de mots: {wordCount}",
+    "readingTime": "Nous estimons qu'il vous faut {readingTimeInMinutes} minutes pour lire cet article",
+    "timeProgress": "Progression temporelle: {timeSpentPercentage}%",
+    "scrollProgress": "Progression du défilement: {scrollPercentage}%",
+    "readingStage": "Étape de lecture: {totalProgress}"
+  }
+}

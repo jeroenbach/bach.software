@@ -19,19 +19,19 @@
     display: block;
     font-size: 0.9rem;
     padding: 0.5em 1em 0.4em;
-    border: 1px solid theme('borderColor.slate.200');
+    border: 1px solid var(--color-slate-200);
     border-radius: 4px;
     outline: none;
     margin: 0.5rem 0;
 
     &:focus {
-      border: 1px solid theme('borderColor.slate.400') !important;
+      border: 1px solid var(--color-slate-400) !important;
     }
   }
 
   .dark {
     input {
-      color: theme('textColor.gray.700');
+      color: var(--color-gray-700);
     }
   }
 }
@@ -44,7 +44,7 @@
       &,
       & > * {
         opacity: 1;
-        background-color: theme('backgroundColor.yellow.50');
+        background-color: var(--color-yellow-50);
       }
     }
   }
@@ -55,7 +55,7 @@
       &.highlighted {
         &,
         & > * {
-          background-color: theme('backgroundColor.slate.600');
+          background-color: var(--color-slate-600);
         }
       }
     }

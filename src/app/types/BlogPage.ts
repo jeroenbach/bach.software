@@ -1,6 +1,4 @@
-import type { Company } from '~/types/Company';
 import type { Page } from '~/types/Page';
 
-export interface BlogPage extends Page {
-  company?: Company
+export interface BlogPage extends Omit<Page, 'greeting' | 'curriculumVitae'> {
 }

@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import Aura from '@primevue/themes/aura';
+import tailwindcss from '@tailwindcss/vite';
 
+import { defaultLocale, locales } from './locales.config';
 import { screens } from './src/app/utils/screen';
 
 export default defineNuxtConfig({
@@ -15,15 +17,18 @@ export default defineNuxtConfig({
     dirs: ['./composables', './utils', './contexts', './types'],
   },
   srcDir: 'src/app',
-  compatibilityDate: '2024-11-03',
+  serverDir: 'src/app/server',
+  compatibilityDate: '2025-10-18',
   devtools: { enabled: true },
+  vite: {
+    plugins: [tailwindcss()],
+  },
   modules: [
-    '@nuxtjs/tailwindcss',
     '@nuxt/content',
+    '@nuxtjs/i18n',
     '@nuxt/image',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
-    '@nuxtjs/i18n',
     '@nuxt/test-utils/module',
     'dayjs-nuxt',
     '@primevue/nuxt-module',
@@ -44,7 +49,7 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: '',
   },
-  css: ['~/assets/css/main.scss'],
+  css: ['~/assets/css/tailwind.css', '~/assets/css/main.scss'],
   plausible: {
     apiHost: 'https://plausible.bach.software',
     // Tracking always on
@@ -75,75 +80,62 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'page', mode: 'out-in' },
   },
   content: {
-    highlight: {
-      theme: {
-        // Default theme (same as single string)
-        default: 'github-light',
-        // Theme used if `html.dark`
-        dark: 'github-dark',
+    build: {
+      markdown: {
+        highlight: {
+          theme: {
+            default: 'github-light',
+            dark: 'github-dark',
+          },
+          langs: [
+            'typescript',
+            'javascript',
+            'json',
+            'csharp',
+            'vue',
+            'html',
+            'css',
+            'terraform',
+            'bash',
+            'sh',
+            'hcl',
+          ],
+        },
+        remarkPlugins: { 'remark-reading-time': {} },
       },
-      langs: [
-        'typescript',
-        'javascript',
-        'json',
-        'c#',
-        'csharp',
-        'vue',
-        'html',
-        'css',
-        'terraform',
-        'bash',
-        'sh',
-        'hcl',
-      ],
     },
-    markdown: {
-      anchorLinks: true,
-      remarkPlugins: ['remark-reading-time'],
-    },
-    experimental: {
-      search: {},
-    },
-    api: {
-      baseURL: '/_content',
-    },
-    locales: ['en'],
-    defaultLocale: 'en',
   },
   image: {
     dir: 'assets/images',
     quality: 80,
     format: ['avif', 'webp', 'jpeg', 'jpg'],
-    screens: {
-      ...screens,
-      '2xl': screens.xxl,
-    },
+    screens,
   },
   i18n: {
     langDir: '../src/app/locales',
-    locales: [{ code: 'en', language: 'en-US', file: 'en.json' }],
-    defaultLocale: 'en',
+    locales,
     strategy: 'prefix_except_default',
-    lazy: true,
-    bundle: {
-      optimizeTranslationDirective: false,
-    },
+    defaultLocale,
   },
   dayjs: {
-    locales: ['en'],
+    locales: locales.map(locale => locale.code),
     plugins: ['relativeTime', 'utc', 'timezone'],
-    defaultLocale: 'en',
+    defaultLocale,
     defaultTimezone: 'Europe/Amsterdam',
   },
   runtimeConfig: {
     public: {
+      baseUrl: 'https://bach.software', // can be overridden by NUXT_PUBLIC_BASE_URL environment variable
       apiBase: '', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
       plausibleDomain: '', // can be overridden by NUXT_PUBLIC_PLAUSIBLE_DOMAIN environment variable
     },
   },
   nitro: {
     prerender: {
-      routes: ['/sitemap.xml'],
+      routes: ['/sitemap.xml', '/pages/20-portfolios'],
     },
+  },
+  routeRules: {
+    '/test': { redirect: { to: '/pages/20-portfolio', statusCode: 301 } },
   },
 });

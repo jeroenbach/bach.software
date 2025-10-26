@@ -8,15 +8,15 @@ const { portfolio = [] } = defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="portfolio" class="bg-gray-50 dark:bg-gray-900">
-    <div class="mx-auto max-w-2xl px-6 py-8 lg:max-w-7xl lg:px-8 lg:py-12">
+  <div v-if="portfolio" class="bg-gray-50 dark:bg-gray-900 left-1/2 -translate-x-1/2 relative w-screen">
+    <div class="mx-auto max-w-2xl px-6 py-18 lg:max-w-7xl lg:px-8 lg:py-28">
       <ul
-        class="group/list mt-10 grid gap-4 sm:mt-16 lg:grid-cols-3 lg:grid-rows-2"
+        class="group/list grid gap-4 lg:grid-cols-3 lg:grid-rows-2"
       >
         <li
           v-for="portfolioItem in portfolio"
           :key="portfolioItem.title"
-          class="delay-50 group transition-opacity duration-200 ease-in-out lg:hover:!opacity-100 lg:group-hover/list:opacity-50"
+          class="delay-50 group transition-opacity duration-200 ease-in-out lg:hover:opacity-100! lg:group-hover/list:opacity-50"
           :class="portfolioItem.liClass"
         >
           <AppLink
@@ -38,7 +38,7 @@ const { portfolio = [] } = defineProps<Props>();
             </div>
             <template v-if="portfolioItem.imgOption === 'sofiaVera'">
               <div
-                class="relative aspect-[3/4] w-full grow max-lg:mx-auto max-lg:max-w-md"
+                class="relative aspect-3/4 w-full grow max-lg:mx-auto max-lg:max-w-md"
               >
                 <div
                   class="absolute inset-x-10 bottom-0 top-10 h-full overflow-hidden rounded-[2.5rem] drop-shadow-2xl"
@@ -70,7 +70,7 @@ const { portfolio = [] } = defineProps<Props>();
             <template v-else-if="portfolioItem.imgOption === 'pavo'">
               <div class="relative flex flex-1 items-end">
                 <div
-                  class="absolute inset-0 bg-gradient-to-b from-white from-15% to-50% dark:from-gray-800"
+                  class="absolute inset-0 bg-linear-to-b from-white from-15% to-50% dark:from-gray-800"
                 />
                 <ResponsiveImage
                   src="/portfolio/Pavo.jpg"
@@ -84,7 +84,7 @@ const { portfolio = [] } = defineProps<Props>();
               </div>
             </template>
             <template v-else-if="portfolioItem.imgOption === 'beautyPlaza'">
-              <div class="relative aspect-[3/4] w-full grow">
+              <div class="relative aspect-3/4 w-full grow">
                 <div
                   class="absolute bottom-0 left-10 right-0 top-10 overflow-hidden rounded-tl-xl bg-white shadow-2xl"
                 >

@@ -27,7 +27,7 @@ const {
       'bg-gray-50 dark:bg-gray-800': backgroundColor === 'gray',
     }"
   >
-    <PageContent class="flex flex-col gap-y-8 lg:gap-y-12">
+    <PageContent class="flex flex-col gap-y-8 lg:gap-y-12 max-w-prose">
       <div v-if="!short" class="flex gap-4 max-md:flex-col lg:gap-6">
         <div class="flex flex-col">
           <h1 class="mb-2 text-2xl">

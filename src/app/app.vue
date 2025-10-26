@@ -1,11 +1,7 @@
 <script lang="ts" setup>
-import type { Config } from '~/types/Config';
 // Note: this file cannot contain any async code at the top level,
 // the static site generation didn't work when refreshing a page.
-import appConfig from '~/appConfig.json';
 
-// Set the app config
-useState<Config>('config', () => appConfig);
 const { t, locale } = useI18n();
 
 useSeoMeta({
@@ -22,32 +18,29 @@ useHead({
   },
 });
 const route = useRoute();
+const appConfig = useAppConfig();
+const pageLayout = computed(() => appConfig.showNoBottomPadding?.includes(Number(route.params.id)) ? 'no-bottom-padding' : 'default');
+
 const background = computed<'gray' | 'white'>(() => {
-  switch (route.meta.layout) {
-    case 'gray':
-    case 'gray-short-footer':
-      return 'gray';
-    default:
-      return 'white';
+  if (appConfig.showGrayBackground?.includes(Number(route.params.id))) {
+    return 'gray';
   }
+  return 'white';
 });
 const backgroundFooter = computed<'gray' | 'white'>(() => {
-  switch (route.meta.layout) {
-    case 'gray-short-footer':
-    case 'white-footer':
-      return 'white';
-    default:
-      return 'gray';
+  if (appConfig.showWhiteFooter?.includes(Number(route.params.id))) {
+    return 'white';
   }
+  return 'gray';
 });
-const shortFooter = computed(() => route.meta.layout === 'gray-short-footer');
+const shortFooter = computed(() => appConfig.showShortFooter?.includes(Number(route.params.id)));
 </script>
 
 <template>
   <AppBackground :background="background" class="flex min-h-screen flex-col">
     <NuxtLoadingIndicator />
     <AppHeaderContext :border="background === 'gray'" />
-    <NuxtLayout>
+    <NuxtLayout :name="pageLayout">
       <NuxtPage />
     </NuxtLayout>
     <AppFooterContext

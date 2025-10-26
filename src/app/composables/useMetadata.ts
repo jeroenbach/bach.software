@@ -38,23 +38,23 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
   if (!metadata)
     return;
 
-  const config = useConfig();
-  const baseUrl = config.value?.baseUrl;
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.baseUrl;
 
-  let url = metadata._path;
+  let url = metadata.path;
   let structuredData: WithNullableContext<
     SchemaWebPage | SchemaBlog | SchemaBlogPosting
   >;
   switch (type) {
     case 'page': {
       const page = metadata as Page;
-      url = page.url ?? page._path;
+      url = page.url ?? page.path;
       structuredData = createWebPageMetadataContext(baseUrl, page);
       break;
     }
     case 'blog': {
       const blog = metadata as BlogPage;
-      url = blog.url ?? blog._path;
+      url = blog.url ?? blog.path;
       structuredData = createBlogMetadataContext(
         baseUrl,
         blog,
@@ -64,7 +64,7 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
     }
     case 'blogPost': {
       const post = metadata as BlogPost;
-      url = post.url ?? post._path;
+      url = post.url ?? post.path;
       structuredData = createBlogPostingMetadataContext(baseUrl, post);
       break;
     }
@@ -119,7 +119,7 @@ export function createWebPageMetadataContext(baseUrl: string, page: Page): WithN
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     'name': page.title,
-    'url': createAbsoluteUrl(page.url ?? page._path, baseUrl),
+    'url': createAbsoluteUrl(page.url ?? page.path, baseUrl),
     'description': page.description,
   };
 }
@@ -132,7 +132,7 @@ export function createBlogMetadataContext(baseUrl: string, blog: BlogPage, posts
     ?.map(post => createBlogPostingMetadata(baseUrl, post))
     .filter(isNotNullOrUndefined);
 
-  const url = createAbsoluteUrl(blog.url ?? blog._path, baseUrl);
+  const url = createAbsoluteUrl(blog.url ?? blog.path, baseUrl);
 
   return {
     '@context': 'https://schema.org',

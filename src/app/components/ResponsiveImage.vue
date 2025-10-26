@@ -36,30 +36,30 @@ const id = useId();
 const loadingBackground = 'bg-slate-50 dark:bg-slate-900';
 const imgClass = computed(() => {
   const ratios = [
-    isNullOrUndefined(props.aspectRatio) ? null : `aspect-${props.aspectRatio}`,
+    isNullOrUndefined(props.aspectRatio) ? null : `aspect-[${props.aspectRatio}]`,
     isNullOrUndefined(props.aspectRatioExtraSmall)
       ? null
-      : `xs:aspect-${props.aspectRatioExtraSmall}`,
+      : `xs:aspect-[${props.aspectRatioExtraSmall}]`,
     isNullOrUndefined(props.aspectRatioSmall)
       ? null
-      : `sm:aspect-${props.aspectRatioSmall}`,
+      : `sm:aspect-[${props.aspectRatioSmall}]`,
     isNullOrUndefined(props.aspectRatioMedium)
       ? null
-      : `md:aspect-${props.aspectRatioMedium}`,
+      : `md:aspect-[${props.aspectRatioMedium}]`,
     isNullOrUndefined(props.aspectRatioLarge)
       ? null
-      : `lg:aspect-${props.aspectRatioLarge}`,
+      : `lg:aspect-[${props.aspectRatioLarge}]`,
     isNullOrUndefined(props.aspectRatioExtraLarge)
       ? null
-      : `xl:aspect-${props.aspectRatioExtraLarge}`,
+      : `xl:aspect-[${props.aspectRatioExtraLarge}]`,
     isNullOrUndefined(props.aspectRatio2ExtraLarge)
       ? null
-      : `xxl:aspect-${props.aspectRatio2ExtraLarge}`,
+      : `2xl:aspect-[${props.aspectRatio2ExtraLarge}]`,
   ].filter(isNotNullOrUndefined);
 
   // Add a default aspect ratio if none is provided
   if (ratios.length === 0) {
-    ratios.push('aspect-1/1');
+    ratios.push('aspect-square');
   }
 
   return [props.class, ratios.join(' '), loadingBackground, 'object-cover']
@@ -72,22 +72,22 @@ const imgSizes = computed(() => {
     return props.sizes;
 
   const _sizes: { [key in ScreenSize]: number | undefined } = {
-    xs: !isNumber(props.partOfScreenExtraSmall)
+    'xs': !isNumber(props.partOfScreenExtraSmall)
       ? props.partOfScreen
       : props.partOfScreenExtraSmall,
-    sm: !isNumber(props.partOfScreenSmall)
+    'sm': !isNumber(props.partOfScreenSmall)
       ? props.partOfScreen
       : props.partOfScreenSmall,
-    md: !isNumber(props.partOfScreenMedium)
+    'md': !isNumber(props.partOfScreenMedium)
       ? props.partOfScreen
       : props.partOfScreenMedium,
-    lg: !isNumber(props.partOfScreenLarge)
+    'lg': !isNumber(props.partOfScreenLarge)
       ? props.partOfScreen
       : props.partOfScreenLarge,
-    xl: !isNumber(props.partOfScreenExtraLarge)
+    'xl': !isNumber(props.partOfScreenExtraLarge)
       ? props.partOfScreen
       : props.partOfScreenExtraLarge,
-    xxl: !isNumber(props.partOfScreen2ExtraLarge)
+    '2xl': !isNumber(props.partOfScreen2ExtraLarge)
       ? props.partOfScreen
       : props.partOfScreen2ExtraLarge,
   };
@@ -139,16 +139,16 @@ function removeLoadingBackground(e: Event) {
     <div v-if="false">
       <!-- Added the aspect ratio's to force tailwind to generate them, this way we don't need to safelist them -->
       <div
-        class="xs:aspect-16/9 xxl:aspect-16/9 aspect-16/9 sm:aspect-16/9 md:aspect-16/9 lg:aspect-16/9 xl:aspect-16/9"
+        class="aspect-[16/9] xs:aspect-[16/9] sm:aspect-[16/9] md:aspect-[16/9] lg:aspect-[16/9] xl:aspect-[16/9] 2xl:aspect-[16/9]"
       />
       <div
-        class="xs:aspect-2/1 xxl:aspect-2/1 aspect-2/1 sm:aspect-2/1 md:aspect-2/1 lg:aspect-2/1 xl:aspect-2/1"
+        class="aspect-[2/1] xs:aspect-[2/1] sm:aspect-[2/1] md:aspect-[2/1] lg:aspect-[2/1] xl:aspect-[2/1] 2xl:aspect-[2/1]"
       />
       <div
-        class="xs:aspect-1/1 xxl:aspect-1/1 aspect-1/1 sm:aspect-1/1 md:aspect-1/1 lg:aspect-1/1 xl:aspect-1/1"
+        class="aspect-[1/1] xs:aspect-[1/1] sm:aspect-[1/1] md:aspect-[1/1] lg:aspect-[1/1] xl:aspect-[1/1] 2xl:aspect-[1/1]"
       />
       <div
-        class="xs:aspect-1/2 xxl:aspect-1/2 aspect-1/2 sm:aspect-1/2 md:aspect-1/2 lg:aspect-1/2 xl:aspect-1/2"
+        class="aspect-[1/2] xs:aspect-[1/2] sm:aspect-[1/2] md:aspect-[1/2] lg:aspect-[1/2] xl:aspect-[1/2] 2xl:aspect-[1/2]"
       />
     </div>
     <figcaption v-if="caption" :id="`${id}_figcaption`">

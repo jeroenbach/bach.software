@@ -41,7 +41,7 @@ describe('responsiveImage', () => {
     const w = mountStory(stories.Default);
     const img = await find(w, 'img');
     expect(img.attributes('class')).toBe(
-      'w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover',
+      'w-full aspect-square bg-slate-50 dark:bg-slate-900 object-cover',
     );
   });
 
@@ -50,7 +50,7 @@ describe('responsiveImage', () => {
     const placeholder = await find(w, 'figure div');
     expect(placeholder.exists()).toBe(true);
     expect(placeholder.attributes('class')).toBe(
-      'w-full aspect-1/1 bg-slate-50 dark:bg-slate-900 object-cover',
+      'w-full aspect-square bg-slate-50 dark:bg-slate-900 object-cover',
     );
   });
 
@@ -85,10 +85,10 @@ describe('responsiveImage', () => {
       expect.arrayContaining([
         'xs:aspect-1/1',
         'sm:aspect-2/1',
-        'md:aspect-16/9',
-        'lg:aspect-1/1',
+        'md:aspect-video',
+        'lg:aspect-square',
         'xl:aspect-2/1',
-        'xxl:aspect-16/9',
+        '2xl:aspect-16/9',
       ]),
     );
   });
@@ -120,7 +120,7 @@ describe('responsiveImage', () => {
       ).imgSizes;
 
     const sizes = (remove?: number) =>
-      ['xs:640px', 'sm:384px', 'md:341px', 'lg:320px', 'xl:307px', 'xxl:341px']
+      ['xs:640px', 'sm:384px', 'md:341px', 'lg:320px', 'xl:307px', '2xl:341px']
         .filter((_, i) => i !== remove)
         .join(' ');
 

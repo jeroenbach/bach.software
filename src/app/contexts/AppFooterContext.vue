@@ -2,8 +2,8 @@
 import type { Props } from '~/components/AppFooter.vue';
 
 defineProps<Props>();
-const { data: about } = await usePagesContext('about');
-const { data: footer } = await usePagesContext('_footer');
+const { data: footer } = await usePagesContext(2); // footer page has contentId 2
+const { data: footerAbout } = await usePagesContext(3); // footer page has contentId 3
 const { data: author } = await useAuthorsContext('jeroenbach');
 export type { Props };
 </script>
@@ -18,10 +18,10 @@ export type { Props };
     :imgAlt="author?.fullName"
   >
     <template #about>
-      <ContentRenderer :value="about" :excerpt="true" />
+      <ContentRenderer v-if="footerAbout" :value="footerAbout" />
     </template>
     <template #footer>
-      <ContentRenderer :value="footer" />
+      <ContentRenderer v-if="footer" :value="footer" />
     </template>
   </AppFooter>
 </template>

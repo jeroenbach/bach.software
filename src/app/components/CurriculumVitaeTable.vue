@@ -33,7 +33,7 @@ defineProps<Props>();
         <ul class="flex flex-wrap gap-x-1.5 gap-y-2">
           <li v-for="technology in technologies" :key="technology">
             <AppChip
-              class="bg-gradient-to-r from-gray-200 to-gray-100 font-medium text-sky-600 dark:from-gray-700 dark:to-gray-600 dark:text-sky-400"
+              class="bg-linear-to-r from-gray-200 to-gray-100 font-medium text-sky-600 dark:from-gray-700 dark:to-gray-600 dark:text-sky-400"
             >
               {{ technology }}
             </AppChip>
