@@ -12,7 +12,7 @@ import NuxtImg from './mocks/NuxtImg.vue';
 import NuxtImgIntegrated from './mocks/NuxtImgIntegrated.vue';
 import NuxtPicture from './mocks/NuxtPicture.vue';
 import NuxtPictureIntegrated from './mocks/NuxtPictureIntegrated.vue';
-import './input.css';
+import '../assets/css/tailwind.css';
 import '../assets/css/main.scss';
 
 const ComponentWithSlot = {

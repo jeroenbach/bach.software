@@ -132,7 +132,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ['/sitemap.xml', '/pages/20-portfolios'],
+      routes: ['/sitemap.xml', '/pages/20-portfolios', '/pages/404-page-not-found'],
     },
   },
   routeRules: {

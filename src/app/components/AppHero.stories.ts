@@ -1,33 +1,30 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import type { Author } from '~/types/Author';
 import AppHero from '~/components/AppHero.vue';
-
-import { readMarkdown } from '~/utils/markdown';
-import { readYaml } from '~/utils/yaml';
-import authorYaml from '../content/en/authors/jeroenbach.yaml?raw';
-import about from '../content/en/pages/3.about.md?raw';
-
-const { bodyHtml } = readMarkdown(about);
-const author = readYaml<Author>(authorYaml);
 
 const meta = {
   title: 'Components/AppHero',
   component: AppHero,
   args: {
     intro: 'Hello, my name is',
-    title: `${author.fullName}.`,
-    subTitle: `${author.role}.`,
-    imgSrc: author.imageUrl,
-    imgAlt: author.fullName,
+    title: 'Jeroen Bach',
+    subTitle: 'Software Engineer & Team Lead',
+    imgSrc: '/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+    imgAlt: 'Jeroen Bach',
   },
   render: args => ({
     components: { AppHero },
     setup() {
-      return { args, bodyHtml };
+      return { args };
     },
     template: `<AppHero v-bind="args">
-      <div v-html="bodyHtml" />
+      <div>
+        I'm a Software Engineer and Team Lead with over 15 years of professional experience.
+        I'm passionate about solving complex problems through simple, elegant solutions.
+        This blog is where I share techniques and insights for building great software, inspired by real-world projects.
+
+        Scroll down to explore my background and the projects I've worked on.
+      </div>
     </AppHero>`,
   }),
 } satisfies Meta<typeof AppHero>;
