@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { MetadataType } from '~/composables/useMetadata';
 import { postsPaths } from '~/locales.config';
 
 const { pathSegments } = useRoute().params as { pathSegments: string[] };
@@ -11,6 +12,7 @@ const pageId = isRoot
   : isBlogRoot
     ? 10 // id 10 is the blog root page
     : -1; // invalid page
+const pageType: MetadataType = isBlogRoot ? 'blog' : 'page';
 
 const { data: page } = await usePagesContext(pageId);
 const { data: posts } = isBlogRoot ? await useBlogPostsContext({ summary: true }) : { data: undefined };
@@ -18,6 +20,7 @@ const { data: posts } = isBlogRoot ? await useBlogPostsContext({ summary: true }
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
 }
+useMetadata(pageType, page.value, posts?.value);
 </script>
 
 <template>

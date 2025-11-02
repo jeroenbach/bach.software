@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { BlogPostSummary } from '~/types/BlogPost';
+import type { BlogPostSummary } from '~/types/BlogPostSummary';
 
 const { post } = defineProps<{
   post: BlogPostSummary

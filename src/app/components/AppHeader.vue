@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
+import type { Language } from '~/components/LanguageSwitcher.vue';
 import type { Notification } from '~/composables/useNotificationStore';
 import type { NavigationItem } from '~/types/NavigationItem';
+
 import {
   Dialog,
   DialogPanel,
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue';
-
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
@@ -18,6 +19,7 @@ interface Props {
   navigation?: NavigationItem[] | null
   notifications?: Notification[]
   colorMode?: ColorMode
+  language?: Language
 }
 
 const {
@@ -28,6 +30,7 @@ const {
 } = defineProps<Props>();
 const emits = defineEmits<{
   (e: 'update:colorMode', value: ColorMode): void
+  (e: 'update:language', value: Language): void
 }>();
 
 const mobileMenuOpen = ref(false);
@@ -64,6 +67,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
+        <LanguageSwitcher
+          :language
+          @update:language="emits('update:language', $event)"
+        />
         <ColorModeSwitcher
           :colorMode="colorMode"
           @update:colorMode="emits('update:colorMode', $event)"
@@ -138,6 +145,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6">
+                  <LanguageSwitcher
+                    :language
+                    @update:language="emits('update:language', $event)"
+                  />
                   <ColorModeSwitcher
                     :colorMode="colorMode"
                     @update:colorMode="emits('update:colorMode', $event)"

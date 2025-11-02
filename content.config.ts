@@ -5,7 +5,7 @@ import { locales } from './locales.config';
 const contentLocation = './src/app/content';
 
 // Define schemas
-const metadataSchema = z.object({
+export const contentMetadataSchema = z.object({
   contentId: z.number(),
   title: z.string(),
   description: z.string(),
@@ -16,17 +16,27 @@ const metadataSchema = z.object({
   canonicalUrl: z.string().optional(),
 });
 
-const pageSchema = z.object({
-  ...metadataSchema.shape,
+export const companySchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  url: z.string(),
+  imageUrl: z.string().optional(),
+  imageAlt: z.string().optional(),
+});
+
+export const pageSchema = z.object({
+  ...contentMetadataSchema.shape,
+  excludeFromNavigation: z.boolean().optional(),
   enableProse: z.boolean().optional(),
   draft: z.boolean().optional(),
   partial: z.boolean().optional(),
   url: z.string().optional(),
   slug: z.string().optional(),
+  company: z.object({ ...companySchema.shape }).optional(),
 });
 
-const postSchema = z.object({
-  ...metadataSchema.shape,
+export const postSchema = z.object({
+  ...contentMetadataSchema.shape,
   authorName: z.string(),
   draft: z.boolean().optional(),
   url: z.string().optional(),
@@ -46,7 +56,7 @@ const postSchema = z.object({
   }),
 });
 
-const authorSchema = z.object({
+export const authorSchema = z.object({
   userName: z.string(),
   fullName: z.string(),
   role: z.string(),
@@ -55,11 +65,7 @@ const authorSchema = z.object({
   linkedIn: z.string().optional(),
   twitter: z.string().optional(),
   github: z.string().optional(),
-  company: z.object({
-    name: z.string(),
-    url: z.string(),
-    imageUrl: z.string(),
-  }).optional(),
+  company: z.object({ ...companySchema.shape }).optional(),
 });
 
 // Generate collections for each locale

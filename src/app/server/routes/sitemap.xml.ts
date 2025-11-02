@@ -1,133 +1,111 @@
+import type { Collections, ContentNavigationItem } from '@nuxt/content';
+import { queryCollectionNavigation } from '@nuxt/content/server';
 import { findPageChildren } from '@nuxt/content/utils';
 import { SitemapStream, streamToPromise } from 'sitemap';
-import { createSlug } from '~/utils/url';
-import { defaultLocale, locales } from '../../../../locales.config';
+import { createBlogPostUrl, createPageUrl, defaultLocale, locales } from '~/locales.config';
+
+interface ContentNavigationItemExtended extends ContentNavigationItem {
+  type: string
+  contentId: number
+  url: string
+  locale: string
+  dateModified: string
+}
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);
-  // const pagesCollections = locales.map(locale => `pages_${locale.code}`);
-  // const postsCollections = locales.map(locale => `posts_${locale.code}`);
 
-  // const test = await queryCollection('pages_en').all();
+  const docs: ContentNavigationItemExtended[] = [];
+  for (const locale of locales) {
+    // Pages
+    const pagesCollection = `pages_${locale.code}` as Extract<keyof Collections, `pages_${string}`>;
+    let pages = await queryCollectionNavigation(event, pagesCollection, ['contentId', 'url', 'dateModified'])
+      .orWhere(q => q.where('partial', 'IS NULL').where('partial', '=', false))
+      .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false)) as ContentNavigationItemExtended[];
 
-  const test = await queryCollectionNavigation(event, 'pages_en');
+    if (locale?.pagesPath && locale.pagesPath !== '/') {
+      pages = findPageChildren(pages, locale?.pagesPath);
+    }
 
-  return test;
-  // const localePrefix = (locale: string) => locale === defaultLocale ? '' : `/${locale}`;
+    pages.forEach((page) => {
+      // Ensure the page has a URL property
+      page.url ??= createPageUrl(locale.code, page.contentId as number, page.title, page.slug as string);
+      page.locale = locale.code;
+      page.type = 'page';
+    });
 
-  // const collection = `pages_${locale.value}` as Extract<keyof Collections, `pages_${string}`>;
-  // const navigation = await queryCollectionNavigation(collection, ['url'])
-  //   .orWhere(q => q.where('partial', 'IS NULL').where('partial', '=', false))
-  //   .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false));
+    docs.push(...pages);
 
-  // // Fetch all documents for all locales
-  // const docs = await serverQueryContent(event)
-  //   .where({
-  //     $and: [{ _partial: false }, { _dir: { $in: ['posts', 'pages'] } }],
-  //   })
-  //   .find();
+    // Articles
+    const postsCollection = `posts_${locale.code}` as Extract<keyof Collections, `posts_${string}`>;
+    let articles = await queryCollectionNavigation(event, postsCollection, ['contentId', 'dateModified'])
+      .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false)) as ContentNavigationItemExtended[];
 
-  // const sitemap = new SitemapStream({
-  //   hostname: appConfig.baseUrl,
-  //   xmlns: {
-  //     news: false,
-  //     xhtml: true,
-  //     image: false,
-  //     video: false,
-  //   },
-  // });
+    if (locale?.postsPath && locale.postsPath !== '/') {
+      articles = findPageChildren(articles, locale?.postsPath);
+    }
 
-  // // Group documents by their identifier (file name without locale)
-  // // Structure: { 'posts/1': { en: {...}, fr: {...} }, 'pages/3.about': { en: {...}, fr: {...} } }
-  // const docsByIdentifier = new Map<string, Record<string, any>>();
+    articles.forEach((post) => {
+      // Ensure the post has a URL property
+      post.url = createBlogPostUrl(locale.code, post.contentId as number, post.title, post.slug as string);
+      post.locale = locale.code;
+      post.type = 'article';
+    });
 
-  // for (const doc of docs) {
-  //   // Extract locale from path (e.g., /en/posts/1 -> en)
-  //   const pathParts = doc._path.split('/').filter(Boolean);
-  //   const locale = pathParts[0];
+    docs.push(...articles);
+  }
 
-  //   // Create identifier without locale (e.g., posts/1)
-  //   const identifier = pathParts.slice(1).join('/');
+  // Group documents by their identifier (type + contentId)
+  const docsByIdentifier = new Map<string, Map<string, ContentNavigationItemExtended>>();
 
-  //   if (!docsByIdentifier.has(identifier)) {
-  //     docsByIdentifier.set(identifier, {});
-  //   }
-  //   docsByIdentifier.get(identifier)![locale] = doc;
-  // }
+  for (const doc of docs) {
+    const identifier = `${doc.type}_${doc.contentId}`;
+    if (!docsByIdentifier.has(identifier)) {
+      docsByIdentifier.set(identifier, new Map<string, ContentNavigationItemExtended>());
+    }
+    docsByIdentifier.get(identifier)!.set(doc.locale, doc);
+  }
 
-  // // Add home page
-  // const homeLinks = locales.map(locale => ({
-  //   lang: locale.code,
-  //   url: `${localePrefix(locale.code)}/`,
-  // }));
-  // sitemap.write({
-  //   url: '/',
-  //   changefreq: 'monthly',
-  //   links: homeLinks,
-  // });
+  const sitemap = new SitemapStream({
+    hostname: config.public.baseUrl,
+    xmlns: {
+      news: false,
+      xhtml: true,
+      image: false,
+      video: false,
+    },
+  });
 
-  // // Add posts index page
-  // const postsLinks = locales.map(locale => ({
-  //   lang: locale.code,
-  //   url: `${localePrefix(locale.code)}/posts`,
-  // }));
-  // sitemap.write({
-  //   url: '/posts',
-  //   changefreq: 'monthly',
-  //   links: postsLinks,
-  // });
+  // Add all documents with hreflang links
+  // eslint-disable-next-line ts/no-unused-vars
+  for (const [_, localeVariants] of docsByIdentifier) {
+    // Only process if we have content for default locale
+    const defaultVariant = localeVariants.get(defaultLocale);
+    if (!defaultVariant)
+      continue;
 
-  // // Add all documents with hreflang links
-  // for (const [identifier, docsByLocale] of docsByIdentifier) {
-  //   // Only process if we have content for default locale
-  //   const defaultDoc = docsByLocale[defaultLocale];
-  //   if (!defaultDoc)
-  //     continue;
+    // Create hreflang links for all available locales
+    const links = localeVariants.entries().map(([locale, doc]) => ({
+      lang: locale,
+      url: doc.url as string,
+    })).toArray();
 
-  //   // Determine the URL for each locale
-  //   const urlsByLocale: Record<string, string> = {};
+    // Add x-default pointing to default locale
+    links.push({
+      lang: 'x-default',
+      url: defaultVariant.url,
+    });
 
-  //   for (const locale of locales) {
-  //     const doc = docsByLocale[locale.code];
-  //     if (!doc)
-  //       continue;
+    // Write entry for each locale
+    sitemap.write({
+      url: defaultVariant.url,
+      lastmod: defaultVariant.dateModified,
+      changefreq: 'monthly',
+      links,
+    });
+  }
 
-  //     let url = doc._path.replace(`/${locale.code}`, localePrefix(locale.code));
+  sitemap.end();
 
-  //     if (doc._dir === 'posts') {
-  //       // Append slug for posts
-  //       const slug = doc.slug ?? createSlug(doc.title);
-  //       url = `${url}-${slug}`;
-  //     }
-
-  //     urlsByLocale[locale.code] = url;
-  //   }
-
-  //   // Create hreflang links for all available locales
-  //   const links = Object.entries(urlsByLocale).map(([locale, url]) => ({
-  //     lang: locale,
-  //     url,
-  //   }));
-
-  //   // Add x-default pointing to default locale
-  //   if (urlsByLocale[defaultLocale]) {
-  //     links.push({
-  //       lang: 'x-default',
-  //       url: urlsByLocale[defaultLocale],
-  //     });
-  //   }
-
-  //   // Write entry for each locale
-  //   for (const [locale, url] of Object.entries(urlsByLocale)) {
-  //     sitemap.write({
-  //       url,
-  //       changefreq: 'monthly',
-  //       links,
-  //     });
-  //   }
-  // }
-
-  // sitemap.end();
-
-  // return streamToPromise(sitemap);
+  return streamToPromise(sitemap);
 });

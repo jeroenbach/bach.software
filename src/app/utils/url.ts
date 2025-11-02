@@ -17,7 +17,7 @@ export function createAbsoluteUrl(relativeUrl: string, baseUrl: string) {
   // Clean up any double slashes in the path
   url.pathname = url.pathname
     .split('/')
-    .filter(isNotNullOrUndefinedOrEmpty)
+    .filter(x => x)
     .join('/');
 
   return url.href;

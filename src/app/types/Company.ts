@@ -1,7 +1,3 @@
-export interface Company {
-  name: string
-  description?: string
-  imageUrl?: string
-  imageAlt?: string
-  url: string
-}
+import type { companySchema } from '../../../content.config';
+
+export type Company = typeof companySchema._type;

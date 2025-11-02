@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineVitestProject } from '@nuxt/test-utils/config';
 import { defineConfig } from 'vitest/config';
 
@@ -5,6 +6,12 @@ export default defineConfig({
   test: {
     projects: [
       {
+        resolve: {
+          alias: {
+            '~': fileURLToPath(new URL('./src/app', import.meta.url)),
+            '@': fileURLToPath(new URL('./src/app', import.meta.url)),
+          },
+        },
         test: {
           name: 'unit',
           include: [
@@ -16,10 +23,16 @@ export default defineConfig({
           exclude: [
             '**/*.nuxt.{test,spec}.{ts,js}',
           ],
-          environment: 'node',
+          environment: 'happy-dom',
         },
       },
       await defineVitestProject({
+        resolve: {
+          alias: {
+            '~': fileURLToPath(new URL('./src/app', import.meta.url)),
+            '@': fileURLToPath(new URL('./src/app', import.meta.url)),
+          },
+        },
         test: {
           name: 'nuxt',
           include: [

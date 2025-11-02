@@ -18,6 +18,9 @@ const configuredPath = computed(() => page?.value?.url || post?.value?.url || un
 if (path !== configuredPath.value) {
   navigateTo(configuredPath.value || '/', { redirectCode: 301 });
 }
+const pageType: MetadataType = isPost ? 'blogPost' : 'page';
+
+useMetadata(pageType, page?.value ?? post?.value);
 </script>
 
 <template>

@@ -1,5 +1,8 @@
 {
   "platform": {
     "apiRuntime": "dotnet-isolated:9.0"
+  },
+  "navigationFallback": {
+    "rewrite": "/content/404-page-not-found"
   }
 }

@@ -89,7 +89,7 @@ function maximizeClick() {
         </AppButton>
       </template>
       <span v-else class="p-2 px-4 text-sm">
-        {{ activeTab.label }}
+        {{ activeTab?.label }}
       </span>
       <ClientOnly>
         <div class="ml-auto flex">

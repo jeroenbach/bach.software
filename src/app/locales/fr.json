@@ -36,5 +36,11 @@
     "timeProgress": "Progression temporelle: {timeSpentPercentage}%",
     "scrollProgress": "Progression du défilement: {scrollPercentage}%",
     "readingStage": "Étape de lecture: {totalProgress}"
+  },
+  "Switch language": "Changer de langue",
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Cette page a été automatiquement traduite avec l'IA. Si vous rencontrez des erreurs, faites-le moi savoir !"
+    }
   }
 }

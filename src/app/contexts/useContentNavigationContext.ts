@@ -16,7 +16,8 @@ export async function useContentNavigationContext() {
 
       let pages = await queryCollectionNavigation(collection, ['contentId', 'url'])
         .orWhere(q => q.where('partial', 'IS NULL').where('partial', '=', false))
-        .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false));
+        .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false))
+        .orWhere(q => q.where('excludeFromNavigation', 'IS NULL').where('excludeFromNavigation', '=', false));
 
       const structure = localesMap.get(locale.value);
       if (structure?.pagesPath && structure.pagesPath !== '/') {

@@ -1,0 +1,46 @@
+{
+  "_metadata": {
+    "titleTemplate": "{titleChunk} - Bach.Software",
+    "titleTemplate_empty": "Bach.Software"
+  },
+  "Copied to clipboard!": "In die Zwischenablage kopiert!",
+  "Linkedin": "Linkedin",
+  "Share": "Teilen",
+  "Bach": {
+    "Software": "Bach.Software"
+  },
+  "read": "{n} mal gelesen | {n} mal gelesen",
+  "plausible": {
+    "current": {
+      "text": "Wir {status} derzeit Ihre Besuche.",
+      "not": "berücksichtigen nicht",
+      "are": "berücksichtigen"
+    },
+    "title": "Plausible Ausschluss",
+    "description": "Klicken Sie auf die Schaltfläche unten, um Ihren Ausschluss in den Analysen für diese Website zu ändern",
+    "button": {
+      "text": "{action} meine Besuche",
+      "include": "Einbeziehen",
+      "exclude": "Ausschließen"
+    }
+  },
+  "notification": {
+    "error": {
+      "unknown": "Ein unbekannter Fehler ist aufgetreten"
+    }
+  },
+  "pageReadProgress": {
+    "openButton": "Meine Statistiken anzeigen",
+    "wordCount": "Wortanzahl: {wordCount}",
+    "readingTime": "Wir schätzen, dass Sie {readingTimeInMinutes} Minuten benötigen, um diesen Artikel zu lesen",
+    "timeProgress": "Zeitfortschritt: {timeSpentPercentage}%",
+    "scrollProgress": "Scroll-Fortschritt: {scrollPercentage}%",
+    "readingStage": "Lesephase: {totalProgress}"
+  },
+  "Switch language": "Sprache wechseln",
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Diese Seite wurde automatisch mit KI übersetzt. Wenn Sie Fehler feststellen, lassen Sie es mich bitte wissen!"
+    }
+  }
+}

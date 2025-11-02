@@ -3,11 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildAuthor } from '~/components/__tests__/authorBuilder';
 import { buildBlog } from '~/components/__tests__/blogBuilder';
 import { buildCompany } from '~/components/__tests__/companyBuilder';
+import { buildPage } from '~/components/__tests__/pageBuilder';
 import { buildPost } from '~/components/__tests__/postBuilder';
 
 const mock = vi.hoisted(() => ({
   useSeoMeta: vi.fn(),
   useHead: vi.fn(),
+  useRuntimeConfig: vi.fn(),
 }));
 vi.mock('@unhead/vue', async (importOriginal) => {
   const actual: Record<string, unknown> = await importOriginal();
@@ -15,6 +17,14 @@ vi.mock('@unhead/vue', async (importOriginal) => {
     ...actual,
     useSeoMeta: mock.useSeoMeta,
     useHead: mock.useHead,
+  };
+});
+
+vi.mock('#app', async (importOriginal) => {
+  const actual: Record<string, unknown> = await importOriginal();
+  return {
+    ...actual,
+    useRuntimeConfig: mock.useRuntimeConfig,
   };
 });
 
@@ -241,25 +251,26 @@ describe('useMetadata', () => {
   beforeEach(() => {
     mock.useHead.mockReset();
     mock.useSeoMeta.mockReset();
+    mock.useRuntimeConfig.mockReturnValue({
+      public: {
+        baseUrl: 'https://bach.software',
+      },
+    });
   });
 
   it('should call the useSeoMeta with the correct parameters', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
     }));
-    useMetadata('page', {
-      title: 'Title',
-      description: 'Description',
-      imageUrl: '/posts/1/cover.jpeg',
-      imageAlt: 'Image alt',
-      _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-      canonicalUrl:
-        '/posts/1-vue-3_3-generics-and-conditional-properties-original',
-      datePublished: '2024-11-05T08:00:00.000Z',
-      dateModified: '2024-11-05T08:00:00.000Z',
-    } as Page);
 
-    const seoArgs = mock.useSeoMeta.mock.calls[0][0];
+    const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
     expect(seoArgs.title).toBe('Title');
     expect(seoArgs.ogTitle).toBe('Title');
     expect(seoArgs.description).toBe('Description');
@@ -274,41 +285,33 @@ describe('useMetadata', () => {
   });
 
   it('should use url if it is specified', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/override';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
     }));
-    useMetadata('page', {
-      title: 'Title',
-      description: 'Description',
-      imageUrl: '/posts/1/cover.jpeg',
-      imageAlt: 'Image alt',
-      _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-      url: '/override',
-      datePublished: '2024-11-05T08:00:00.000Z',
-      dateModified: '2024-11-05T08:00:00.000Z',
-    } as Page);
 
-    const seoArgs = mock.useSeoMeta.mock.calls[0][0];
+    const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
     expect(seoArgs.ogUrl).toBe('https://bach.software/override');
   });
 
   it('should call the useHead with the correct parameters', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
     }));
-    useMetadata('page', {
-      title: 'Title',
-      description: 'Description',
-      imageUrl: '/posts/1/cover.jpeg',
-      imageAlt: 'Image alt',
-      _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-      canonicalUrl:
-        '/posts/1-vue-3_3-generics-and-conditional-properties-original',
-      datePublished: '2024-11-05T08:00:00.000Z',
-      dateModified: '2024-11-05T08:00:00.000Z',
-    } as Page);
 
-    const headArgs = mock.useHead.mock.calls[0][0];
+    const headArgs = mock.useHead.mock.calls[0]![0];
     expect(headArgs.script[0].type).toBe('application/ld+json');
     expect(headArgs.script[0].innerHTML).toBe(
       '{"@context":"https://schema.org","@type":"WebPage","name":"Title","url":"https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties","description":"Description"}',
@@ -320,38 +323,32 @@ describe('useMetadata', () => {
   });
 
   it('should use url if canonical url is empty', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
     }));
-    useMetadata('page', {
-      title: 'Title',
-      description: 'Description',
-      imageUrl: '/posts/1/cover.jpeg',
-      imageAlt: 'Image alt',
-      _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-      datePublished: '2024-11-05T08:00:00.000Z',
-      dateModified: '2024-11-05T08:00:00.000Z',
-    } as Page);
-    const headArgs = mock.useHead.mock.calls[0][0];
+    const headArgs = mock.useHead.mock.calls[0]![0];
     expect(headArgs.link[0].href).toBe(
       'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
     );
   });
 
   it('should use page structured data when type is blog', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
     }));
-    useMetadata('page', {
-      title: 'Title',
-      description: 'Description',
-      imageUrl: '/posts/1/cover.jpeg',
-      imageAlt: 'Image alt',
-      _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-      datePublished: '2024-11-05T08:00:00.000Z',
-      dateModified: '2024-11-05T08:00:00.000Z',
-    } as Page);
-    const headArgs = mock.useHead.mock.calls[0][0];
+    const headArgs = mock.useHead.mock.calls[0]![0];
     expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
       '@context': 'https://schema.org',
       '@type': 'WebPage',
@@ -362,24 +359,21 @@ describe('useMetadata', () => {
   });
 
   it('should use blog structured data when type is blog', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
-    }));
     useMetadata(
       'blog',
-      {
-        title: 'Title',
-        description: 'Description',
-        imageUrl: '/posts/1/cover.jpeg',
-        imageAlt: 'Image alt',
-        _path: '/posts/1-vue-3_3-generics-and-conditional-properties',
-        datePublished: '2024-11-05T08:00:00.000Z',
-        dateModified: '2024-11-05T08:00:00.000Z',
-        company: buildCompany(),
-      } as BlogPage,
+      buildBlog((x) => {
+        x.title = 'Title';
+        x.description = 'Description';
+        x.imageUrl = '/posts/1/cover.jpeg';
+        x.imageAlt = 'Image alt';
+        x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+        x.datePublished = '2024-11-05T08:00:00.000Z';
+        x.dateModified = '2024-11-05T08:00:00.000Z';
+        x.company = buildCompany();
+      }),
       [buildPost()],
     );
-    const headArgs = mock.useHead.mock.calls[0][0];
+    const headArgs = mock.useHead.mock.calls[0]![0];
     expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
       '@context': 'https://schema.org',
       '@type': 'Blog',
@@ -433,9 +427,6 @@ describe('useMetadata', () => {
   });
 
   it('should use blogPost structured data when type is blogPost', async () => {
-    useState<Config>('config', () => ({
-      baseUrl: 'https://bach.software',
-    }));
     useMetadata(
       'blogPost',
       buildPost((p) => {
@@ -443,12 +434,12 @@ describe('useMetadata', () => {
         p.description = 'Description';
         p.imageUrl = '/posts/1/cover.jpeg';
         p.imageAlt = 'Image alt';
-        p._path = '/posts/1-vue-3_3-generics-and-conditional-properties';
+        p.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
         p.datePublished = '2024-11-05T08:00:00.000Z';
         p.dateModified = '2024-11-05T08:00:00.000Z';
       }),
     );
-    const headArgs = mock.useHead.mock.calls[0][0];
+    const headArgs = mock.useHead.mock.calls[0]![0];
     expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',

@@ -7,7 +7,7 @@ import { createPageUrl, defaultLocale } from '~/locales.config';
  * This hook uses a unique identifier to cache the data and avoid redundant fetches.
  * If no slug is provided, it returns null.
  *
- * @param {string} [slug] - An optional slug to filter the page.
+ * @param {number} id - The ID of the page to fetch.
  * @returns {Promise<PagesCollectionItem | undefined>} A promise that resolves to a single page or null.
  */
 export async function usePagesContext<TPage extends Page>(id: number) {

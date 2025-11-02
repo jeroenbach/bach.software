@@ -2,9 +2,21 @@
 import type { Props } from '~/components/AppFooter.vue';
 
 defineProps<Props>();
-const { data: footer } = await usePagesContext(2); // footer page has contentId 2
-const { data: footerAbout } = await usePagesContext(3); // footer page has contentId 3
-const { data: author } = await useAuthorsContext('jeroenbach');
+const { locale } = useI18n();
+
+const { data: footer, refresh: refreshFooter } = await usePagesContext(2); // footer page has contentId 2
+const { data: footerAbout, refresh: refreshFooterAbout } = await usePagesContext(3); // footer page has contentId 3
+const { data: author, refresh: refreshAuthor } = await useAuthorsContext('jeroenbach');
+
+// Watch locale changes and refresh all footer data
+watch(locale, async () => {
+  await Promise.all([
+    refreshFooter(),
+    refreshFooterAbout(),
+    refreshAuthor(),
+  ]);
+});
+
 export type { Props };
 </script>
 

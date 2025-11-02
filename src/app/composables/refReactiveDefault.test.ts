@@ -107,7 +107,7 @@ describe('refReactiveDefault', () => {
       children: [{ details: 'child details' }],
     });
     const state = refReactiveDefault(defaultValue);
-    defaultValue.value.children![0].details = 'updated child details';
+    defaultValue.value.children![0]!.details = 'updated child details';
     expect(state.value).toEqual({
       children: [{ details: 'updated child details' }],
     });
@@ -139,7 +139,7 @@ describe('refReactiveDefault', () => {
       },
       { flush: 'sync' },
     );
-    defaultValue.value.children![0].details = 'updated child details';
+    defaultValue.value.children![0]!.details = 'updated child details';
 
     // The object is updated, because both variables are a reference to the same object
     expect(state.value).toEqual({
@@ -155,7 +155,7 @@ describe('refReactiveDefault', () => {
     });
     const state = refReactiveDefault(defaultValue);
     state.value.children![0].details = 'changed child details';
-    defaultValue.value.children![0].details = 'also changed child details';
+    defaultValue.value.children![0]!.details = 'also changed child details';
     expect(state.value).toEqual({
       children: [{ details: 'also changed child details' }],
     });
@@ -164,7 +164,7 @@ describe('refReactiveDefault', () => {
     expect(state.value).toEqual({
       children: [{ details: 'also changed child details' }],
     });
-    defaultValue.value.children![0].details = 'child details';
+    defaultValue.value.children![0]!.details = 'child details';
     expect(state.value).toEqual({
       children: [{ details: 'child details' }],
     });
@@ -178,7 +178,7 @@ describe('refReactiveDefault', () => {
       resetOnDefaultChange: false, // breaks the sync
     });
     state.value.children![0].details = 'changed child details';
-    defaultValue.value.children![0].details = 'also changed child details';
+    defaultValue.value.children![0]!.details = 'also changed child details';
     expect(state.value).toEqual({
       children: [{ details: 'changed child details' }], // sync is stopped
     });
@@ -186,7 +186,7 @@ describe('refReactiveDefault', () => {
     expect(state.value).toEqual({
       children: [{ details: 'also changed child details' }],
     });
-    defaultValue.value.children![0].details = 'child details';
+    defaultValue.value.children![0]!.details = 'child details';
     expect(state.value).toEqual({
       children: [{ details: 'child details' }], // sync working again
     });
@@ -206,7 +206,7 @@ describe('refReactiveDefault', () => {
       { flush: 'sync' }, // no deep watchers here
     );
 
-    defaultValue.value.children![0].details = 'updated child details';
+    defaultValue.value.children![0]!.details = 'updated child details';
     expect(state.value).toEqual({
       children: [{ details: 'updated child details' }], // this is updated because we modified the object and this is a reference
     });
@@ -255,9 +255,9 @@ describe('refReactiveDefault', () => {
       children: [{ details: 'child details' }],
     });
     const state = refReactiveDefault(defaultValue);
-    defaultValue.value.children![0].details = 'first update on default';
+    defaultValue.value.children![0]!.details = 'first update on default';
     expect(state.value.children![0].details).toBe('first update on default');
-    defaultValue.value.children![0].details = 'second update on default';
+    defaultValue.value.children![0]!.details = 'second update on default';
     expect(state.value.children![0].details).toBe('second update on default');
 
     state.value.children![0].details = 'third update on source';
@@ -265,7 +265,7 @@ describe('refReactiveDefault', () => {
     state.value.children![0].details = 'fourth update on source';
     expect(state.value.children![0].details).toBe('fourth update on source');
 
-    defaultValue.value.children![0].details = 'fifth update on default';
+    defaultValue.value.children![0]!.details = 'fifth update on default';
     expect(state.value.children![0].details).toBe('fifth update on default');
 
     state.value.children![0].details = 'sixth update on source';
@@ -279,9 +279,9 @@ describe('refReactiveDefault', () => {
     const state = refReactiveDefault(defaultValue, {
       resetOnDefaultChange: false,
     });
-    defaultValue.value.children![0].details = 'first update on default';
+    defaultValue.value.children![0]!.details = 'first update on default';
     expect(state.value.children![0].details).toBe('first update on default');
-    defaultValue.value.children![0].details = 'second update on default';
+    defaultValue.value.children![0]!.details = 'second update on default';
     expect(state.value.children![0].details).toBe('second update on default');
 
     state.value.children![0].details = 'third update on source';
@@ -289,7 +289,7 @@ describe('refReactiveDefault', () => {
     state.value.children![0].details = 'fourth update on source';
     expect(state.value.children![0].details).toBe('fourth update on source');
 
-    defaultValue.value.children![0].details
+    defaultValue.value.children![0]!.details
       = 'fifth update on default, but should be ignored';
     expect(state.value.children![0].details).toBe('fourth update on source');
 

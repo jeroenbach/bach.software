@@ -11,8 +11,8 @@ import type {
 } from 'schema-dts';
 
 import type { Author } from '~/types/Author';
-import type { BlogPage } from '~/types/BlogPage';
-import type { BlogPost, BlogPostSummary } from '~/types/BlogPost';
+import type { BlogPost } from '~/types/BlogPost';
+import type { BlogPostSummary } from '~/types/BlogPostSummary';
 import type { Company } from '~/types/Company';
 import type { Metadata } from '~/types/Metadata';
 import type { Page } from '~/types/Page';
@@ -21,6 +21,8 @@ import { createAbsoluteUrl } from '~/utils/url';
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
 type MetadataOptions = Parameters<typeof useSeoMeta>[1];
+
+export type MetadataType = 'page' | 'blog' | 'blogPost';
 
 /**
  * Helper function to get an image url for metadata purposes
@@ -34,27 +36,27 @@ export function getMetadataImageUrl(relativeUrl: string, baseUrl: string) {
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
-export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metadata, itemsMetadata?: Metadata[], options?: MetadataOptions) {
+export function useMetadata(type: MetadataType, metadata?: Metadata, itemsMetadata?: Metadata[], options?: MetadataOptions) {
   if (!metadata)
     return;
 
   const config = useRuntimeConfig();
   const baseUrl = config.public.baseUrl;
 
-  let url = metadata.path;
+  let url: string = '';
   let structuredData: WithNullableContext<
     SchemaWebPage | SchemaBlog | SchemaBlogPosting
   >;
   switch (type) {
     case 'page': {
       const page = metadata as Page;
-      url = page.url ?? page.path;
+      url = page.url!;
       structuredData = createWebPageMetadataContext(baseUrl, page);
       break;
     }
     case 'blog': {
-      const blog = metadata as BlogPage;
-      url = blog.url ?? blog.path;
+      const blog = metadata as Page;
+      url = blog.url!;
       structuredData = createBlogMetadataContext(
         baseUrl,
         blog,
@@ -64,7 +66,7 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
     }
     case 'blogPost': {
       const post = metadata as BlogPost;
-      url = post.url ?? post.path;
+      url = post.url!;
       structuredData = createBlogPostingMetadataContext(baseUrl, post);
       break;
     }
@@ -124,7 +126,7 @@ export function createWebPageMetadataContext(baseUrl: string, page: Page): WithN
   };
 }
 
-export function createBlogMetadataContext(baseUrl: string, blog: BlogPage, posts: BlogPostSummary[]): WithNullableContext<SchemaBlog> {
+export function createBlogMetadataContext(baseUrl: string, blog: Page, posts: BlogPostSummary[]): WithNullableContext<SchemaBlog> {
   if (!blog)
     return undefined;
 
@@ -175,7 +177,7 @@ export function createBlogPostingMetadata(baseUrl: string, post: BlogPostSummary
     'datePublished': post.datePublished && toDateWithTimeZone(post.datePublished),
     'dateModified': post.dateModified && toDateWithTimeZone(post.dateModified),
     'url': post.url && createAbsoluteUrl(post.url, baseUrl),
-    'author': createAuthorMetadata(baseUrl, post.author),
+    'author': post.author && createAuthorMetadata(baseUrl, post.author),
     'publisher':
       post.author?.company && createOrganizationMetadata(post.author.company),
     'image': post.imageUrl && createImageMetadata(baseUrl, post.imageUrl),
