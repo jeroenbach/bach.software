@@ -2,7 +2,7 @@
 // Note: this file cannot contain any async code at the top level,
 // the static site generation didn't work when refreshing a page.
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 useSeoMeta({
   titleTemplate: (titleChunk) => {
@@ -13,10 +13,10 @@ useSeoMeta({
 });
 useHead({
   htmlAttrs: {
-    lang: locale,
     class: 'overflow-x-hidden',
   },
 });
+
 const route = useRoute();
 const appConfig = useAppConfig();
 const pageLayout = computed(() => appConfig.showNoBottomPadding?.includes(Number(route.params.id)) ? 'no-bottom-padding' : 'default');
@@ -41,7 +41,9 @@ const shortFooter = computed(() => appConfig.showShortFooter?.includes(Number(ro
     <NuxtLoadingIndicator />
     <AppHeaderContext :border="background === 'gray'" />
     <NuxtLayout :name="pageLayout">
-      <NuxtPage />
+      <slot>
+        <NuxtPage />
+      </slot>
     </NuxtLayout>
     <AppFooterContext
       :short="shortFooter"

@@ -17,11 +17,11 @@ defineProps<Props>();
       :key="`${i}-${title}`"
       class="grid gap-y-2 transition-all sm:grid-cols-4 sm:gap-8 md:gap-4"
     >
-      <header
+      <div
         class="mt-1 h-fit text-xs font-semibold uppercase tracking-wide text-gray-500"
       >
         {{ date }}
-      </header>
+      </div>
       <div class="flex flex-col gap-2 sm:col-span-3">
         <h3 class="font-medium leading-snug text-gray-900 dark:text-gray-50">
           {{ title }} - {{ company }}

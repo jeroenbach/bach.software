@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process';
 import Aura from '@primevue/themes/aura';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -17,6 +18,9 @@ export default defineNuxtConfig({
     dirs: ['./composables', './utils', './contexts', './types'],
   },
   srcDir: 'src/app',
+  dir: {
+    public: 'src/app/public',
+  },
   serverDir: 'src/app/server',
   compatibilityDate: '2025-10-18',
   devtools: { enabled: true },
@@ -112,6 +116,7 @@ export default defineNuxtConfig({
     screens,
   },
   i18n: {
+    baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'https://bach.software',
     langDir: '../src/app/locales',
     locales,
     strategy: 'prefix_except_default',
@@ -132,10 +137,11 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ['/sitemap.xml', '/pages/20-portfolios', '/pages/404-page-not-found'],
+      routes: ['/sitemap.xml', '/api/content-urls'],
     },
   },
   routeRules: {
-    '/test': { redirect: { to: '/pages/20-portfolio', statusCode: 301 } },
+    '/pages/portfolio': { redirect: { to: '/content/20-portfolio', statusCode: 301 } },
+    '/pages/about': { redirect: { to: '/content/30-about', statusCode: 301 } },
   },
 });

@@ -5,7 +5,11 @@ import NotificationMessage from './NotificationMessage.vue';
 const meta = {
   title: 'Components/NotificationMessage',
   component: NotificationMessage,
-  args: {},
+  args: {
+    title: 'NotificationMessage title',
+    description: 'NotificationMessage description',
+    disableTeleport: true,
+  },
   render: args => ({
     components: { NotificationMessage },
     setup() {
@@ -23,10 +27,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: Story = {};
+
+export const CloseIn: Story = {
   args: {
-    title: 'NotificationMessage title',
-    description: 'NotificationMessage description',
-    disableTeleport: true,
+    ...Default.args,
+    options: {
+      closeIn: 50000,
+    },
   },
 };

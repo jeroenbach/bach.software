@@ -23,15 +23,15 @@
     border-radius: 4px;
     outline: none;
     margin: 0.5rem 0;
-
-    &:focus {
-      border: 1px solid var(--color-slate-400) !important;
-    }
+    background-color: white;
   }
 
-  .dark {
-    input {
-      color: var(--color-gray-700);
+  @at-root html.dark & {
+    input,
+    select {
+      color: var(--color-gray-200);
+      background-color: var(--color-slate-600);
+      border-color: var(--color-slate-500);
     }
   }
 }
@@ -49,7 +49,7 @@
     }
   }
 }
-.dark {
+html.dark {
   .shiki.has-highlighted {
     .line {
       &.highlighted {

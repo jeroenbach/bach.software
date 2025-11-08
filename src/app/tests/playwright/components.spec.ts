@@ -13,9 +13,9 @@ async function createScreenshot(page: Page) {
 }
 
 [
-  'header--default',
-  'footer--default',
   'alert--default',
+  'footer--default',
+  'header--default',
   'apphero--default',
   'applink--default',
   'blogpost--default',

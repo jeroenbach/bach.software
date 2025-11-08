@@ -42,5 +42,12 @@
     "info": {
       "languageAiTranslated": "Deze pagina is automatisch vertaald met AI. Mocht je fouten tegenkomen, laat het me dan weten!"
     }
+  },
+  "error": {
+    "pageNotFound": "Pagina niet gevonden",
+    "pageNotFoundDescription": "De pagina die je zoekt bestaat niet of is verplaatst.",
+    "goBackHome": "Terug naar home",
+    "errorOccurred": "Er is een fout opgetreden",
+    "somethingWentWrong": "Er is iets misgegaan."
   }
 }

@@ -13,6 +13,13 @@ async function getMetadataName(page: Page, name: string) {
 }
 
 test.describe('Open Graph Protocol Tests', () => {
+  test.beforeEach(async ({ browser: _ }, testInfo) => {
+    /**
+     * Only run these tests in Chromium to avoid redundancy and speed up the test suite.
+     */
+    test.skip(testInfo.project.name !== 'chromium');
+  });
+
   test('Blog overview page — metadata for sharing', async ({ page }) => {
     await page.goto('/posts');
 

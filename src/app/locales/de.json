@@ -42,5 +42,12 @@
     "info": {
       "languageAiTranslated": "Diese Seite wurde automatisch mit KI übersetzt. Wenn Sie Fehler feststellen, lassen Sie es mich bitte wissen!"
     }
+  },
+  "error": {
+    "pageNotFound": "Seite nicht gefunden",
+    "pageNotFoundDescription": "Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.",
+    "goBackHome": "Zurück zur Startseite",
+    "errorOccurred": "Ein Fehler ist aufgetreten",
+    "somethingWentWrong": "Etwas ist schiefgelaufen."
   }
 }

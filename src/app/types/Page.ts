@@ -1,4 +1,4 @@
 import type { PagesEnCollectionItem } from '@nuxt/content';
 
-export interface Page extends PagesEnCollectionItem {
+export interface Page extends PagesEnCollectionItem, Metadata {
 }

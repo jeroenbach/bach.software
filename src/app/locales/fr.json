@@ -42,5 +42,12 @@
     "info": {
       "languageAiTranslated": "Cette page a été automatiquement traduite avec l'IA. Si vous rencontrez des erreurs, faites-le moi savoir !"
     }
+  },
+  "error": {
+    "pageNotFound": "Page non trouvée",
+    "pageNotFoundDescription": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "goBackHome": "Retour à l'accueil",
+    "errorOccurred": "Une erreur s'est produite",
+    "somethingWentWrong": "Quelque chose s'est mal passé."
   }
 }

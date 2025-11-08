@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import type { LocaleStructure } from '~/locales.config';
+import type { LocalesCode } from '~/locales.config';
 import { defaultLocale, locales } from '~/locales.config';
 
 /**
  * The svg flags can be downloaded from https://svgflags.com/
  */
-export type Language = LocaleStructure['code'];
-
 interface Props {
-  language?: Language
+  language?: LocalesCode
 }
 
 const { language = defaultLocale } = defineProps<Props>();
 const emits = defineEmits<{
-  (e: 'update:language', value: Language): void
+  (e: 'update:language', value: LocalesCode): void
 }>();
 
 function toggleLanguage() {
   const currentIndex = locales.findIndex(locale => locale.code === language);
   const nextIndex = (currentIndex + 1) % locales.length;
-  emits('update:language', locales[nextIndex]!.code as Language);
+  emits('update:language', locales[nextIndex]!.code as LocalesCode);
 }
 </script>
 
@@ -28,7 +26,7 @@ function toggleLanguage() {
     <ClientOnly>
       <AppButton
         :title="$t('Switch language')"
-        class="absolute"
+        class="absolute cursor-pointer"
         @click="toggleLanguage"
       >
         <AppTransition name="slide-up">
@@ -36,6 +34,7 @@ function toggleLanguage() {
           <svg v-else-if="language === 'fr'" class="absolute size-6" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" fill="#f0f0f0" r="256" /><path d="m512 256c0-110.071-69.472-203.906-166.957-240.077v480.155c97.485-36.172 166.957-130.007 166.957-240.078z" fill="#d80027" /><path d="m0 256c0 110.071 69.473 203.906 166.957 240.077v-480.154c-97.484 36.171-166.957 130.006-166.957 240.077z" fill="#0052b4" /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /></svg>
           <svg v-else-if="language === 'nl'" class="absolute size-6" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" fill="#f0f0f0" r="256" /><path d="m256 0c-110.071 0-203.906 69.472-240.077 166.957h480.155c-36.172-97.485-130.007-166.957-240.078-166.957z" fill="#a2001d" /><path d="m256 512c110.071 0 203.906-69.472 240.077-166.957h-480.154c36.171 97.485 130.006 166.957 240.077 166.957z" fill="#0052b4" /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /></svg>
           <svg v-else-if="language === 'de'" class="absolute size-6" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m15.923 345.043c36.171 97.484 130.006 166.957 240.077 166.957s203.906-69.473 240.077-166.957l-240.077-22.26z" fill="#ffda44" /><path d="m256 0c-110.071 0-203.906 69.472-240.077 166.957l240.077 22.26 240.077-22.261c-36.171-97.484-130.006-166.956-240.077-166.956z" /><path d="m15.923 166.957c-10.29 27.733-15.923 57.729-15.923 89.043s5.633 61.31 15.923 89.043h480.155c10.29-27.733 15.922-57.729 15.922-89.043s-5.632-61.31-15.923-89.043z" fill="#d80027" /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /></svg>
+          <svg v-else-if="language === 'es'" class="absolute size-6" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m0 256c0 31.314 5.633 61.31 15.923 89.043l240.077 22.261 240.077-22.261c10.29-27.733 15.923-57.729 15.923-89.043s-5.633-61.31-15.923-89.043l-240.077-22.261-240.077 22.261c-10.29 27.733-15.923 57.729-15.923 89.043z" fill="#ffda44" /><g fill="#d80027"><path d="m496.077 166.957c-36.171-97.484-130.006-166.957-240.077-166.957s-203.906 69.473-240.077 166.957z" /><path d="m15.923 345.043c36.171 97.484 130.006 166.957 240.077 166.957s203.906-69.473 240.077-166.957z" /></g><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /><g /></svg>
         </AppTransition>
       </AppButton>
     </ClientOnly>

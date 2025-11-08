@@ -1,5 +1,5 @@
 import type { Collections } from '@nuxt/content';
-import { createPageUrl, defaultLocale } from '~/locales.config';
+import { createPageUrl, createUrl, defaultLocale } from '~/locales.config';
 
 /**
  * Fetches a single page based on the provided slug. The composable is language aware.
@@ -14,7 +14,7 @@ export async function usePagesContext<TPage extends Page>(id: number) {
   const { locale } = useI18n();
   const uniqueId = `pagesContext-${locale.value}-${id}`;
 
-  return await useAsyncData(
+  const { data, refresh } = await useAsyncData(
     uniqueId,
     async () => {
       if (isNullOrUndefinedOrEmpty(id)) {
@@ -37,11 +37,13 @@ export async function usePagesContext<TPage extends Page>(id: number) {
           return undefined;
 
         // Ensure the page has a URL property
-        data.url ??= createPageUrl(locale.value, data.contentId, data.title, data.slug);
+        data.url = data.url ? createUrl(locale.value, data.url) : createPageUrl(locale.value, data.contentId, data.title, data.slug);
         return data;
       },
     },
   );
+
+  return { data, refresh };
 }
 
 async function queryPage<TPage extends Page>(locale: string, contentId: number) {

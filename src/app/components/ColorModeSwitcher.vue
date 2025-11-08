@@ -34,7 +34,7 @@ function toggleColorMode() {
     <ClientOnly>
       <AppButton
         title="Switch color mode"
-        class="absolute"
+        class="absolute cursor-pointer"
         @click="toggleColorMode"
       >
         <AppTransition name="slide-up">

@@ -9,18 +9,25 @@ const { segment1, id } = params as { segment1: string, id: string, slug: string 
 const isPage = pagesPaths.has(`/${segment1}`);
 const isPost = postsPaths.has(`/${segment1}`);
 
+const pageType: MetadataType = isPost ? 'blogPost' : 'page';
+
+const alternateUrls = await useAlternateUrls(pageType, Number(id));
+
 const { data: page } = isPage ? await usePagesContext(Number(id)) : { data: undefined };
 const { data: post } = isPost ? await useBlogPostsContext({ id: Number(id) }) : { data: undefined };
 const { pageReads } = isPost ? await usePageReadsContext() : { pageReads: undefined };
 
+if (!page?.value && !post?.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
+}
+
 const configuredPath = computed(() => page?.value?.url || post?.value?.url || undefined);
 
-if (path !== configuredPath.value) {
-  navigateTo(configuredPath.value || '/', { redirectCode: 301 });
+if (configuredPath.value && path !== configuredPath.value) {
+  navigateTo(configuredPath.value, { redirectCode: 301 });
 }
-const pageType: MetadataType = isPost ? 'blogPost' : 'page';
 
-useMetadata(pageType, page?.value ?? post?.value);
+useMetadata(pageType, (page?.value ?? post?.value)!, alternateUrls);
 </script>
 
 <template>

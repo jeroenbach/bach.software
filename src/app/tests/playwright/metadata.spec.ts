@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Structured Data Tests', () => {
+  test.beforeEach(async ({ browser: _ }, testInfo) => {
+    /**
+     * Only run these tests in Chromium to avoid redundancy and speed up the test suite.
+     */
+    test.skip(testInfo.project.name !== 'chromium');
+  });
+
   test('BlogPost JSON-LD should be valid', async ({ page }) => {
     await page.goto(
       `/posts/2-ditching-the-cookie-banners-run-plausible-analytics-on-azure-kubernetes`,

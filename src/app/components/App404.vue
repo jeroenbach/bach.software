@@ -1,26 +1,14 @@
 <script setup lang="ts">
-interface Props {
-  title?: string
-  subTitle?: string
-  description?: string
-  linkText?: string
-  linkLocation?: string
-}
-defineProps<Props>();
+const { t } = useI18n();
 </script>
 
 <template>
-  <div class="max-w-520px text-center flex flex-col justify-center">
-    <h1 class="font-semibold leading-none mb-4 sm:text-[110px] tabular-nums text-[80px]">
-      {{ title }}
-    </h1><h2 class="font-semibold mb-2 sm:text-3xl text-2xl">
-      {{ subTitle }}
-    </h2><p class="mb-4 px-2 text-[#64748B] text-md">
-      {{ description }}
-    </p><div class="flex items-center justify-center w-full">
-      <AppLink :to="linkLocation" class="font-medium text-sm underline underline-offset-3">
-        {{ linkText }}
-      </AppLink>
-    </div>
-  </div>
+  <AppError
+    title="404"
+    class="min-h-[60vh]"
+    :subTitle="t('error.pageNotFound')"
+    :description="t('error.pageNotFoundDescription')"
+    :linkText="t('error.goBackHome')"
+    linkLocation="/"
+  />
 </template>

@@ -81,6 +81,7 @@
     "@vitejs/plugin-vue": "6.0.1",
     "@vue/test-utils": "2.4.6",
     "autoprefixer": "10.4.21",
+    "better-sqlite3": "^12.4.1",
     "dayjs-nuxt": "2.1.11",
     "eslint": "^9.38.0",
     "eslint-plugin-format": "^1.0.2",
@@ -108,5 +109,13 @@
     "vue-i18n": "11.1.12",
     "vue-i18n-extract": "2.0.7",
     "yaml": "2.8.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "@parcel/watcher",
+      "esbuild",
+      "sharp"
+    ]
   }
 }

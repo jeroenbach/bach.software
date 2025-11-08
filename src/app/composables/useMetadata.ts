@@ -22,8 +22,6 @@ type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
 type MetadataOptions = Parameters<typeof useSeoMeta>[1];
 
-export type MetadataType = 'page' | 'blog' | 'blogPost';
-
 /**
  * Helper function to get an image url for metadata purposes
  * @param relativeUrl the url that NuxtPicture uses
@@ -36,10 +34,13 @@ export function getMetadataImageUrl(relativeUrl: string, baseUrl: string) {
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
-export function useMetadata(type: MetadataType, metadata?: Metadata, itemsMetadata?: Metadata[], options?: MetadataOptions) {
+export function useMetadata(type: MetadataType, metadata: Metadata, alternateUrls: AlternateUrl[], itemsMetadata?: Metadata[], options?: MetadataOptions) {
   if (!metadata)
     return;
 
+  const i18nHead = useLocaleHead({
+    seo: { canonicalQueries: [] }, // add here the query parameters you want to keep in the canonical URL
+  });
   const config = useRuntimeConfig();
   const baseUrl = config.public.baseUrl;
 
@@ -74,6 +75,22 @@ export function useMetadata(type: MetadataType, metadata?: Metadata, itemsMetada
       break;
   }
 
+  // Use part of the i18n head links, but override canonical and alternate links
+  const i18nLinks = i18nHead.value?.link?.filter(l => l.rel !== 'alternate') ?? []; // remove all the alternate links added by useLocaleHead
+  const [canonicalUrls, otherI18nUrls] = divideArray(i18nLinks, x => x.rel === 'canonical');
+  const canonicalUrl = metadata.canonicalUrl
+    ? [{
+        rel: 'canonical',
+        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
+      }]
+    : canonicalUrls;
+
+  const alternateLinks = alternateUrls?.map(({ hreflang, href }) => ({
+    rel: 'alternate',
+    hreflang,
+    href: createAbsoluteUrl(href, baseUrl),
+  })) ?? [];
+
   useSeoMeta(
     {
       title: metadata.title,
@@ -88,6 +105,7 @@ export function useMetadata(type: MetadataType, metadata?: Metadata, itemsMetada
     options,
   );
   useHead({
+    htmlAttrs: i18nHead.value?.htmlAttrs,
     script: [
       {
         type: 'application/ld+json',
@@ -95,11 +113,11 @@ export function useMetadata(type: MetadataType, metadata?: Metadata, itemsMetada
       },
     ],
     link: [
-      {
-        rel: 'canonical',
-        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
-      },
+      ...otherI18nUrls,
+      ...alternateLinks,
+      ...canonicalUrl,
     ],
+    meta: i18nHead.value?.meta,
   });
 }
 

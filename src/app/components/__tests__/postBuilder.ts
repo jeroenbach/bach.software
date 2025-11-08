@@ -46,6 +46,12 @@ export function buildPost(fn?: (post: BlogPost) => void) {
     stem: '',
     extension: '',
     meta: {},
+    readingTime: {
+      text: '11 min read',
+      minutes: 11,
+      time: 0,
+      words: 0,
+    },
   };
   if (fn)
     fn(post);

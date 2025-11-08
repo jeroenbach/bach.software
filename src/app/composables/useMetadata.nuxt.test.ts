@@ -1,3 +1,4 @@
+import type { I18nHeadMetaInfo } from '@nuxtjs/i18n';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildAuthor } from '~/components/__tests__/authorBuilder';
@@ -10,6 +11,15 @@ const mock = vi.hoisted(() => ({
   useSeoMeta: vi.fn(),
   useHead: vi.fn(),
   useRuntimeConfig: vi.fn(),
+  useLocaleHead: vi.fn(() => ({
+    value: {
+      link: [
+        { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n', id: 'i18n-can', rel: 'canonical' },
+      ],
+      htmlAttrs: {},
+      meta: [] as I18nHeadMetaInfo['meta'],
+    },
+  })),
 }));
 vi.mock('@unhead/vue', async (importOriginal) => {
   const actual: Record<string, unknown> = await importOriginal();
@@ -19,7 +29,6 @@ vi.mock('@unhead/vue', async (importOriginal) => {
     useHead: mock.useHead,
   };
 });
-
 vi.mock('#app', async (importOriginal) => {
   const actual: Record<string, unknown> = await importOriginal();
   return {
@@ -27,6 +36,9 @@ vi.mock('#app', async (importOriginal) => {
     useRuntimeConfig: mock.useRuntimeConfig,
   };
 });
+vi.mock('#i18n', () => ({
+  useLocaleHead: mock.useLocaleHead,
+}));
 
 describe('getMetadataImageUrl', () => {
   it('should render the correct full url of an image', async () => {
@@ -251,6 +263,7 @@ describe('useMetadata', () => {
   beforeEach(() => {
     mock.useHead.mockReset();
     mock.useSeoMeta.mockReset();
+    mock.useLocaleHead.mockReset();
     mock.useRuntimeConfig.mockReturnValue({
       public: {
         baseUrl: 'https://bach.software',
@@ -268,7 +281,7 @@ describe('useMetadata', () => {
       x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
-    }));
+    }), []);
 
     const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
     expect(seoArgs.title).toBe('Title');
@@ -293,13 +306,22 @@ describe('useMetadata', () => {
       x.url = '/override';
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
-    }));
+    }), []);
 
     const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
     expect(seoArgs.ogUrl).toBe('https://bach.software/override');
   });
 
   it('should call the useHead with the correct parameters', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        htmlAttrs: { lang: 'en', dir: 'ltr' },
+        meta: [],
+        link: [
+          { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties', id: 'i18n-can', rel: 'canonical' },
+        ],
+      },
+    });
     useMetadata('page', buildPage((x) => {
       x.title = 'Title';
       x.description = 'Description';
@@ -309,20 +331,45 @@ describe('useMetadata', () => {
       x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
-    }));
+    }), [
+      { href: 'https://bach.software/nl/posts/1-nl', hreflang: 'nl', rel: 'alternate' },
+      { href: 'https://bach.software/nl/posts/1-de', hreflang: 'de', rel: 'alternate' },
+    ]);
 
     const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.htmlAttrs).toEqual({ lang: 'en', dir: 'ltr' });
+    expect(headArgs.meta).toEqual([]);
+
     expect(headArgs.script[0].type).toBe('application/ld+json');
     expect(headArgs.script[0].innerHTML).toBe(
       '{"@context":"https://schema.org","@type":"WebPage","name":"Title","url":"https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties","description":"Description"}',
     );
-    expect(headArgs.link[0].rel).toBe('canonical');
-    expect(headArgs.link[0].href).toBe(
-      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original',
-    );
+    expect(headArgs.link[0]).toEqual({
+      rel: 'alternate',
+      hreflang: 'nl',
+      href: 'https://bach.software/nl/posts/1-nl',
+    });
+    expect(headArgs.link[1]).toEqual({
+      rel: 'alternate',
+      hreflang: 'de',
+      href: 'https://bach.software/nl/posts/1-de',
+    });
+    expect(headArgs.link[2]).toEqual({
+      rel: 'canonical',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original',
+    });
   });
 
-  it('should use url if canonical url is empty', async () => {
+  it('should use i18n url if canonical url is empty', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        link: [
+          { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n', id: 'i18n-can', rel: 'canonical' },
+        ],
+        htmlAttrs: {},
+        meta: [],
+      },
+    });
     useMetadata('page', buildPage((x) => {
       x.title = 'Title';
       x.description = 'Description';
@@ -331,11 +378,32 @@ describe('useMetadata', () => {
       x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
-    }));
+    }), []);
     const headArgs = mock.useHead.mock.calls[0]![0];
-    expect(headArgs.link[0].href).toBe(
-      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
-    );
+    expect(headArgs.link[0]).toEqual({
+      rel: 'canonical',
+      id: 'i18n-can',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n',
+    });
+  });
+
+  it('should not throw an error when data is not set', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      // @ts-expect-error - testing undefined value
+      value: undefined,
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.link).toEqual([]);
+    expect(headArgs.link).toHaveLength(0);
   });
 
   it('should use page structured data when type is blog', async () => {
@@ -347,7 +415,7 @@ describe('useMetadata', () => {
       x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
-    }));
+    }), []);
     const headArgs = mock.useHead.mock.calls[0]![0];
     expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
       '@context': 'https://schema.org',
@@ -371,6 +439,7 @@ describe('useMetadata', () => {
         x.dateModified = '2024-11-05T08:00:00.000Z';
         x.company = buildCompany();
       }),
+      [],
       [buildPost()],
     );
     const headArgs = mock.useHead.mock.calls[0]![0];
@@ -438,6 +507,7 @@ describe('useMetadata', () => {
         p.datePublished = '2024-11-05T08:00:00.000Z';
         p.dateModified = '2024-11-05T08:00:00.000Z';
       }),
+      [],
     );
     const headArgs = mock.useHead.mock.calls[0]![0];
     expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
