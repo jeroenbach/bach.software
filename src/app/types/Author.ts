@@ -1,11 +1,4 @@
-export interface Author {
-  userName: string
-  fullName?: string
-  role?: string
-  imageUrl?: string
-  homePage?: string
-  linkedIn?: string
-  twitter?: string
-  github?: string
-  company?: Company
+import type { AuthorsEnCollectionItem } from '@nuxt/content';
+
+export interface Author extends AuthorsEnCollectionItem {
 }

@@ -8,7 +8,7 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline';
 
-import { useAnimate, useTimeoutFn } from '@vueuse/core';
+import { useAnimate, useEventListener } from '@vueuse/core';
 
 interface Props extends Omit<Notification, 'notificationId'> {
   disableTeleport?: boolean
@@ -26,27 +26,28 @@ const emits = defineEmits<{
 
 const progress = ref();
 const dismissed = ref(false);
+const notification = useTemplateRef('notification');
 
-const { currentTime } = useAnimate(
+const { currentTime, pause, play } = useAnimate(
   progress,
   { width: '100%' },
   {
     duration: options?.closeIn,
     persist: true,
     immediate: !!options?.closeIn,
+    onReady: (animate) => {
+      animate.onfinish = () => close();
+    },
   },
 );
+
+useEventListener(notification, 'mouseenter', () => options?.closeIn && pause(), { passive: true });
+useEventListener(notification, 'mouseleave', () => options?.closeIn && play(), { passive: true });
+
 const percentageComplete = computed(() =>
   options?.closeIn
     ? ((currentTime.value as number) / options?.closeIn) * 100
     : 0,
-);
-useTimeoutFn(
-  () => {
-    dismissed.value = true;
-  },
-  options?.closeIn ?? 0,
-  { immediate: !!options?.closeIn },
 );
 
 function close() {
@@ -60,18 +61,20 @@ function close() {
     <Teleport :disabled="disableTeleport" to="[notification='main']">
       <div
         v-if="!dismissed"
+        ref="notification"
         role="alert"
-        class="pointer-events-auto mb-1 w-full max-w-md overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+        class="cursor-pointer pointer-events-auto mb-1 w-full max-w-md overflow-hidden rounded-lg shadow-lg border-t border-e border-black/5 dark:border-white/5"
         :class="{
-          'border-l-4 border-green-300 bg-white dark:bg-gray-800 dark:text-green-400':
+          'border-l-4 border-l-green-300 dark:border-l-green-300 bg-white dark:bg-gray-800 dark:text-green-400':
             severity === 'success',
-          'border-l-4 border-red-400 bg-red-50 dark:bg-gray-800 dark:text-red-400':
+          'border-l-4 border-l-red-400 dark:border-l-red-400 bg-red-50 dark:bg-gray-800 dark:text-red-400':
             severity === 'error',
-          'border-l-4 border-yellow-400 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300':
+          'border-l-4 border-l-yellow-400 dark:border-l-yellow-400 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300':
             severity === 'warning',
-          'border-l-4 border-blue-400 bg-white dark:bg-gray-800 dark:text-blue-400':
+          'border-l-4 border-l-blue-400 dark:border-l-blue-400 bg-white dark:bg-gray-800 dark:text-blue-400':
             severity === 'info',
         }"
+        @click="close"
       >
         <div class="p-4">
           <div class="flex items-start gap-4">

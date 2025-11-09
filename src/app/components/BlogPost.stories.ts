@@ -15,5 +15,8 @@ export const Default: Story = {
   args: {
     post: buildPost(),
     baseUrl: 'https://bach.software',
+    pageReads: {
+      threeQuarterRead: 11,
+    },
   },
 };

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  mergeReplace,
-} from '@/utils/mergeReplace';
+import { mergeReplace } from '@/utils/mergeReplace';
+import { uniqueBy } from '@/utils/uniqueBy';
 
 interface Item { id: number, name: string }
 

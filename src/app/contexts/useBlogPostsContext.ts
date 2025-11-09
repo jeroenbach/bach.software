@@ -1,5 +1,5 @@
-import type { Author } from '~/types/Author';
-import type { BlogPost, BlogPostSummary } from '~/types/BlogPost';
+import type { Collections } from '@nuxt/content';
+import { createBlogPostUrl } from '~/locales.config';
 import { toMap } from '~/utils/toMap';
 
 /**
@@ -27,7 +27,7 @@ import { toMap } from '~/utils/toMap';
  * const singlePost = await useBlogPostsContext({ id: 'post-id' });
  */
 export async function useBlogPostsContext<
-  TSingle extends string | undefined = undefined,
+  TSingle extends number | undefined = undefined,
   TSummary extends boolean | undefined = undefined,
 >(options?: {
   id?: TSingle
@@ -40,56 +40,27 @@ export async function useBlogPostsContext<
       ? BlogPostSummary
       : BlogPost;
 
-  // Then check whether we want a single or multiple object
+  // Then check whether we want a single or multiple objects
   type TPostSingleOrMultiple = undefined extends TSingle ? TPost[] : TPost;
 
   const { id, summary } = options ?? {};
-  const uniqueId = `postsContext-${id}-${summary}`;
+  const { locale } = useI18n();
+  const uniqueId = `postsContext-${locale.value}-${id}-${summary}`;
 
   return await useAsyncData(
     uniqueId,
     async () => {
-      const query = isFalseOrUndefined(summary)
-        ? queryContent<BlogPost>('posts')
-        : queryContent<BlogPostSummary>('posts').only([
-            '_path',
-            'title',
-            'description',
-            'datePublished',
-            'dateModified',
-            'imageUrl',
-            'imageAlt',
-            'draft',
-            'slug',
-            'category',
-            'keywords',
-            'authorName',
-            'imagePosition',
-            'readingTime',
-            'excerpt',
-          ]);
-
-      if (id) {
-        query.where({ _path: { $eq: `/posts/${id}` } });
-      }
-
-      query.where({ draft: { $ne: true } });
-
-      query.sort({ datePublished: -1 });
-
-      const postsRaw = await query.find();
+      const postsRaw = await queryBlogPosts(locale.value, id, summary).all();
       const authorUserNames = new Set(postsRaw.map(p => p.authorName));
 
-      const authors = await queryContent<Author>('authors')
-        .where({ userName: { $in: Array.from(authorUserNames) } })
-        .find();
+      const authors = await queryAuthors(locale.value, Array.from(authorUserNames)).all();
 
       const authorsDictionary = toMap(authors, a => a.userName);
 
       const posts = postsRaw.map((p) => {
         const post = p as BlogPostSummary;
-        post.author = authorsDictionary.get(post.authorName)!;
-        post.url = `${post._path}-${post.slug ?? createSlug(post.title)}`;
+        post.author = authorsDictionary.get(post.authorName);
+        post.url ??= createBlogPostUrl(locale.value, post.contentId, post.title, post.slug);
         return post;
       });
 
@@ -99,4 +70,45 @@ export async function useBlogPostsContext<
       default: () => undefined,
     },
   );
+}
+
+function queryBlogPosts(locale: string, id?: number, summary?: boolean) {
+  const collection = `posts_${locale}` as Extract<keyof Collections, `posts_${string}`>;
+  const query = whereNotDraft<typeof collection>(
+    queryCollection(collection),
+  );
+
+  if (id) {
+    query.where('contentId', '=', id);
+  }
+
+  if (summary === true) {
+    query.select(
+      'contentId',
+      'title',
+      'description',
+      'datePublished',
+      'dateModified',
+      'imageUrl',
+      'imageAlt',
+      'authorName',
+      'draft',
+      'url',
+      'slug',
+      'imagePosition',
+      'category',
+      'keywords',
+      'readingTime',
+      'excerpt',
+    );
+  }
+
+  query.order('datePublished', 'DESC');
+
+  return query;
+}
+function queryAuthors(locale: string, userNames: string[]) {
+  const collection = `authors_${locale}` as Extract<keyof Collections, `authors_${string}`>;
+  return queryCollection(collection)
+    .where('userName', 'IN', userNames);
 }

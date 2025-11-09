@@ -36,5 +36,18 @@
     "timeProgress": "Time progress: {timeSpentPercentage}%",
     "scrollProgress": "Scroll progress: {scrollPercentage}%",
     "readingStage": "Reading stage: {totalProgress}"
+  },
+  "Switch language": "Switch language",
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "This page has been automatically translated with AI. If you encounter any errors, please let me know!"
+    }
+  },
+  "error": {
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "The page you are looking for does not exist or has been moved.",
+    "goBackHome": "Go back home",
+    "errorOccurred": "An error occurred",
+    "somethingWentWrong": "Something went wrong."
   }
 }

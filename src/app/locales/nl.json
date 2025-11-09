@@ -1,0 +1,53 @@
+{
+  "_metadata": {
+    "titleTemplate": "{titleChunk} - Bach.Software",
+    "titleTemplate_empty": "Bach.Software"
+  },
+  "Copied to clipboard!": "Gekopieerd naar klembord!",
+  "Linkedin": "Linkedin",
+  "Share": "Delen",
+  "Bach": {
+    "Software": "Bach.Software"
+  },
+  "read": "{n} keer gelezen | {n} keer gelezen",
+  "plausible": {
+    "current": {
+      "text": "We {status} momenteel je bezoeken.",
+      "not": "nemen niet mee",
+      "are": "nemen mee"
+    },
+    "title": "Plausible Uitsluiting",
+    "description": "Klik op de knop hieronder om je uitsluiting in analytics voor deze site te wijzigen",
+    "button": {
+      "text": "{action} mijn bezoeken",
+      "include": "Meenemen",
+      "exclude": "Uitsluiten"
+    }
+  },
+  "notification": {
+    "error": {
+      "unknown": "Er is een onbekende fout opgetreden"
+    }
+  },
+  "pageReadProgress": {
+    "openButton": "Toon mijn statistieken",
+    "wordCount": "Aantal woorden: {wordCount}",
+    "readingTime": "We schatten dat je {readingTimeInMinutes} minuten nodig hebt om dit artikel te lezen",
+    "timeProgress": "Tijdsvoortgang: {timeSpentPercentage}%",
+    "scrollProgress": "Scrollvoortgang: {scrollPercentage}%",
+    "readingStage": "Leesfase: {totalProgress}"
+  },
+  "Switch language": "Taal wijzigen",
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Deze pagina is automatisch vertaald met AI. Mocht je fouten tegenkomen, laat het me dan weten!"
+    }
+  },
+  "error": {
+    "pageNotFound": "Pagina niet gevonden",
+    "pageNotFoundDescription": "De pagina die je zoekt bestaat niet of is verplaatst.",
+    "goBackHome": "Terug naar home",
+    "errorOccurred": "Er is een fout opgetreden",
+    "somethingWentWrong": "Er is iets misgegaan."
+  }
+}

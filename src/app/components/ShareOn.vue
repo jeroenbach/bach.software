@@ -36,7 +36,7 @@ const properties = computed<{ [key in Icon]?: Setting }>(() => ({
     <AppLink
       v-for="icon in icons"
       :key="icon"
-      class="ease inline-flex items-center rounded-full border-sky-600 bg-gradient-to-r from-sky-600 to-sky-500 p-2 text-white transition duration-200 hover:from-sky-700 hover:to-sky-600"
+      class="ease inline-flex items-center rounded-full border-sky-600 bg-linear-to-r from-sky-600 to-sky-500 p-2 text-white transition duration-200 hover:from-sky-700 hover:to-sky-600"
       target="_blank"
       :to="properties[icon]?.url"
       :aria-label="`Share on ${icon}`"

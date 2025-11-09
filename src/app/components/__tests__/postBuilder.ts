@@ -4,7 +4,7 @@ import { buildAuthor } from './authorBuilder';
 
 export function buildPost(fn?: (post: BlogPost) => void) {
   const post: BlogPost = {
-    _path: '/posts/1',
+    contentId: 1,
     title: 'Title',
     description: 'Description',
     category: 'Category',
@@ -33,37 +33,25 @@ export function buildPost(fn?: (post: BlogPost) => void) {
       ],
     },
     body: {
-      type: 'root',
-      children: [
-        {
-          type: 'element',
-          tag: 'p',
-          props: {},
-          children: [
-            {
-              type: 'text',
-              value: 'Introduction',
-            },
-            {
-              type: 'element',
-              tag: 'em',
-              props: {},
-              children: [
-                {
-                  type: 'text',
-                  value: 'multiple',
-                },
-              ],
-            },
-            {
-              type: 'text',
-              value: 'Actual text',
-            },
-          ],
-        },
-      ],
+      type: 'minimark',
+      value: [],
     },
     url: '/posts/1-vue-3_3-generics-and-conditional-properties',
+    path: '',
+    seo: {
+      title: undefined,
+      description: undefined,
+    },
+    id: '',
+    stem: '',
+    extension: '',
+    meta: {},
+    readingTime: {
+      text: '11 min read',
+      minutes: 11,
+      time: 0,
+      words: 0,
+    },
   };
   if (fn)
     fn(post);

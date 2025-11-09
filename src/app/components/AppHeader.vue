@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
 import type { Notification } from '~/composables/useNotificationStore';
+import type { LocalesCode } from '~/locales.config';
 import type { NavigationItem } from '~/types/NavigationItem';
+
 import {
   Dialog,
   DialogPanel,
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue';
-
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
@@ -18,6 +19,7 @@ interface Props {
   navigation?: NavigationItem[] | null
   notifications?: Notification[]
   colorMode?: ColorMode
+  language?: LocalesCode
 }
 
 const {
@@ -28,6 +30,7 @@ const {
 } = defineProps<Props>();
 const emits = defineEmits<{
   (e: 'update:colorMode', value: ColorMode): void
+  (e: 'update:language', value: LocalesCode): void
 }>();
 
 const mobileMenuOpen = ref(false);
@@ -64,6 +67,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
+        <LanguageSwitcher
+          :language
+          @update:language="emits('update:language', $event)"
+        />
         <ColorModeSwitcher
           :colorMode="colorMode"
           @update:colorMode="emits('update:colorMode', $event)"
@@ -137,7 +144,11 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                     {{ item.label }}
                   </AppLink>
                 </div>
-                <div class="space-y-2 py-6">
+                <div class="space-y-2 py-6 flex gap-3">
+                  <LanguageSwitcher
+                    :language
+                    @update:language="emits('update:language', $event)"
+                  />
                   <ColorModeSwitcher
                     :colorMode="colorMode"
                     @update:colorMode="emits('update:colorMode', $event)"
@@ -149,7 +160,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         </TransitionChild>
       </Dialog>
     </TransitionRoot>
-    <NotificationContainer />
+    <NotificationContainer class="pt-[var(--reduceHeaderHeight)]" />
     <NotificationMessage
       v-for="notification in notifications"
       :key="notification.notificationId"
@@ -161,7 +172,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 <style lang="scss">
 @keyframes reduce-height {
   to {
-    height: var(--reduceHeight);
+    height: var(--reduceHeaderHeight);
   }
 }
 @keyframes border-appear {
@@ -174,12 +185,12 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
 }
 
 html {
-  --height: 4rem;
-  scroll-padding-top: var(--height); /* or whatever height your header is */
+  --headerHeight: 4rem;
+  scroll-padding-top: var(--headerHeight); /* or whatever height your header is */
 
   header {
-    --reduceHeight: calc(var(--height) * 0.65);
-    height: var(--height);
+    --reduceHeaderHeight: calc(var(--headerHeight) * 0.65);
+    height: var(--headerHeight);
     animation: reduce-height 1s linear both paused;
     animation-delay: calc(v-bind(scrollHeader) * -1s);
 
@@ -191,9 +202,9 @@ html {
     }
 
     .logo {
-      --height: 2rem;
-      --reduceHeight: calc(var(--height) * 0.85);
-      height: var(--height);
+      --headerHeight: 2rem;
+      --reduceHeaderHeight: calc(var(--headerHeight) * 0.85);
+      height: var(--headerHeight);
       animation: reduce-height 1s linear both paused;
       animation-delay: calc(v-bind(scrollHeader) * -1s);
     }
@@ -202,10 +213,10 @@ html {
 
 @media (min-width: 1024px) {
   html {
-    --height: 5rem;
+    --headerHeight: 5rem;
     header {
       .logo {
-        --height: 2.5rem;
+        --headerHeight: 2.5rem;
       }
     }
   }

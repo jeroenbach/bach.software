@@ -1,4 +1,6 @@
+import type { Ref } from 'vue';
 import { useDocumentVisibility, useScroll } from '@vueuse/core';
+import { computed, ref, watch } from 'vue';
 
 import { useStopWatch } from '~/composables/useStopWatch';
 

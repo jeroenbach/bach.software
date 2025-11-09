@@ -4,7 +4,7 @@ import { readMarkdown } from '~/utils/markdown';
 import { readYaml } from '~/utils/yaml';
 import authorYaml from '../content/en/authors/jeroenbach.yaml?raw';
 
-import about from '../content/en/pages/3.about.md?raw';
+import about from '../content/en/pages/_footer-about.md?raw';
 
 import footer from '../content/en/pages/_footer.md?raw';
 import AppFooter from './AppFooter.vue';

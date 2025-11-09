@@ -1,0 +1,53 @@
+{
+  "_metadata": {
+    "titleTemplate": "{titleChunk} - Bach.Software",
+    "titleTemplate_empty": "Bach.Software"
+  },
+  "Copied to clipboard!": "¡Copiado al portapapeles!",
+  "Linkedin": "Linkedin",
+  "Share": "Compartir",
+  "Bach": {
+    "Software": "Bach.Software"
+  },
+  "read": "{n} lectura | {n} lecturas",
+  "plausible": {
+    "current": {
+      "text": "Actualmente {status} incluyendo tus visitas.",
+      "not": "no estamos",
+      "are": "estamos"
+    },
+    "title": "Exclusión Plausible",
+    "description": "Haz clic en el botón de abajo para cambiar tu exclusión en los análisis de este sitio",
+    "button": {
+      "text": "{action} mis visitas",
+      "include": "Incluir",
+      "exclude": "Excluir"
+    }
+  },
+  "notification": {
+    "error": {
+      "unknown": "Ha ocurrido un error desconocido"
+    }
+  },
+  "pageReadProgress": {
+    "openButton": "Mostrar mis estadísticas",
+    "wordCount": "Recuento de palabras: {wordCount}",
+    "readingTime": "Estimamos que necesitas {readingTimeInMinutes} minutos para leer este artículo",
+    "timeProgress": "Progreso de tiempo: {timeSpentPercentage}%",
+    "scrollProgress": "Progreso de desplazamiento: {scrollPercentage}%",
+    "readingStage": "Etapa de lectura: {totalProgress}"
+  },
+  "Switch language": "Cambiar idioma",
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Esta página ha sido traducida automáticamente con IA. Si encuentras algún error, ¡házmelo saber!"
+    }
+  },
+  "error": {
+    "pageNotFound": "Página no encontrada",
+    "pageNotFoundDescription": "La página que buscas no existe o ha sido movida.",
+    "goBackHome": "Volver al inicio",
+    "errorOccurred": "Ha ocurrido un error",
+    "somethingWentWrong": "Algo salió mal."
+  }
+}

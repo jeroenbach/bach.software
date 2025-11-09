@@ -1,0 +1,555 @@
+import type { I18nHeadMetaInfo } from '@nuxtjs/i18n';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { buildAuthor } from '~/components/__tests__/authorBuilder';
+import { buildBlog } from '~/components/__tests__/blogBuilder';
+import { buildCompany } from '~/components/__tests__/companyBuilder';
+import { buildPage } from '~/components/__tests__/pageBuilder';
+import { buildPost } from '~/components/__tests__/postBuilder';
+
+const mock = vi.hoisted(() => ({
+  useSeoMeta: vi.fn(),
+  useHead: vi.fn(),
+  useRuntimeConfig: vi.fn(),
+  useLocaleHead: vi.fn(() => ({
+    value: {
+      link: [
+        { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n', id: 'i18n-can', rel: 'canonical' },
+      ],
+      htmlAttrs: {},
+      meta: [] as I18nHeadMetaInfo['meta'],
+    },
+  })),
+}));
+vi.mock('@unhead/vue', async (importOriginal) => {
+  const actual: Record<string, unknown> = await importOriginal();
+  return {
+    ...actual,
+    useSeoMeta: mock.useSeoMeta,
+    useHead: mock.useHead,
+  };
+});
+vi.mock('#app', async (importOriginal) => {
+  const actual: Record<string, unknown> = await importOriginal();
+  return {
+    ...actual,
+    useRuntimeConfig: mock.useRuntimeConfig,
+  };
+});
+vi.mock('#i18n', () => ({
+  useLocaleHead: mock.useLocaleHead,
+}));
+
+describe('getMetadataImageUrl', () => {
+  it('should render the correct full url of an image', async () => {
+    expect(getMetadataImageUrl('/test.jpeg', 'https://bach.software')).toBe(
+      'https://bach.software/_ipx/w_768&f_jpeg&q_80/test.jpeg',
+    );
+  });
+
+  it('should not have extra slashes', async () => {
+    expect(getMetadataImageUrl('//test.jpeg', 'https://bach.software/')).toBe(
+      'https://bach.software/_ipx/w_768&f_jpeg&q_80/test.jpeg',
+    );
+    expect(
+      getMetadataImageUrl('asdf/d//test.jpeg', 'https://bach.software//'),
+    ).toBe('https://bach.software/_ipx/w_768&f_jpeg&q_80/asdf/d/test.jpeg');
+  });
+});
+
+describe('create metadata functions', () => {
+  const baseUrl = 'https://bach.software';
+
+  describe('createWebsiteMetadataContext', () => {
+    it('should render the correct structured data', async () => {
+      expect(createWebsiteMetadataContext(buildCompany())).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'name': 'Company',
+        'url': 'https://bach.software',
+      });
+    });
+  });
+
+  describe('createBlogMetadataContext', () => {
+    it('should render the correct structured data', async () => {
+      expect(
+        createBlogMetadataContext(baseUrl, buildBlog(), [
+          buildPost((p) => {
+            p.authorName = 'author1';
+            p.author = buildAuthor((a) => {
+              a.userName = p.authorName;
+              a.fullName = p.authorName;
+            });
+          }),
+          buildPost((p) => {
+            p.authorName = 'author2';
+            p.author = buildAuthor((a) => {
+              a.userName = p.authorName;
+              a.fullName = p.authorName;
+            });
+          }),
+          buildPost((p) => {
+            p.authorName = 'author2';
+            p.author = buildAuthor((a) => {
+              a.userName = p.authorName;
+              a.fullName = p.authorName;
+            });
+          }),
+        ]),
+      ).toEqual({
+        '@context': 'https://schema.org',
+        '@id': 'https://bach.software/blog',
+        '@type': 'Blog',
+        'description': 'Description',
+        'mainEntityOfPage': 'https://bach.software/blog',
+        'name': 'Blog',
+        'publisher': {
+          '@type': 'Organization',
+          '@id': 'https://bach.software',
+          'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+          'name': 'Company',
+        },
+        'blogPost': [
+          {
+            '@type': 'BlogPosting',
+            'author': {
+              '@type': 'Person',
+              'image': {
+                '@type': 'ImageObject',
+                'height': '768',
+                'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+                'width': '768',
+              },
+              'name': 'author1',
+              'url': 'https://author.com/authors/author',
+            },
+            'dateModified': '2024-11-05T09:00:00+01:00',
+            'datePublished': '2024-11-05T09:00:00+01:00',
+            'headline': 'Title',
+            'image': {
+              '@type': 'ImageObject',
+              'height': '768',
+              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+              'width': '768',
+            },
+            'isAccessibleForFree': true,
+            'keywords': ['keyword', 'keyword2', 'keyword3'],
+            'publisher': {
+              '@type': 'Organization',
+              '@id': 'https://bach.software',
+              'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+              'name': 'Company',
+            },
+            'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+          },
+          {
+            '@type': 'BlogPosting',
+            'author': {
+              '@type': 'Person',
+              'image': {
+                '@type': 'ImageObject',
+                'height': '768',
+                'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+                'width': '768',
+              },
+              'name': 'author2',
+              'url': 'https://author.com/authors/author',
+            },
+            'dateModified': '2024-11-05T09:00:00+01:00',
+            'datePublished': '2024-11-05T09:00:00+01:00',
+            'headline': 'Title',
+            'image': {
+              '@type': 'ImageObject',
+              'height': '768',
+              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+              'width': '768',
+            },
+            'isAccessibleForFree': true,
+            'keywords': ['keyword', 'keyword2', 'keyword3'],
+            'publisher': {
+              '@type': 'Organization',
+              '@id': 'https://bach.software',
+              'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+              'name': 'Company',
+            },
+            'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+          },
+          {
+            '@type': 'BlogPosting',
+            'author': {
+              '@type': 'Person',
+              'image': {
+                '@type': 'ImageObject',
+                'height': '768',
+                'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+                'width': '768',
+              },
+              'name': 'author2',
+              'url': 'https://author.com/authors/author',
+            },
+            'dateModified': '2024-11-05T09:00:00+01:00',
+            'datePublished': '2024-11-05T09:00:00+01:00',
+            'headline': 'Title',
+            'image': {
+              '@type': 'ImageObject',
+              'height': '768',
+              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+              'width': '768',
+            },
+            'isAccessibleForFree': true,
+            'keywords': ['keyword', 'keyword2', 'keyword3'],
+            'publisher': {
+              '@type': 'Organization',
+              '@id': 'https://bach.software',
+              'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+              'name': 'Company',
+            },
+            'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+          },
+        ],
+      });
+    });
+  });
+
+  describe('createBlogPostingMetadataContext', () => {
+    it('should render the correct structured data', async () => {
+      expect(createBlogPostingMetadataContext(baseUrl, buildPost())).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'author': {
+          '@type': 'Person',
+          'name': 'First LastName',
+          'url': 'https://author.com/authors/author',
+          'image': {
+            '@type': 'ImageObject',
+            'height': '768',
+            'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+            'width': '768',
+          },
+        },
+        'dateModified': '2024-11-05T09:00:00+01:00',
+        'datePublished': '2024-11-05T09:00:00+01:00',
+        'headline': 'Title',
+        'image': {
+          '@type': 'ImageObject',
+          'height': '768',
+          'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+          'width': '768',
+        },
+        'keywords': ['keyword', 'keyword2', 'keyword3'],
+        'publisher': {
+          '@id': 'https://bach.software',
+          '@type': 'Organization',
+          'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+          'name': 'Company',
+        },
+        'speakable': {
+          '@type': 'SpeakableSpecification',
+          'cssSelector': [
+            'html head title',
+            'html head meta[name="description"]',
+            'html main article [itemprop="articleBody"]',
+          ],
+        },
+        'isAccessibleForFree': true,
+        'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+      });
+    });
+  });
+});
+
+describe('useMetadata', () => {
+  beforeEach(() => {
+    mock.useHead.mockReset();
+    mock.useSeoMeta.mockReset();
+    mock.useLocaleHead.mockReset();
+    mock.useRuntimeConfig.mockReturnValue({
+      public: {
+        baseUrl: 'https://bach.software',
+      },
+    });
+  });
+
+  it('should call the useSeoMeta with the correct parameters', async () => {
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+
+    const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
+    expect(seoArgs.title).toBe('Title');
+    expect(seoArgs.ogTitle).toBe('Title');
+    expect(seoArgs.description).toBe('Description');
+    expect(seoArgs.ogDescription).toBe('Description');
+    expect(seoArgs.ogUrl).toBe(
+      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    );
+    expect(seoArgs.ogImage).toBe(
+      'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+    );
+    expect(seoArgs.ogImageAlt).toBe('Image alt');
+  });
+
+  it('should use url if it is specified', async () => {
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/override';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+
+    const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
+    expect(seoArgs.ogUrl).toBe('https://bach.software/override');
+  });
+
+  it('should call the useHead with the correct parameters', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        htmlAttrs: { lang: 'en', dir: 'ltr' },
+        meta: [],
+        link: [
+          { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties', id: 'i18n-can', rel: 'canonical' },
+        ],
+      },
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.canonicalUrl = '/posts/1-vue-3_3-generics-and-conditional-properties-original';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), [
+      { href: 'https://bach.software/nl/posts/1-nl', hreflang: 'nl', rel: 'alternate' },
+      { href: 'https://bach.software/nl/posts/1-de', hreflang: 'de', rel: 'alternate' },
+    ]);
+
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.htmlAttrs).toEqual({ lang: 'en', dir: 'ltr' });
+    expect(headArgs.meta).toEqual([]);
+
+    expect(headArgs.script[0].type).toBe('application/ld+json');
+    expect(headArgs.script[0].innerHTML).toBe(
+      '{"@context":"https://schema.org","@type":"WebPage","name":"Title","url":"https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties","description":"Description"}',
+    );
+    expect(headArgs.link[0]).toEqual({
+      rel: 'alternate',
+      hreflang: 'nl',
+      href: 'https://bach.software/nl/posts/1-nl',
+    });
+    expect(headArgs.link[1]).toEqual({
+      rel: 'alternate',
+      hreflang: 'de',
+      href: 'https://bach.software/nl/posts/1-de',
+    });
+    expect(headArgs.link[2]).toEqual({
+      rel: 'canonical',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original',
+    });
+  });
+
+  it('should use i18n url if canonical url is empty', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        link: [
+          { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n', id: 'i18n-can', rel: 'canonical' },
+        ],
+        htmlAttrs: {},
+        meta: [],
+      },
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.link[0]).toEqual({
+      rel: 'canonical',
+      id: 'i18n-can',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n',
+    });
+  });
+
+  it('should not throw an error when data is not set', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      // @ts-expect-error - testing undefined value
+      value: undefined,
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.link).toEqual([]);
+    expect(headArgs.link).toHaveLength(0);
+  });
+
+  it('should use page structured data when type is blog', async () => {
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      'description': 'Description',
+      'name': 'Title',
+      'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    });
+  });
+
+  it('should use blog structured data when type is blog', async () => {
+    useMetadata(
+      'blog',
+      buildBlog((x) => {
+        x.title = 'Title';
+        x.description = 'Description';
+        x.imageUrl = '/posts/1/cover.jpeg';
+        x.imageAlt = 'Image alt';
+        x.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+        x.datePublished = '2024-11-05T08:00:00.000Z';
+        x.dateModified = '2024-11-05T08:00:00.000Z';
+        x.company = buildCompany();
+      }),
+      [],
+      [buildPost()],
+    );
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      '@id':
+        'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+      'mainEntityOfPage':
+        'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+      'name': 'Title',
+      'publisher': {
+        '@type': 'Organization',
+        '@id': 'https://bach.software',
+        'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+        'name': 'Company',
+      },
+      'description': 'Description',
+      'blogPost': [
+        {
+          '@type': 'BlogPosting',
+          'headline': 'Title',
+          'datePublished': '2024-11-05T09:00:00+01:00',
+          'dateModified': '2024-11-05T09:00:00+01:00',
+          'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+          'author': {
+            '@type': 'Person',
+            'name': 'First LastName',
+            'url': 'https://author.com/authors/author',
+            'image': {
+              '@type': 'ImageObject',
+              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+              'height': '768',
+              'width': '768',
+            },
+          },
+          'publisher': {
+            '@type': 'Organization',
+            '@id': 'https://bach.software',
+            'name': 'Company',
+            'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+          },
+          'image': {
+            '@type': 'ImageObject',
+            'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+            'height': '768',
+            'width': '768',
+          },
+          'isAccessibleForFree': true,
+          'keywords': ['keyword', 'keyword2', 'keyword3'],
+        },
+      ],
+    });
+  });
+
+  it('should use blogPost structured data when type is blogPost', async () => {
+    useMetadata(
+      'blogPost',
+      buildPost((p) => {
+        p.title = 'Title';
+        p.description = 'Description';
+        p.imageUrl = '/posts/1/cover.jpeg';
+        p.imageAlt = 'Image alt';
+        p.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+        p.datePublished = '2024-11-05T08:00:00.000Z';
+        p.dateModified = '2024-11-05T08:00:00.000Z';
+      }),
+      [],
+    );
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(JSON.parse(headArgs.script[0].innerHTML)).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      'author': {
+        '@type': 'Person',
+        'image': {
+          '@type': 'ImageObject',
+          'height': '768',
+          'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE.jpeg',
+          'width': '768',
+        },
+        'name': 'First LastName',
+        'url': 'https://author.com/authors/author',
+      },
+      'dateModified': '2024-11-05T09:00:00+01:00',
+      'datePublished': '2024-11-05T09:00:00+01:00',
+      'headline': 'Title',
+      'image': {
+        '@type': 'ImageObject',
+        'height': '768',
+        'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
+        'width': '768',
+      },
+      'isAccessibleForFree': true,
+      'keywords': ['keyword', 'keyword2', 'keyword3'],
+      'publisher': {
+        '@id': 'https://bach.software',
+        '@type': 'Organization',
+        'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/company/logo.png',
+        'name': 'Company',
+      },
+      'speakable': {
+        '@type': 'SpeakableSpecification',
+        'cssSelector': [
+          'html head title',
+          'html head meta[name="description"]',
+          'html main article [itemprop="articleBody"]',
+        ],
+      },
+      'url': 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    });
+  });
+});

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createAbsoluteUrl, createSlug } from '@/utils/url';
 
 describe('url', () => {
   describe('createSlug', () => {

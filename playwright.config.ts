@@ -15,7 +15,7 @@ process.env.STORYBOOK_URL = 'http://localhost:6006';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './src/app/tests',
+  testDir: './src/app/tests/playwright',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

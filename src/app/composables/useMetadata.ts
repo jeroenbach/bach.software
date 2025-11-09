@@ -11,8 +11,8 @@ import type {
 } from 'schema-dts';
 
 import type { Author } from '~/types/Author';
-import type { BlogPage } from '~/types/BlogPage';
-import type { BlogPost, BlogPostSummary } from '~/types/BlogPost';
+import type { BlogPost } from '~/types/BlogPost';
+import type { BlogPostSummary } from '~/types/BlogPostSummary';
 import type { Company } from '~/types/Company';
 import type { Metadata } from '~/types/Metadata';
 import type { Page } from '~/types/Page';
@@ -34,27 +34,30 @@ export function getMetadataImageUrl(relativeUrl: string, baseUrl: string) {
 /***
  * A helper method to reduce the boilerplate code for setting metadata in the head of the document.
  */
-export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metadata, itemsMetadata?: Metadata[], options?: MetadataOptions) {
+export function useMetadata(type: MetadataType, metadata: Metadata, alternateUrls: AlternateUrl[], itemsMetadata?: Metadata[], options?: MetadataOptions) {
   if (!metadata)
     return;
 
-  const config = useConfig();
-  const baseUrl = config.value?.baseUrl;
+  const i18nHead = useLocaleHead({
+    seo: { canonicalQueries: [] }, // add here the query parameters you want to keep in the canonical URL
+  });
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.baseUrl;
 
-  let url = metadata._path;
+  let url: string = '';
   let structuredData: WithNullableContext<
     SchemaWebPage | SchemaBlog | SchemaBlogPosting
   >;
   switch (type) {
     case 'page': {
       const page = metadata as Page;
-      url = page.url ?? page._path;
+      url = page.url!;
       structuredData = createWebPageMetadataContext(baseUrl, page);
       break;
     }
     case 'blog': {
-      const blog = metadata as BlogPage;
-      url = blog.url ?? blog._path;
+      const blog = metadata as Page;
+      url = blog.url!;
       structuredData = createBlogMetadataContext(
         baseUrl,
         blog,
@@ -64,13 +67,29 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
     }
     case 'blogPost': {
       const post = metadata as BlogPost;
-      url = post.url ?? post._path;
+      url = post.url!;
       structuredData = createBlogPostingMetadataContext(baseUrl, post);
       break;
     }
     default:
       break;
   }
+
+  // Use part of the i18n head links, but override canonical and alternate links
+  const i18nLinks = i18nHead.value?.link?.filter(l => l.rel !== 'alternate') ?? []; // remove all the alternate links added by useLocaleHead
+  const [canonicalUrls, otherI18nUrls] = divideArray(i18nLinks, x => x.rel === 'canonical');
+  const canonicalUrl = metadata.canonicalUrl
+    ? [{
+        rel: 'canonical',
+        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
+      }]
+    : canonicalUrls;
+
+  const alternateLinks = alternateUrls?.map(({ hreflang, href }) => ({
+    rel: 'alternate',
+    hreflang,
+    href: createAbsoluteUrl(href, baseUrl),
+  })) ?? [];
 
   useSeoMeta(
     {
@@ -86,6 +105,7 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
     options,
   );
   useHead({
+    htmlAttrs: i18nHead.value?.htmlAttrs,
     script: [
       {
         type: 'application/ld+json',
@@ -93,11 +113,11 @@ export function useMetadata(type: 'page' | 'blog' | 'blogPost', metadata?: Metad
       },
     ],
     link: [
-      {
-        rel: 'canonical',
-        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
-      },
+      ...otherI18nUrls,
+      ...alternateLinks,
+      ...canonicalUrl,
     ],
+    meta: i18nHead.value?.meta,
   });
 }
 
@@ -119,12 +139,12 @@ export function createWebPageMetadataContext(baseUrl: string, page: Page): WithN
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     'name': page.title,
-    'url': createAbsoluteUrl(page.url ?? page._path, baseUrl),
+    'url': createAbsoluteUrl(page.url ?? page.path, baseUrl),
     'description': page.description,
   };
 }
 
-export function createBlogMetadataContext(baseUrl: string, blog: BlogPage, posts: BlogPostSummary[]): WithNullableContext<SchemaBlog> {
+export function createBlogMetadataContext(baseUrl: string, blog: Page, posts: BlogPostSummary[]): WithNullableContext<SchemaBlog> {
   if (!blog)
     return undefined;
 
@@ -132,7 +152,7 @@ export function createBlogMetadataContext(baseUrl: string, blog: BlogPage, posts
     ?.map(post => createBlogPostingMetadata(baseUrl, post))
     .filter(isNotNullOrUndefined);
 
-  const url = createAbsoluteUrl(blog.url ?? blog._path, baseUrl);
+  const url = createAbsoluteUrl(blog.url ?? blog.path, baseUrl);
 
   return {
     '@context': 'https://schema.org',
@@ -175,7 +195,7 @@ export function createBlogPostingMetadata(baseUrl: string, post: BlogPostSummary
     'datePublished': post.datePublished && toDateWithTimeZone(post.datePublished),
     'dateModified': post.dateModified && toDateWithTimeZone(post.dateModified),
     'url': post.url && createAbsoluteUrl(post.url, baseUrl),
-    'author': createAuthorMetadata(baseUrl, post.author),
+    'author': post.author && createAuthorMetadata(baseUrl, post.author),
     'publisher':
       post.author?.company && createOrganizationMetadata(post.author.company),
     'image': post.imageUrl && createImageMetadata(baseUrl, post.imageUrl),

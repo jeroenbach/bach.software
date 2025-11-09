@@ -34,6 +34,8 @@ export default antfu({
           'Parent',
           'Child',
           'Example',
+          'App404',
+          'error',
         ],
       },
     ],

@@ -1,21 +1,32 @@
+import type { Collections } from '@nuxt/content';
+import { findPageChildren } from '@nuxt/content/utils';
+import { createPageUrl, localesMap } from '~/locales.config';
+
 /**
  * Gets the content from the pages folder and builds a navigation object.
  */
 export async function useContentNavigationContext() {
+  const { locale } = useI18n();
+  const uniqueId = `navigation-${locale.value}`;
+
   return useAsyncData<NavigationItem[]>(
-    'navigation',
+    uniqueId,
     async () => {
-      const pages = await queryContent<Page>('pages')
-        .where({
-          _partial: false,
-          draft: { $ne: true },
-        })
-        .only(['title', 'url', '_path'])
-        .find();
+      const collection = `pages_${locale.value}` as Extract<keyof Collections, `pages_${string}`>;
+
+      let pages = await queryCollectionNavigation(collection, ['contentId', 'url'])
+        .orWhere(q => q.where('partial', 'IS NULL').where('partial', '=', false))
+        .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false))
+        .orWhere(q => q.where('excludeFromNavigation', 'IS NULL').where('excludeFromNavigation', '=', false));
+
+      const structure = localesMap.get(locale.value);
+      if (structure?.pagesPath && structure.pagesPath !== '/') {
+        pages = findPageChildren(pages, structure?.pagesPath);
+      }
 
       return pages.map(item => ({
         label: item.title ?? '',
-        to: item.url ?? item._path,
+        to: item.url as string ?? createPageUrl(locale.value, item.contentId as number, item.title, item.slug as string),
       }));
     },
     {

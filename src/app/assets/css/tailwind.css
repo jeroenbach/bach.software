@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --text-xs-em: 0.75em;
+  --text-sm-em: 0.875em;
+}
+@utility prose-custom {
+  --tw-prose-pre-code: var(--color-gray-400);
+  --tw-prose-pre-bg: var(--color-stone-50);
+  --tw-prose-invert-pre-bg: var(--color-slate-700);
+}
+/** Set dark theme based on html.dark class */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html.tailwind-includes {
+  color: var(--color-gray-200);
+  color: var(--color-gray-600);
+  color: var(--color-slate-500);
+  color: var(--color-slate-600);
+  color: var(--color-yellow-50);
+}

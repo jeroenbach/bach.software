@@ -1,11 +1,10 @@
 import { fileURLToPath, URL } from 'node:url';
 
+import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import autoImport from 'unplugin-auto-import/vite';
 import { defineConfig } from 'vite';
 import vueDevTools from 'vite-plugin-vue-devtools';
-
-import postcss from './postcss.config.js';
 
 export default defineConfig({
   plugins: [
@@ -24,6 +23,7 @@ export default defineConfig({
       dirs: ['./utils', './composables'],
       dts: false,
     }),
+    tailwindcss(),
   ],
   resolve: {
     alias: {
@@ -32,8 +32,5 @@ export default defineConfig({
       '#imports': fileURLToPath(new URL('./mocks/imports.ts', import.meta.url)),
       '#dayjs': fileURLToPath(new URL('./mocks/dayjs.ts', import.meta.url)),
     },
-  },
-  css: {
-    postcss,
   },
 });
