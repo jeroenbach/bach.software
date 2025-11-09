@@ -12,7 +12,14 @@ test.describe('Sitemap.xml Tests', () => {
     const response = await page.goto('/sitemap.xml');
 
     expect(response?.status()).toBe(200);
-    expect(response?.headers()['content-type']).toContain('xml');
+
+    const headers = response?.headers();
+    const contentType = Object.entries(headers || {}).find(([key]) =>
+      key.toLowerCase() === 'content-type',
+    )?.[1];
+
+    expect(contentType).toBeTruthy();
+    expect(contentType).toContain('xml');
   });
 
   test('should contain valid XML structure with proper namespaces', async ({ page }) => {

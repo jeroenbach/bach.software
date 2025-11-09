@@ -4,6 +4,13 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.nuxt/**',
+      '**/playwright/**',
+      '**/.output/**',
+    ],
     projects: [
       {
         resolve: {

@@ -24,7 +24,12 @@ export default defineEventHandler(async (event) => {
 
   sitemap.end();
 
-  return streamToPromise(sitemap);
+  const xml = await streamToPromise(sitemap);
+
+  // Set the correct content type header
+  setResponseHeader(event, 'Content-Type', 'application/xml; charset=utf-8');
+
+  return xml;
 });
 
 function addLinks(sitemap: SitemapStream, navDic: ContentNavigationDictionary) {

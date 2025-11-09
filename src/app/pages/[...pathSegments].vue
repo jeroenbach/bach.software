@@ -22,7 +22,7 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
 }
 
-if (page.value.url && page.value.url !== path) {
+if (page.value.url && page.value.url !== path && path !== '/') { // temporary show the same on the home page as the blog page
   navigateTo(page.value.url, { redirectCode: 301 });
 }
 
