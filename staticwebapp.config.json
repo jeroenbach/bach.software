@@ -10,6 +10,11 @@
       "route": "/pages/about",
       "redirect": "/content/30-about",
       "statusCode": 301
+    },
+    {
+      "route": "/pages/portfolio",
+      "redirect": "/content/20-portfolio",
+      "statusCode": 301
     }
   ]
 }
