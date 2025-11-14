@@ -4,5 +4,12 @@
   },
   "navigationFallback": {
     "rewrite": "/index.html"
-  }
+  },
+  "routes": [
+    {
+      "route": "/pages/about",
+      "redirect": "/content/30-about",
+      "statusCode": 301
+    }
+  ]
 }
