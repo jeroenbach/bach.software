@@ -2,7 +2,7 @@
 
 Bach.Software is a personal blog and portfolio website that showcases modern web development practices. It's built with a hybrid architecture combining:
 
-- **Frontend**: Nuxt 3 + Vue 3 + TypeScript for a fast, interactive user experience
+- **Frontend**: Nuxt 4 + Vue 3 + TypeScript for a fast, interactive user experience
 - **Backend**: .NET 9 Azure Functions for serverless API functionality
 - **Content**: Markdown-based blog posts with rich frontmatter
 - **Deployment**: Static site generation with Azure Static Web Apps
@@ -12,7 +12,7 @@ Bach.Software is a personal blog and portfolio website that showcases modern web
 ### Prerequisites
 
 - **Node.js** v18+
-- **pnpm** v9+: use [nvm](https://nodejs.org/en/download) to install node v22 and pnpm v9. To install pnpm v9, execute `corepack use pnpm@latest-9`
+- **pnpm** v10+: use [nvm](https://nodejs.org/en/download) to install node v22 and pnpm v10. To install pnpm v10, execute `corepack use pnpm@latest-10`
 - **.NET 9** (for backend development): install [dotnet](https://dotnet.microsoft.com/en-us/download)
 - **Azure Functions Core Tools** (for local API development): install [azure functions core tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp)
 
@@ -43,10 +43,10 @@ pnpm generate         # Generate static site
 
 | What                   | Technology               | Why We Chose It                                            |
 | ---------------------- | ------------------------ | ---------------------------------------------------------- |
-| **Frontend Framework** | Nuxt 3 + Vue 3           | Excellent DX, SSG capabilities, Vue ecosystem              |
+| **Frontend Framework** | Nuxt 4 + Vue 3           | Excellent DX, SSG capabilities, Vue ecosystem              |
 | **Language**           | TypeScript               | Type safety, better IDE support, fewer runtime errors      |
 | **Styling**            | TailwindCSS              | Utility-first, consistent design system, great performance |
-| **UI Components**      | PrimeVue + Custom        | Minimal usage, mostly custom implementations               |
+| **UI Components**      | Element Plus + Custom    | Minimal usage, mostly custom implementations               |
 | **Content**            | Nuxt Content             | Git-based CMS, markdown with Vue components                |
 | **State Management**   | Pinia                    | Vue-native, TypeScript-first, great devtools               |
 | **Testing**            | Vitest + Playwright      | Fast unit tests, reliable E2E testing                      |
@@ -306,7 +306,7 @@ The site uses Azure Static Web Apps with automatic deployment:
 ## 📚 Additional Resources
 
 - **Vue 3 Documentation**: https://vuejs.org/
-- **Nuxt 3 Documentation**: https://nuxt.com/
+- **Nuxt 4 Documentation**: https://nuxt.com/
 - **TypeScript Handbook**: https://www.typescriptlang.org/docs/
 - **TailwindCSS Documentation**: https://tailwindcss.com/docs
 - **Vitest Documentation**: https://vitest.dev/

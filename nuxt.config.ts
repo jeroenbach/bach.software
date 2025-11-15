@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import process from 'node:process';
-import Aura from '@primevue/themes/aura';
 import tailwindcss from '@tailwindcss/vite';
 
 import { defaultLocale, locales } from './locales.config';
@@ -22,6 +21,9 @@ export default defineNuxtConfig({
     public: 'src/app/public',
   },
   serverDir: 'src/app/server',
+  dir: {
+    public: 'src/app/public',
+  },
   compatibilityDate: '2025-10-18',
   devtools: { enabled: true },
   vite: {
@@ -35,20 +37,12 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxt/test-utils/module',
     'dayjs-nuxt',
-    '@primevue/nuxt-module',
+    '@element-plus/nuxt',
     '@nuxtjs/plausible',
   ],
   components: [{ path: '~/contexts', pathPrefix: false }, '~/components'],
-  primevue: {
-    autoImport: false,
-    options: {
-      theme: {
-        preset: Aura,
-        options: {
-          darkModeSelector: 'html.dark',
-        },
-      },
-    },
+  elementPlus: {
+    // Element Plus will be automatically configured with dark mode support
   },
   colorMode: {
     classSuffix: '',
