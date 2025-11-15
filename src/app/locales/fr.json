@@ -37,6 +37,10 @@
     "scrollProgress": "Progression du défilement: {scrollPercentage}%",
     "readingStage": "Étape de lecture: {totalProgress}"
   },
+  "codeGroup": {
+    "copyToClipboard": "Copier le code dans le presse-papiers",
+    "maximizeCodeBlock": "Agrandir le bloc de code"
+  },
   "Switch language": "Changer de langue",
   "notifications": {
     "info": {
