@@ -111,7 +111,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           leaveTo="translate-x-full"
         >
           <DialogPanel
-            class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1"
+            class="fixed inset-y-0 right-0 z-50 w-11/12 overflow-y-auto bg-white px-6 py-6 ring-gray-900/10 dark:bg-slate-900 dark:ring-gray-50/10 sm:max-w-sm sm:ring-1 dark:text-gray-300"
           >
             <div class="flex items-center justify-between">
               <AppLink to="/" class="-m-1.5 p-1.5 text-lg" @click="close">
