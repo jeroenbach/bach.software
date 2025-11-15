@@ -10,9 +10,6 @@
     TOptionValue extends keyof TOptionType = any
   "
 >
-import type { MultiSelectProps } from 'primevue/multiselect';
-import MultiSelect from 'primevue/multiselect';
-import Select from 'primevue/select';
 import { computed } from 'vue';
 
 // Check whether we need to return the entire option object
@@ -29,13 +26,16 @@ type TSingleOrMultiple = undefined extends TMultiple
     ? TReturnType
     : TReturnType[];
 
-// Use the MultiSelectProps type from PrimeVue, but with some better typing
-interface Props
-  extends Omit<MultiSelectProps, 'modelValue' | 'options' | 'optionValue'> {
+interface Props {
   modelValue?: TSingleOrMultiple
   optionValue?: TOptionValue
+  optionLabel?: keyof TOptionType
   options?: TOptionType[]
   multiple?: TMultiple
+  placeholder?: string
+  disabled?: boolean
+  clearable?: boolean
+  filterable?: boolean
 }
 
 const props = defineProps<Props>();
@@ -53,24 +53,27 @@ function update(value: unknown) {
   emit('update:modelValue', value as TSingleOrMultiple);
 }
 
-const optionValueString = computed(() => {
-  return props.optionValue as string;
-});
+// Function to help work with ElementPlus
+function getAsString(value: unknown): string {
+  return value as string;
+}
 </script>
 
 <template>
-  <MultiSelect
-    v-if="isMultiple"
-    v-bind="props"
-    :optionValue="optionValueString"
-    :modelValue="modelValue"
+  <ElSelect
+    :modelValue="(modelValue as any)"
+    :multiple="isMultiple"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :clearable="clearable"
+    :filterable="filterable"
     @update:modelValue="update"
-  />
-  <Select
-    v-else
-    v-bind="props"
-    :optionValue="optionValueString"
-    :modelValue="modelValue"
-    @update:modelValue="update"
-  />
+  >
+    <ElOption
+      v-for="(option, index) in options"
+      :key="index"
+      :label="getAsString(props.optionLabel ? option[props.optionLabel!] : option)"
+      :value="getAsString(props.optionValue ? option[props.optionValue!] : option)"
+    />
+  </ElSelect>
 </template>

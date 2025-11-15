@@ -37,6 +37,10 @@
     "scrollProgress": "Scroll-Fortschritt: {scrollPercentage}%",
     "readingStage": "Lesephase: {totalProgress}"
   },
+  "codeGroup": {
+    "copyToClipboard": "Code in die Zwischenablage kopieren",
+    "maximizeCodeBlock": "Codeblock maximieren"
+  },
   "Switch language": "Sprache wechseln",
   "notifications": {
     "info": {
