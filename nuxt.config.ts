@@ -1,9 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import process from 'node:process';
 import Aura from '@primevue/themes/aura';
+
 import tailwindcss from '@tailwindcss/vite';
 
 import { defaultLocale, locales } from './locales.config';
+import { routeRules } from './route-rules';
 import { screens } from './src/app/utils/screen';
 
 export default defineNuxtConfig({
@@ -140,8 +142,6 @@ export default defineNuxtConfig({
       routes: ['/sitemap.xml', '/api/content-urls'],
     },
   },
-  routeRules: {
-    '/pages/portfolio': { redirect: { to: '/content/20-portfolio', statusCode: 301 } },
-    '/pages/about': { redirect: { to: '/content/30-about', statusCode: 301 } },
-  },
+  // @ts-expect-error - routeRules imported from route-rules.js has correct shape but TS can't infer literal types
+  routeRules,
 });
