@@ -3,7 +3,7 @@ import type { ContentNavigationDictionary, ContentNavigationItemExtended } from 
 import type { MetadataType } from '~/types/MetadataType';
 import { queryCollectionNavigation } from '@nuxt/content/server';
 import { findPageChildren } from '@nuxt/content/utils';
-import { createBlogPostUrl, createPageUrl, locales } from '~/locales.config';
+import { createBlogPostUrl, createPageUrl, createUrl, locales } from '~/locales.config';
 
 export type ContentUrlMap = {
   [K in MetadataType]: ContentNavigationDictionary
@@ -31,7 +31,7 @@ export async function getContentUrlMap(event: any): Promise<ContentUrlMap> {
     }
 
     pages.forEach((page) => {
-      page.url ??= createPageUrl(locale.code, page.contentId as number, page.title, page.slug as string);
+      page.url = page.url ? createUrl(locale.code, page.url) : createPageUrl(locale.code, page.contentId as number, page.title, page.slug as string);
       page.locale = locale.code;
       page.type = 'page';
     });

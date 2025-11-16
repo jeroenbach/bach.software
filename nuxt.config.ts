@@ -22,9 +22,6 @@ export default defineNuxtConfig({
     public: 'src/app/public',
   },
   serverDir: 'src/app/server',
-  dir: {
-    public: 'src/app/public',
-  },
   compatibilityDate: '2025-10-18',
   devtools: { enabled: true },
   vite: {
