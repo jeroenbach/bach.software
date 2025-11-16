@@ -37,6 +37,10 @@
     "scrollProgress": "Scrollvoortgang: {scrollPercentage}%",
     "readingStage": "Leesfase: {totalProgress}"
   },
+  "codeGroup": {
+    "copyToClipboard": "Kopieer code naar klembord",
+    "maximizeCodeBlock": "Vergroot codeblok"
+  },
   "Switch language": "Taal wijzigen",
   "notifications": {
     "info": {

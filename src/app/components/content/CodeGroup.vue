@@ -97,7 +97,8 @@ function maximizeClick() {
             v-if="isSupported && activeTab?.code"
             type="button"
             class="p-2"
-            aria-label="Copy code to clipboard"
+            :title="t('codeGroup.copyToClipboard')"
+            :aria-label="t('codeGroup.copyToClipboard')"
             tabindex="-1"
             @click="copy(activeTab?.code)"
           >
@@ -107,7 +108,8 @@ function maximizeClick() {
           <AppButton
             type="button"
             class="p-2"
-            aria-label="Maximize code block"
+            :title="t('codeGroup.maximizeCodeBlock')"
+            :aria-label="t('codeGroup.maximizeCodeBlock')"
             tabindex="-1"
             @click="maximizeClick"
           >

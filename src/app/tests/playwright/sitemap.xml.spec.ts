@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import format from 'xml-formatter';
 
 test.describe('Sitemap.xml Tests', () => {
   test.beforeEach(async ({ browser: _ }, testInfo) => {
@@ -88,7 +89,12 @@ test.describe('Sitemap.xml Tests', () => {
     const response = await page.goto('/sitemap.xml');
     const content = await response?.text();
 
+    const formatted = format(content || '', {
+      indentation: '  ',
+      collapseContent: true,
+    });
+
     // Use snapshot testing - this handles formatting automatically
-    expect(content).toMatchSnapshot('sitemap.xml');
+    expect(formatted).toMatchSnapshot('sitemap.xml');
   });
 });
