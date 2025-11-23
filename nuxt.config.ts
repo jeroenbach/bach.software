@@ -76,6 +76,9 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'page', mode: 'out-in' },
   },
   content: {
+    preview: {
+      api: 'https://api.nuxt.studio',
+    },
     build: {
       markdown: {
         highlight: {
@@ -102,7 +105,7 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    dir: 'assets/images',
+    dir: 'public/images',
     quality: 80,
     format: ['avif', 'webp', 'jpeg', 'jpg'],
     screens,

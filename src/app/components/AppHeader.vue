@@ -77,14 +77,14 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         />
       </div>
       <div class="ml-auto flex lg:hidden">
-        <button
+        <AppButton
           type="button"
           class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
           @click="open"
         >
           <span class="sr-only">Open main menu</span>
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-        </button>
+        </AppButton>
       </div>
     </nav>
 

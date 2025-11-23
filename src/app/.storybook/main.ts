@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/vue3-vite';
 import process from 'node:process';
 import { mergeConfig } from 'vite';
 
-import viteConfig from './vite.config';
+import viteConfig from './vite.config.ts';
 
 const config: StorybookConfig = {
   stories: ['../components/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -11,7 +11,7 @@ const config: StorybookConfig = {
     name: '@storybook/vue3-vite',
     options: {},
   },
-  staticDirs: ['../public', '../assets/images'],
+  staticDirs: ['../public', '../public/images'],
   docs: {},
   viteFinal: async (config, { configType }) => {
     const mergedConfig = mergeConfig(viteConfig, config);

@@ -2,7 +2,12 @@ import { fileURLToPath } from 'node:url';
 import { defineVitestProject } from '@nuxt/test-utils/config';
 import { defineConfig } from 'vitest/config';
 
+const nuxtSetupFile = fileURLToPath(new URL('./src/app/tests/setup/nuxt-color-mode.ts', import.meta.url));
+
 export default defineConfig({
+  define: {
+    'import.meta.test': true,
+  },
   test: {
     exclude: [
       '**/node_modules/**',
@@ -49,6 +54,7 @@ export default defineConfig({
             'src/app/utils/**/*.nuxt.{test,spec}.{ts,js}',
             'src/app/tests/nuxt/**/*.nuxt.{test,spec}.{ts,js}',
           ],
+          setupFiles: [nuxtSetupFile],
           environment: 'nuxt',
         },
       }),

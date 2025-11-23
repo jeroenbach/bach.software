@@ -285,7 +285,7 @@ pnpm storybook         # Start Storybook dev server
 1. **Create markdown file** in `src/app/content/en/posts/`
 2. **Add frontmatter** with required metadata
 3. **Write content** using standard Markdown
-4. **Add images** to `src/app/assets/images/posts/[post-number]/`
+4. **Add images** to `src/app/public/images/posts/[post-number]/`
 5. **Preview locally** with `pnpm dev`
 
 ### Content Structure
