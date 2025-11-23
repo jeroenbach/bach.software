@@ -5,7 +5,7 @@ import { postsPaths } from '~/locales.config';
 const { path, params } = useRoute();
 const { pathSegments } = params as { pathSegments: string[] };
 
-const isRoot = pathSegments.length === 0;
+const isRoot = path === '/';
 const isBlogRoot = postsPaths.has(`/${pathSegments[0]}`) || isRoot; // temporary show the blog root on root path
 
 const pageId = isBlogRoot

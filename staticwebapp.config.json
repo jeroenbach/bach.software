@@ -3,7 +3,14 @@
     "apiRuntime": "dotnet-isolated:9.0"
   },
   "navigationFallback": {
-    "rewrite": "/index.html"
+    "rewrite": "/200.html",
+    "exclude": ["*.{png,jpg,gif,svg,css,js,json,xml,txt,ico,woff,woff2,ttf,eot}"]
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html",
+      "statusCode": 404
+    }
   },
   "routes": [
     {
