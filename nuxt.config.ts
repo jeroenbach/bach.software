@@ -76,6 +76,9 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'page', mode: 'out-in' },
   },
   content: {
+    preview: {
+      api: 'https://api.nuxt.studio',
+    },
     build: {
       markdown: {
         highlight: {
