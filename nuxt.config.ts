@@ -105,7 +105,7 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    dir: 'assets/images',
+    dir: 'public/images',
     quality: 80,
     format: ['avif', 'webp', 'jpeg', 'jpg'],
     screens,

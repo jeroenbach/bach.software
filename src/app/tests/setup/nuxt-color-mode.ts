@@ -12,11 +12,11 @@ if (typeof window !== 'undefined') {
 declare global {
   interface Window {
     __NUXT_COLOR_MODE__?: {
-      preference: string;
-      value: string;
-      getColorScheme: () => string;
-      addColorScheme: (value: string) => void;
-      removeColorScheme: (value: string) => void;
-    };
+      preference: string
+      value: string
+      getColorScheme: () => string
+      addColorScheme: (value: string) => void
+      removeColorScheme: (value: string) => void
+    }
   }
 }
