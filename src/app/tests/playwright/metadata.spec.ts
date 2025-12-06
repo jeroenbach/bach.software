@@ -141,7 +141,7 @@ test.describe('Structured Data Tests', () => {
                 'name': 'Jeroen Bach',
                 'url': 'https://bach.software/pages/about',
               },
-              'dateModified': '2025-09-29T21:00:00+02:00',
+              'dateModified': '2025-12-06T21:00:00+01:00',
               'datePublished': '2025-09-20T16:34:55+02:00',
               'headline': 'Deploy a production-ready Kubernetes Cluster on Azure with Terraform',
               'image': {

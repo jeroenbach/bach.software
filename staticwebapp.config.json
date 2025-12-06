@@ -4,7 +4,9 @@
   },
   "navigationFallback": {
     "rewrite": "/200.html",
-    "exclude": ["*.{png,jpg,gif,svg,css,js,json,xml,txt,ico,woff,woff2,ttf,eot}"]
+    "exclude": [
+      "*.{png,jpg,gif,svg,css,js,json,xml,txt,ico,woff,woff2,ttf,eot}"
+    ]
   },
   "responseOverrides": {
     "404": {
