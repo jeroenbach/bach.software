@@ -26,15 +26,21 @@ pnpm install
 pnpm dev-setup
 
 # Start development servers
-pnpm dev              # Frontend (Nuxt)
+pnpm dev              # Frontend (Nuxt + i18n extract)
 pnpm dev:api          # Backend (.NET Azure Functions)
 
 # Run tests
-pnpm test             # Unit tests
+pnpm test             # Unit tests (watch mode)
+pnpm ci:test          # Unit tests (single run, for CI)
 pnpm playwright       # E2E tests
 
-# Build and deploy
+# Code quality
+pnpm lint             # Lint
+pnpm check            # Lint + typecheck
+
+# Build and preview
 pnpm generate         # Generate static site
+pnpm preview          # Preview the generated site locally
 ```
 
 ## 🧩 Architecture Overview
@@ -201,10 +207,10 @@ export interface BlogPostSummary extends Metadata {
 
 ### Git Workflow
 
-- **Main branch**: Production-ready code
+- **Main branch**: Production-ready code, auto-deploys on push
 - **Feature branches**: `feature/description-of-feature`
-- **Commit messages**: Clear, descriptive messages
-- **Pull requests**: Required for all changes, include tests and documentation
+- **Bug branches**: `bug/description-of-bug`
+- **Pull requests**: Required for all changes — include tests and a description of what changed and why
 
 ## 🧪 Testing Strategy
 
@@ -246,23 +252,22 @@ pnpm playwright        # Run E2E tests
 - Cross-browser compatibility
 - Real user interactions
 
-We also do screenshot testing for visual regressions. As the ci pipeline runs ubuntu, we included a ci:playwright:docker command
-to run the tests in a docker container with the same environment as the ci pipeline. This way the screenshots don't have any font or layout discrepancies.
+We also do screenshot testing for visual regressions. Since the CI pipeline runs Ubuntu, we provide a `ci:playwright:docker` command that runs tests inside a Docker container matching the CI environment — this prevents font and layout discrepancies between your local machine and CI.
 
-You can install colima to run docker lockally on macOS.
+To run Docker locally on macOS, install colima:
 
 ```bash
 brew install colima docker docker-compose
 colima start
 ```
 
-From here you can run the playwright tests in docker with:
+Then run the Playwright tests in Docker:
 
 ```bash
 pnpm ci:playwright:docker
-``` 
+```
 
-And update the snapshots with:
+Or update the snapshots:
 
 ```bash
 pnpm ci:playwright:docker:update
@@ -305,9 +310,15 @@ The site uses Azure Static Web Apps with automatic deployment:
 
 ## 📚 Additional Resources
 
-- **Vue 3 Documentation**: https://vuejs.org/
-- **Nuxt 4 Documentation**: https://nuxt.com/
-- **TypeScript Handbook**: https://www.typescriptlang.org/docs/
-- **TailwindCSS Documentation**: https://tailwindcss.com/docs
-- **Vitest Documentation**: https://vitest.dev/
-- **Playwright Documentation**: https://playwright.dev/
+| Resource | URL |
+| -------- | --- |
+| Vue 3 | https://vuejs.org/ |
+| Nuxt 4 | https://nuxt.com/ |
+| TypeScript | https://www.typescriptlang.org/docs/ |
+| TailwindCSS | https://tailwindcss.com/docs |
+| Nuxt Content | https://content.nuxt.com/ |
+| Pinia | https://pinia.vuejs.org/ |
+| Vitest | https://vitest.dev/ |
+| Playwright | https://playwright.dev/ |
+| Azure Static Web Apps | https://learn.microsoft.com/en-us/azure/static-web-apps/ |
+| Azure Functions (.NET) | https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide |
