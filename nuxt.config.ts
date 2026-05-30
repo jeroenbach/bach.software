@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import process from 'node:process';
 import tailwindcss from '@tailwindcss/vite';
@@ -132,9 +133,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'cloudflare-pages',
+    publicAssets: [
+      { dir: resolve('src/app/public/images'), baseURL: '/' },
+    ],
     prerender: {
       crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status
-      routes: ['/sitemap.xml', '/api/content-urls'],
+      routes: ['/', '/sitemap.xml', '/api/content-urls'],
     },
   },
   // @ts-expect-error - routeRules imported from route-rules.js has correct shape but TS can't infer literal types
