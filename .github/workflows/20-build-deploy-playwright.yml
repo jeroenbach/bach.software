@@ -48,9 +48,7 @@ jobs:
         run: pnpm build
 
       - name: Zip generated site (no compression)
-        run: |
-          cd .output
-          zip -r -0 ../generated-site.zip public
+        run: zip -r -0 generated-site.zip dist
 
       - name: Upload zipped site
         uses: actions/upload-artifact@v4
@@ -68,6 +66,11 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       - name: Download zipped site
         uses: actions/download-artifact@v4
         with:
@@ -75,7 +78,7 @@ jobs:
           path: .
 
       - name: Unzip generated site
-        run: unzip generated-site.zip -d .output
+        run: unzip generated-site.zip
 
       - name: Deploy
         id: builddeploy
@@ -83,7 +86,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .output/public --project-name=bach-software --branch=${{ github.ref_name }}
+          command: pages deploy dist --project-name=bach-software --branch=${{ github.ref_name }}
 
   playwright_job:
     needs: build_job
@@ -130,7 +133,7 @@ jobs:
           path: .
 
       - name: Unzip generated site
-        run: unzip generated-site.zip -d .output
+        run: unzip generated-site.zip
 
       - name: Run Playwright tests
         run: pnpm ci:playwright
