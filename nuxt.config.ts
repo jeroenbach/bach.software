@@ -131,7 +131,9 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    preset: 'cloudflare-pages',
     prerender: {
+      crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status
       routes: ['/sitemap.xml', '/api/content-urls'],
     },
   },
