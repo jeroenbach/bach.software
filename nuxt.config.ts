@@ -48,6 +48,7 @@ export default defineNuxtConfig({
     },
   },
   modules: [
+    'nuxt-content-twoslash', // this needs to be before `@nuxt/content`
     '@nuxt/content',
     '@nuxtjs/i18n',
     '@nuxt/image',
@@ -151,6 +152,9 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/sitemap.xml', '/api/content-urls'],
     },
+  },
+  twoslash: {
+    enableInDev: true,
   },
   routeRules,
 });

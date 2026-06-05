@@ -88,6 +88,7 @@
     "inquirer": "14.0.0",
     "marked": "18.0.4",
     "nuxt": "4.4.6",
+    "nuxt-content-twoslash": "^0.4.0",
     "playwright-core": "1.60.0",
     "postcss": "8.5.15",
     "prettier": "3.8.3",

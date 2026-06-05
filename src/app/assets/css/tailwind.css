@@ -18,5 +18,6 @@ html.tailwind-includes {
   color: var(--color-gray-600);
   color: var(--color-slate-500);
   color: var(--color-slate-600);
+  color: var(--color-slate-800);
   color: var(--color-yellow-50);
 }
