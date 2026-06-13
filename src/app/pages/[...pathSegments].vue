@@ -6,7 +6,7 @@ const { path, params } = useRoute();
 const { pathSegments } = params as { pathSegments: string[] };
 
 const isRoot = path === '/';
-const isBlogRoot = postsPaths.has(`/${pathSegments[0]}`) || isRoot; // temporary show the blog root on root path
+const isBlogRoot = postsPaths.has(`/${pathSegments?.[0]}`) || isRoot; // temporary show the blog root on root path
 
 const pageId = isBlogRoot
   ? 10 // id 10 is the blog root page
