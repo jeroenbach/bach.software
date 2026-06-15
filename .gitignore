@@ -19,6 +19,7 @@ logs
 .idea
 .pnpm-store
 coverage
+.wrangler
 
 # Local env files
 .env
