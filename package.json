@@ -13,19 +13,16 @@
   "scripts": {
     "check-updates": "pnpm dlx npm-check-updates -i --format group",
     "dev-setup": "node development-setup.js",
-    "i18n-extract": "vue-i18n-extract report --vueFiles './**/*.?(ts|js|vue)' --languageFiles './src/app/locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
-    "prebuild": "node scripts/sync-redirects.js",
-    "build": "nuxt build",
-    "pregenerate": "node scripts/sync-redirects.js",
+    "i18n-extract": "vue-i18n-extract report --vueFiles './src/**/*.?(ts|js|vue)' --languageFiles './src/app/locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
+    "build": "pnpm run i18n-extract && nuxt build --dotenv .env.local && pnpm storybook:build",
     "generate": "pnpm run i18n-extract && nuxt generate --dotenv .env.local && pnpm storybook:build",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "dev": "pnpm run i18n-extract && nuxt dev --dotenv .env.local",
     "dev:api": "cd ./src/api/Bach.Software.API && dotnet watch start",
-    "dev:static-web-app": "cp staticwebapp.config.json .output/public && swa start .output/public --api-location src/api/Bach.Software.API",
     "ssg": "nuxt generate && pnpm run serve",
-    "serve": "pnpm dlx serve ./.output/public/",
-    "serve:storybook": "pnpm dlx http-server ./.output/public/_storybook/standalone/ -p 6006",
+    "serve": "pnpm dlx serve ./dist/",
+    "serve:storybook": "pnpm dlx http-server ./dist/_storybook/standalone/ -p 6006",
     "test": "TZ=Europe/Amsterdam vitest -w",
     "playwright": "playwright test --config=playwright.config.ts",
     "lint": "eslint",
@@ -39,8 +36,8 @@
     "ci:typecheck": "nuxi typecheck",
     "storybook": "storybook dev --config-dir ./src/app/.storybook --port 6006 --no-open",
     "storybook:build": "pnpm run storybook:build:integrated && pnpm run storybook:build:standalone",
-    "storybook:build:integrated": "storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/",
-    "storybook:build:standalone": "VITE_STANDALONE=true storybook build -c ./src/app/.storybook -o ./.output/public/_storybook/standalone"
+    "storybook:build:integrated": "storybook build -c ./src/app/.storybook -o ./dist/_storybook/",
+    "storybook:build:standalone": "VITE_STANDALONE=true storybook build -c ./src/app/.storybook -o ./dist/_storybook/standalone"
   },
   "dependencies": {
     "@headlessui/vue": "1.7.23",
@@ -112,10 +109,11 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "better-sqlite3",
       "@parcel/watcher",
+      "better-sqlite3",
       "esbuild",
-      "sharp"
+      "sharp",
+      "vue-demi"
     ]
   }
 }
