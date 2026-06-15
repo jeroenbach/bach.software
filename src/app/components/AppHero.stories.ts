@@ -9,7 +9,7 @@ const meta = {
     intro: 'Hello, my name is',
     title: 'Jeroen Bach',
     subTitle: 'Software Engineer & Team Lead',
-    imgSrc: '/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+    imgSrc: '/images/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
     imgAlt: 'Jeroen Bach',
   },
   render: args => ({

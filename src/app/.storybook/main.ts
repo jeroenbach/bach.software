@@ -11,7 +11,7 @@ const config: StorybookConfig = {
     name: '@storybook/vue3-vite',
     options: {},
   },
-  staticDirs: ['../public', '../public/images'],
+  staticDirs: ['../public'],
   docs: {},
   viteFinal: async (config, { configType }) => {
     const mergedConfig = mergeConfig(viteConfig, config);

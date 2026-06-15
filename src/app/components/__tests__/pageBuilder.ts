@@ -8,7 +8,7 @@ export function buildPage(fn?: (page: Page) => void) {
     title: 'Page',
     description: 'Description',
     url: '/page',
-    imageUrl: '/page/logo.png',
+    imageUrl: '/images/page/logo.png',
     imageAlt: 'Page Logo',
     company: buildCompany(),
     body: { toc: undefined, type: 'minimark', value: [] },

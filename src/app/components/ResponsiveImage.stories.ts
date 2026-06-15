@@ -13,7 +13,7 @@ export type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    src: '/JEROEN-4238-HD.jpeg',
+    src: '/images/JEROEN-4238-HD.jpeg',
     alt: 'alt text',
     caption: 'Figure caption',
     class: 'w-full',

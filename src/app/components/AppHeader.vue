@@ -54,8 +54,8 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
         <AppLink tabindex="-1" :to="navigation?.[0]?.to" class="-m-1.5 p-1.5 text-lg">
           <span class="sr-only">{{ $t("Bach.Software") }}</span>
-          <AppImage class="logo inline dark:hidden" src="/logo.svg" />
-          <AppImage class="logo hidden dark:inline" src="/logo-light.svg" />
+          <AppImage class="logo inline dark:hidden" src="/images/logo.svg" />
+          <AppImage class="logo hidden dark:inline" src="/images/logo-light.svg" />
         </AppLink>
       </div>
       <div class="ml-auto hidden lg:flex lg:gap-x-12">
@@ -116,10 +116,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
             <div class="flex items-center justify-between">
               <AppLink to="/" class="-m-1.5 p-1.5 text-lg" @click="close">
                 <span class="sr-only">{{ $t("Bach.Software") }}</span>
-                <AppImage class="inline h-8 dark:hidden" src="/logo.svg" />
+                <AppImage class="inline h-8 dark:hidden" src="/images/logo.svg" />
                 <AppImage
                   class="hidden h-8 dark:inline"
-                  src="/logo-light.svg"
+                  src="/images/logo-light.svg"
                 />
               </AppLink>
               <AppButton

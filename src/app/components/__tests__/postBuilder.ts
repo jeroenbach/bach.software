@@ -14,7 +14,7 @@ export function buildPost(fn?: (post: BlogPost) => void) {
     }),
     datePublished: '2024-11-05T08:00:00.000Z',
     dateModified: '2024-11-05T08:00:00.000Z',
-    imageUrl: '/posts/1/cover.jpeg',
+    imageUrl: '/images/posts/1/cover.jpeg',
     keywords: ['keyword', 'keyword2', 'keyword3'],
     excerpt: {
       type: 'root',

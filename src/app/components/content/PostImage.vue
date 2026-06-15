@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <NuxtImg class="w-full bg-gray-100 dark:bg-gray-800" :class="cssClass" :src="`/${src}`" :alt="alt" />
+  <NuxtImg class="w-full bg-gray-100 dark:bg-gray-800" :class="cssClass" :src="`/images/${src}`" :alt="alt" />
   <figcaption v-if="caption">
     {{ caption }}
   </figcaption>

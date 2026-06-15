@@ -8,7 +8,7 @@ export function buildBlog(fn?: (blog: Page) => void) {
     title: 'Blog',
     description: 'Description',
     url: '/blog',
-    imageUrl: '/blog/logo.png',
+    imageUrl: '/images/blog/logo.png',
     imageAlt: 'Blog Logo',
     company: buildCompany(),
     body: { toc: undefined, type: 'minimark', value: [] },

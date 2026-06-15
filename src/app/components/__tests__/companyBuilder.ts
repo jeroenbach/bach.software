@@ -5,7 +5,7 @@ export function buildCompany(fn?: (company: Company) => void) {
     name: 'Company',
     description: 'Description',
     url: 'https://bach.software',
-    imageUrl: '/company/logo.png',
+    imageUrl: '/images/company/logo.png',
     imageAlt: 'Company Logo',
   };
   if (fn)

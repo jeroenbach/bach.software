@@ -7,7 +7,7 @@ export function buildAuthor(fn?: (author: Author) => void) {
     userName: 'author',
     fullName: 'First LastName',
     role: 'Freelance Solution Engineer',
-    imageUrl: '/JEROEN-4238-SQUARE.jpeg',
+    imageUrl: '/images/JEROEN-4238-SQUARE.jpeg',
     homePage: 'https://author.com/authors/author',
     linkedIn: 'https://www.linkedin.com/in/author/',
     company: buildCompany(),
