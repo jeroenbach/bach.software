@@ -43,6 +43,7 @@ export default defineConfig({
           alias: {
             '~': fileURLToPath(new URL('./src/app', import.meta.url)),
             '@': fileURLToPath(new URL('./src/app', import.meta.url)),
+            '@plausible-analytics/tracker': fileURLToPath(new URL('./node_modules/@plausible-analytics/tracker/plausible.js', import.meta.url)),
           },
         },
         test: {

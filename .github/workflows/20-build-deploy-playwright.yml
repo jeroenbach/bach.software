@@ -86,13 +86,14 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: 4.100.0
           command: pages deploy dist --project-name=bach-software --branch=${{ github.ref_name }}
 
   playwright_job:
     needs: build_job
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.56.0-jammy
+      image: mcr.microsoft.com/playwright:v1.60.0-jammy
       options: --user root
     env:
       HOME: /root

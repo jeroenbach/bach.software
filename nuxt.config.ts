@@ -27,6 +27,26 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        '@headlessui/vue',
+        '@heroicons/vue/24/outline',
+        '@plausible-analytics/tracker',
+        '@vueuse/core',
+        'dayjs',
+        'dayjs/locale/de',
+        'dayjs/locale/en',
+        'dayjs/locale/es',
+        'dayjs/locale/fr',
+        'dayjs/locale/nl',
+        'dayjs/plugin/*.js',
+        'dayjs/plugin/relativeTime',
+        'dayjs/plugin/timezone',
+        'dayjs/plugin/updateLocale',
+        'dayjs/plugin/utc',
+        'lodash-unified',
+      ],
+    },
   },
   modules: [
     '@nuxt/content',
@@ -40,9 +60,6 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
   ],
   components: [{ path: '~/contexts', pathPrefix: false }, '~/components'],
-  elementPlus: {
-    // Element Plus will be automatically configured with dark mode support
-  },
   colorMode: {
     classSuffix: '',
   },
@@ -137,10 +154,10 @@ export default defineNuxtConfig({
       { dir: resolve('src/app/public/images'), baseURL: '/' },
     ],
     prerender: {
+      autoSubfolderIndex: false,
       crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status
       routes: ['/', '/sitemap.xml', '/api/content-urls'],
     },
   },
-  // @ts-expect-error - routeRules imported from route-rules.js has correct shape but TS can't infer literal types
   routeRules,
 });

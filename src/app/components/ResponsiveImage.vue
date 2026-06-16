@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { ClassValue } from 'vue';
+
 type AspectRatio = '1/1' | '2/1' | '1/2' | '16/9'; // Also add them in the template
 export interface Props {
   src?: string
@@ -28,7 +30,7 @@ export interface Props {
    * If you need to override the partOfScreen and set the sizes directly
    */
   sizes?: string
-  class?: unknown
+  class?: ClassValue
 }
 const props = defineProps<Props>();
 
