@@ -124,4 +124,103 @@ jobs:
         run: pnpm run postinstall
 
       - name: Run Tests
-        run: pnpm run ci:test
+        run: pnpm run ci:test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: frontend
+          fail_ci_if_error: true
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
+          retention-days: 1
+
+  sonarqube:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          fetch-depth: 0
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+
+      - name: Check SonarQube reachability
+        id: sonar-check
+        run: |
+          if curl --silent --fail --max-time 5 https://sonar.bach.software/api/system/ping > /dev/null 2>&1; then
+            echo "reachable=true" >> $GITHUB_OUTPUT
+          else
+            echo "reachable=false" >> $GITHUB_OUTPUT
+            echo "SonarQube server not reachable, skipping scan."
+          fi
+
+      - name: SonarQube Scan
+        if: steps.sonar-check.outputs.reachable == 'true'
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonar.bach.software
+
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore src/api/bach.software.sln
+
+      - name: Run Tests with coverage
+        run: dotnet test src/api/bach.software.sln --collect:"XPlat Code Coverage" --results-directory ./coverage-backend
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage-backend
+          flags: backend
+          fail_ci_if_error: true
+
+  trivy-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif

@@ -16,6 +16,23 @@ export default defineConfig({
       '**/playwright/**',
       '**/.output/**',
     ],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      reportsDirectory: './coverage',
+      include: [
+        'src/app/components/**',
+        'src/app/composables/**',
+        'src/app/contexts/**',
+        'src/app/pages/**',
+        'src/app/stores/**',
+        'src/app/utils/**',
+      ],
+      exclude: [
+        '**/*.{test,spec}.{ts,js}',
+        '**/*.nuxt.{test,spec}.{ts,js}',
+      ],
+    },
     projects: [
       {
         resolve: {
