@@ -36,9 +36,13 @@ vi.mock('#app', async (importOriginal) => {
     useRuntimeConfig: mock.useRuntimeConfig,
   };
 });
-vi.mock('#i18n', () => ({
-  useLocaleHead: mock.useLocaleHead,
-}));
+vi.mock('#i18n', async (importOriginal) => {
+  const actual: Record<string, unknown> = await importOriginal();
+  return {
+    ...actual,
+    useLocaleHead: mock.useLocaleHead,
+  };
+});
 
 describe('getMetadataImageUrl', () => {
   it('should render the correct full url of an image', async () => {
