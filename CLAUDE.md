@@ -43,6 +43,21 @@ pnpm ci:playwright:docker:update   # Update snapshots in Docker
 
 > **Important**: `pnpm dev` and `pnpm generate` both auto-run `i18n-extract` first. If translations are out of sync you'll see TypeScript errors — run `pnpm dev` once to re-sync.
 
+## Workflow — Before Finishing Any Change
+
+When completing any code change (feature, fix, refactor):
+
+1. **Run all pipeline checks locally** and fix every error before pushing:
+   ```bash
+   pnpm ci:lint        # must be clean
+   pnpm ci:typecheck   # must be clean
+   pnpm ci:test        # must pass; coverage must not decrease vs. main
+   dotnet test src/api/bach.software.sln   # if backend files changed
+   ```
+2. **Add tests** for any new logic — unit tests for pure functions/composables, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov).
+3. **Screenshot UI changes** using the Playwright browser or the Storybook dev server (`pnpm storybook`) and attach them to the PR so reviewers can see before/after.
+4. **Check the Cloudflare Pages deploy preview** — Cloudflare automatically creates a preview environment for every open PR. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
+
 ## Architecture
 
 This is a hybrid static site with two independent layers:
