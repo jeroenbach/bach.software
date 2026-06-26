@@ -1,0 +1,175 @@
+<script lang="ts" setup>
+import {
+  Dialog,
+  DialogPanel,
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useDebounceFn } from '@vueuse/core';
+import { ref, watch } from 'vue';
+
+interface Props {
+  open: boolean
+}
+
+interface SearchResult {
+  url: string
+  meta?: { title?: string }
+  excerpt: string
+}
+
+const props = defineProps<Props>();
+const emits = defineEmits<{ (e: 'close'): void }>();
+const { locale } = useI18n();
+
+const query = ref('');
+const results = ref<SearchResult[]>([]);
+const loading = ref(false);
+const unavailable = ref(false);
+
+// Module-level cache so we only download the index once per language per session.
+// Pagefind reads <html lang=""> at init time; if the user switches locale the
+// instance is recreated on next open because pfLang won't match.
+let pfInstance: any = null;
+let pfLang: string | null = null;
+
+async function getPagefind(lang: string) {
+  if (pfInstance && pfLang === lang) {
+    return pfInstance;
+  }
+  try {
+    // @ts-expect-error pagefind is generated post-build, not resolvable at compile time
+    const pf = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
+    if (pfLang !== lang) {
+      await pf.options({ language: lang });
+    }
+    pfInstance = pf;
+    pfLang = lang;
+    return pf;
+  }
+  catch {
+    unavailable.value = true;
+    return null;
+  }
+}
+
+const runSearch = useDebounceFn(async (q: string) => {
+  if (!import.meta.client || !q.trim()) {
+    results.value = [];
+    return;
+  }
+  loading.value = true;
+  try {
+    const pf = await getPagefind(locale.value);
+    if (!pf) {
+      return;
+    }
+    const { results: hits } = await pf.search(q);
+    results.value = await Promise.all(hits.slice(0, 8).map((r: any) => r.data()));
+  }
+  finally {
+    loading.value = false;
+  }
+}, 200);
+
+watch(query, q => runSearch(q));
+
+watch(() => props.open, (open) => {
+  if (open) {
+    query.value = '';
+    results.value = [];
+  }
+});
+
+function close() {
+  emits('close');
+}
+</script>
+
+<template>
+  <TransitionRoot :show="open" as="template">
+    <Dialog as="div" class="relative z-50" @close="close">
+      <TransitionChild
+        as="template"
+        enter="duration-150 ease-out"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="duration-100 ease-in"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black/40" aria-hidden="true" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto px-4 pt-[10vh]">
+        <TransitionChild
+          as="template"
+          enter="duration-150 ease-out"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="duration-100 ease-in"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
+          <DialogPanel class="mx-auto max-w-2xl overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-slate-900 dark:ring-white/10">
+            <div class="flex items-center border-b border-gray-200 px-4 dark:border-gray-700">
+              <MagnifyingGlassIcon class="size-5 shrink-0 text-gray-400" aria-hidden="true" />
+              <input
+                v-model="query"
+                class="ml-3 h-14 w-full bg-transparent text-gray-900 placeholder:text-gray-400 focus:outline-none dark:text-gray-100"
+                :placeholder="$t('search.placeholder')"
+                type="search"
+                autocomplete="off"
+                autofocus
+              >
+              <button
+                class="ml-2 shrink-0 rounded p-1 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-200"
+                :aria-label="$t('search.close')"
+                @click="close"
+              >
+                <XMarkIcon class="size-5" />
+              </button>
+            </div>
+
+            <ul v-if="results.length" class="max-h-80 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800">
+              <li v-for="result in results" :key="result.url">
+                <NuxtLink
+                  :to="result.url"
+                  class="flex flex-col px-4 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-slate-800"
+                  @click="close"
+                >
+                  <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    {{ result.meta?.title ?? result.url }}
+                  </span>
+                  <!-- result.excerpt contains <mark> tags from pagefind for keyword highlighting -->
+                  <!-- eslint-disable-next-line vue/no-v-html -->
+                  <span class="search-excerpt mt-1 line-clamp-2 text-sm text-gray-500 dark:text-gray-400" v-html="result.excerpt" />
+                </NuxtLink>
+              </li>
+            </ul>
+
+            <p v-else-if="loading" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+              {{ $t('search.loading') }}
+            </p>
+            <p v-else-if="query && !loading" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+              {{ $t('search.noResults') }}
+            </p>
+            <p v-else-if="unavailable" class="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
+              {{ $t('search.unavailable') }}
+            </p>
+          </DialogPanel>
+        </TransitionChild>
+      </div>
+    </Dialog>
+  </TransitionRoot>
+</template>
+
+<style scoped>
+/* Style pagefind's <mark> highlight tags inside v-html content */
+:deep(.search-excerpt mark) {
+  background-color: transparent;
+  color: inherit;
+  font-weight: 600;
+}
+</style>

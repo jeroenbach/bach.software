@@ -47,6 +47,14 @@
       "languageAiTranslated": "This page has been automatically translated with AI. If you encounter any errors, please let me know!"
     }
   },
+  "search": {
+    "open": "Open search",
+    "close": "Close search",
+    "placeholder": "Search...",
+    "loading": "Searching...",
+    "noResults": "No results found",
+    "unavailable": "Search is not available in development mode. Run the build first."
+  },
   "error": {
     "pageNotFound": "Page not found",
     "pageNotFoundDescription": "The page you are looking for does not exist or has been moved.",

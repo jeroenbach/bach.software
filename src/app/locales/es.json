@@ -47,6 +47,14 @@
       "languageAiTranslated": "Esta página ha sido traducida automáticamente con IA. Si encuentras algún error, ¡házmelo saber!"
     }
   },
+  "search": {
+    "open": "Abrir búsqueda",
+    "close": "Cerrar búsqueda",
+    "placeholder": "Buscar...",
+    "loading": "Buscando...",
+    "noResults": "No se encontraron resultados",
+    "unavailable": "La búsqueda no está disponible en modo desarrollo. Ejecuta primero la compilación."
+  },
   "error": {
     "pageNotFound": "Página no encontrada",
     "pageNotFoundDescription": "La página que buscas no existe o ha sido movida.",
