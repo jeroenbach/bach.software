@@ -53,5 +53,18 @@
     "goBackHome": "Go back home",
     "errorOccurred": "An error occurred",
     "somethingWentWrong": "Something went wrong."
+  },
+  "blog": {
+    "filter": {
+      "label": "Filter:",
+      "all": "All posts",
+      "count": "{count} posts",
+      "noResults": "No posts found for this filter."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "← Prev",
+      "next": "Next →"
+    }
   }
 }

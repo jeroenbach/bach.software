@@ -53,5 +53,18 @@
     "goBackHome": "Terug naar home",
     "errorOccurred": "Er is een fout opgetreden",
     "somethingWentWrong": "Er is iets misgegaan."
+  },
+  "blog": {
+    "filter": {
+      "label": "Filter:",
+      "all": "Alle berichten",
+      "count": "{count} berichten",
+      "noResults": "Geen berichten gevonden voor dit filter."
+    },
+    "pagination": {
+      "label": "Paginering",
+      "previous": "← Vorige",
+      "next": "Volgende →"
+    }
   }
 }
