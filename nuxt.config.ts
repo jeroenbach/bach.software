@@ -27,6 +27,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        // pagefind/pagefind.js is generated post-build and served as a static asset.
+        // Marking it external prevents Rollup from trying to resolve it during the build.
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
     optimizeDeps: {
       include: [
         '@headlessui/vue',
