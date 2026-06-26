@@ -10,8 +10,8 @@ import {
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue';
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { useScroll } from '@vueuse/core';
+import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useEventListener, useScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
 interface Props {
@@ -36,6 +36,15 @@ const emits = defineEmits<{
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
 const open = () => (mobileMenuOpen.value = true);
+
+const searchOpen = ref(false);
+
+useEventListener('keydown', (e: KeyboardEvent) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    searchOpen.value = !searchOpen.value;
+  }
+});
 
 // Animate only during scroll of max 64px (the max height of the header)
 const { y } = useScroll(window);
@@ -67,6 +76,14 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         >
           {{ item.label }}
         </AppLink>
+        <AppButton
+          class="-m-1 flex items-center rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          :title="$t('search.open')"
+          @click="searchOpen = true"
+        >
+          <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
+          <span class="sr-only">{{ $t('search.open') }}</span>
+        </AppButton>
         <LanguageSwitcher
           :language
           @update:language="emits('update:language', $event)"
@@ -145,6 +162,14 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6 flex gap-3">
+                  <AppButton
+                    class="-m-1 flex items-center rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    :title="$t('search.open')"
+                    @click="() => { close(); searchOpen = true; }"
+                  >
+                    <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
+                    <span class="sr-only">{{ $t('search.open') }}</span>
+                  </AppButton>
                   <LanguageSwitcher
                     :language
                     @update:language="emits('update:language', $event)"
@@ -166,6 +191,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
       :key="notification.notificationId"
       v-bind="notification"
     />
+    <SearchModal :open="searchOpen" @close="searchOpen = false" />
   </header>
 </template>
 
