@@ -93,7 +93,15 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           @update:colorMode="emits('update:colorMode', $event)"
         />
       </div>
-      <div class="ml-auto flex lg:hidden">
+      <div class="ml-auto flex items-center gap-1 lg:hidden">
+        <AppButton
+          class="-m-1 flex items-center rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          :title="$t('search.open')"
+          @click="searchOpen = true"
+        >
+          <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
+          <span class="sr-only">{{ $t('search.open') }}</span>
+        </AppButton>
         <AppButton
           type="button"
           class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
@@ -162,14 +170,6 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6 flex gap-3">
-                  <AppButton
-                    class="-m-1 flex items-center rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                    :title="$t('search.open')"
-                    @click="() => { close(); searchOpen = true; }"
-                  >
-                    <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
-                    <span class="sr-only">{{ $t('search.open') }}</span>
-                  </AppButton>
                   <LanguageSwitcher
                     :language
                     @update:language="emits('update:language', $event)"

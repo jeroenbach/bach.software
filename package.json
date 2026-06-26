@@ -14,7 +14,7 @@
     "check-updates": "pnpm dlx npm-check-updates -i --format group",
     "dev-setup": "node development-setup.js",
     "i18n-extract": "vue-i18n-extract report --vueFiles './src/**/*.?(ts|js|vue)' --languageFiles './src/app/locales/*.?(json|yml|yaml|js)' --noEmptyTranslation '*' --add true --remove true",
-    "build": "pnpm run i18n-extract && nuxt build --dotenv .env.local && pnpm storybook:build",
+    "build": "pnpm run i18n-extract && nuxt build --dotenv .env.local && pagefind --source dist && pnpm storybook:build",
     "generate": "pnpm run i18n-extract && nuxt generate --dotenv .env.local && pagefind --source .output/public && pnpm storybook:build",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
