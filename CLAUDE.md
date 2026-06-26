@@ -55,7 +55,13 @@ When completing any code change (feature, fix, refactor):
    dotnet test src/api/bach.software.sln   # if backend files changed
    ```
 2. **Add tests** for any new logic — unit tests for pure functions/composables, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov).
-3. **Screenshot UI changes** using the Playwright browser or the Storybook dev server (`pnpm storybook`) and attach them to the PR so reviewers can see before/after.
+3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`). Commit the PNGs to `.github/screenshots/` on the feature branch and embed them in the PR description using raw GitHub URLs so reviewers can see before/after without leaving GitHub.
+   ```bash
+   # Start dev server, then run a Node script like:
+   # node --input-type=module < scripts/take-screenshots.js
+   # Screenshots go to .github/screenshots/<name>.png
+   # Reference in PR: https://raw.githubusercontent.com/jeroenbach/bach.software/<branch>/.github/screenshots/<name>.png
+   ```
 4. **Check the Cloudflare Pages deploy preview** — Cloudflare automatically creates a preview environment for every open PR. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
 
 ## Architecture
