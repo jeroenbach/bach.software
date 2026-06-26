@@ -36,7 +36,8 @@ const activeCategory = computed(() => route.query.category as string | undefined
 const currentPage = computed(() => Number(route.query.page) || 1);
 
 const categories = computed(() => {
-  if (!allPosts?.value) return [];
+  if (!allPosts?.value)
+    return [];
   const countMap = new Map<string, number>();
   for (const post of allPosts.value) {
     if (post.category) {
@@ -49,8 +50,10 @@ const categories = computed(() => {
 });
 
 const filteredPosts = computed(() => {
-  if (!allPosts?.value) return [];
-  if (!activeCategory.value) return allPosts.value;
+  if (!allPosts?.value)
+    return [];
+  if (!activeCategory.value)
+    return allPosts.value;
   return allPosts.value.filter(p => p.category === activeCategory.value);
 });
 

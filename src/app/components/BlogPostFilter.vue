@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 defineProps<{
-  categories: { name: string; count: number }[]
+  categories: { name: string, count: number }[]
   activeCategory?: string
   totalCount: number
-}>()
+}>();
 
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <template>
