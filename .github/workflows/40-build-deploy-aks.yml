@@ -1,0 +1,154 @@
+name: Build & Deploy to AKS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/api/**'
+      - 'k8s/**'
+      - .github/workflows/40-build-deploy-aks.yml
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+    paths:
+      - 'src/api/**'
+      - 'k8s/**'
+      - .github/workflows/40-build-deploy-aks.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  ACR_NAME: bachreg
+  IMAGE_NAME: bach-software-web
+  AKS_CLUSTER: aks-1-payg-westeu-prod
+  RESOURCE_GROUP: rg-aks-1-payg-westeu-prod
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
+jobs:
+  build-and-push:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: Build & Push Image
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Set image tag
+        id: meta
+        run: |
+          IMAGE=${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TAG="pr-${{ github.event.pull_request.number }}"
+            echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+            echo "tags=${IMAGE}:${TAG}" >> "$GITHUB_OUTPUT"
+          else
+            VERSION=$(cat src/api/version.txt | tr -d '[:space:]')
+            TAG="${VERSION}-${{ github.run_number }}"
+            echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+            {
+              echo "tags<<EOF"
+              echo "${IMAGE}:${TAG}"
+              echo "${IMAGE}:latest"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/api
+          file: ./src/api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=registry,ref=${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+          cache-to: type=inline
+
+  deploy:
+    if: github.event.action != 'closed'
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    name: Deploy to AKS
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_CLUSTER }}
+
+      - name: Set deployment target
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "release=bach-software-web-pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+            echo "host=pr-${{ github.event.pull_request.number }}.api.bach.software" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=bach-software-web" >> "$GITHUB_OUTPUT"
+            echo "host=api.bach.software" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy to AKS
+        run: |
+          helm upgrade --install ${{ steps.target.outputs.release }} ./k8s \
+            --namespace bach-software \
+            --create-namespace \
+            --set image.repository=${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }} \
+            --set image.tag=${{ needs.build-and-push.outputs.image-tag }} \
+            --set plausible.apiToken=${{ secrets.PLAUSIBLE_API_TOKEN }} \
+            --set plausible.apiUrl=${{ secrets.PLAUSIBLE_API_URL }} \
+            --set ingress.host=${{ steps.target.outputs.host }} \
+            --wait --timeout 120s
+
+  teardown:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Remove PR Preview
+    steps:
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ env.RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_CLUSTER }}
+
+      - name: Uninstall preview release
+        run: helm uninstall bach-software-web-pr-${{ github.event.pull_request.number }} --namespace bach-software --ignore-not-found
+
+      - name: Delete PR image from ACR
+        run: |
+          az acr repository delete \
+            --name ${{ env.ACR_NAME }} \
+            --image ${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }} \
+            --yes || echo "No image found for this PR, nothing to delete"

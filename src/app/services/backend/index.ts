@@ -12,8 +12,6 @@ import {
 import { createBackendApiClient } from "./backendApiClient";
 
 export const useApiClient = () => {
-  const config = useRuntimeConfig();
-
   // Create registry and register JSON support
   const parseRegistry = new ParseNodeFactoryRegistry();
   parseRegistry.contentTypeAssociatedFactories.set(
@@ -36,7 +34,7 @@ export const useApiClient = () => {
     parseRegistry,
     writerRegistry,
   );
-  adapter.baseUrl = `${config.public.apiBase}/api`;
+  adapter.baseUrl = '/api';
 
   // Create the API client
   const client = createBackendApiClient(adapter);

@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: ""
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 192Mi
+
+env:
+  aspnetcoreEnvironment: Production
+  dotnetGCConserveMemory: "7"
+
+plausible:
+  apiToken: ""
+  apiUrl: ""
+
+ingress:
+  host: ""
+  className: nginx
+  tls:
+    secretName: bach-software-tls

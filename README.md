@@ -3,9 +3,9 @@
 Bach.Software is a personal blog and portfolio website that showcases modern web development practices. It's built with a hybrid architecture combining:
 
 - **Frontend**: Nuxt 4 + Vue 3 + TypeScript for a fast, interactive user experience
-- **Backend**: .NET 9 Azure Functions for serverless API functionality
+- **Backend**: .NET 9 ASP.NET Core Web API running in Kubernetes (AKS)
 - **Content**: Markdown-based blog posts with rich frontmatter
-- **Deployment**: Static site generation with Azure Static Web Apps
+- **Deployment**: Static site generation for the frontend; containerised API deployed to AKS via Helm
 
 ## 🚀 Quick Start for Developers
 
@@ -14,7 +14,8 @@ Bach.Software is a personal blog and portfolio website that showcases modern web
 - **Node.js** v18+
 - **pnpm** v10+: use [nvm](https://nodejs.org/en/download) to install node v22 and pnpm v10. To install pnpm v10, execute `corepack use pnpm@latest-10`
 - **.NET 9** (for backend development): install [dotnet](https://dotnet.microsoft.com/en-us/download)
-- **Azure Functions Core Tools** (for local API development): install [azure functions core tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp)
+- **Docker + Colima** _(optional, macOS — only needed for manual API deployment)_: `brew install colima docker`
+- **kubectl + Helm** _(optional — only needed for manual deployment to AKS)_: `brew install kubectl helm`
 
 ### Getting Started
 
@@ -27,7 +28,11 @@ pnpm dev-setup
 
 # Start development servers
 pnpm dev              # Frontend (Nuxt + i18n extract)
-pnpm dev:api          # Backend (.NET Azure Functions)
+pnpm dev:api          # Backend (ASP.NET Core Web API on http://localhost:8080)
+
+# Run the API in Docker locally
+pnpm docker:api:build # Build Docker image (starts Colima automatically)
+pnpm docker:api:run   # Run Docker image on port 8080 with .env.local
 
 # Run tests
 pnpm test             # Unit tests (watch mode)
@@ -56,7 +61,8 @@ pnpm preview          # Preview the generated site locally
 | **Content**            | Nuxt Content             | Git-based CMS, markdown with Vue components                |
 | **State Management**   | Pinia                    | Vue-native, TypeScript-first, great devtools               |
 | **Testing**            | Vitest + Playwright      | Fast unit tests, reliable E2E testing                      |
-| **Backend**            | .NET 9 + Azure Functions | Familiar stack, serverless benefits, excellent tooling     |
+| **Backend**            | .NET 9 + ASP.NET Core    | Familiar stack, containerised, runs on Kubernetes (AKS)    |
+| **Infrastructure**     | Kubernetes + Helm        | Portable deployments, rolling updates, easy rollbacks      |
 
 ## 📁 Project Structure
 
@@ -72,10 +78,18 @@ bach.software/
 │   └── utils/                 # 🛠️ Helper functions
 │
 ├── src/api/                   # ⚡ Backend API (.NET)
-│   ├── Bach.Software.API/     # 🚀 Azure Functions & endpoints
+│   ├── Bach.Software.Web/     # 🚀 ASP.NET Core Web API & endpoints
 │   ├── Bach.Software.Application/  # 💼 Business logic
-│   ├── Bach.Software.Infrastructure/ # 🔌 External services
-│   └── Bach.Software.Tests/   # 🧪 Backend tests
+│   ├── Bach.Software.Infrastructure/ # 🔌 External services (Plausible)
+│   ├── Bach.Software.Tests/   # 🧪 Backend tests
+│   ├── Dockerfile             # 🐳 Container image definition
+│   ├── Makefile               # 🛠️ Build & deploy commands
+│   └── version.txt            # 🔖 Current API version
+│
+├── k8s/                       # ☸️ Kubernetes / Helm chart
+│   ├── Chart.yaml             # Chart metadata
+│   ├── values.yaml            # Default Helm values
+│   └── templates/             # Deployment, Service, Ingress, Secret
 │
 ├── tests/                     # 🎭 E2E tests
 ├── docs/                      # 📚 Documentation
@@ -301,12 +315,51 @@ pnpm storybook         # Start Storybook dev server
 
 ## 🚀 Deployment
 
-The site uses Azure Static Web Apps with automatic deployment:
+### Frontend (Static Site)
 
-1. **Push to main** triggers automatic deployment
-2. **Build process**: i18n extraction → Nuxt generate → Storybook build
-3. **Static files** deployed to CDN
-4. **Azure Functions** handle API requests
+Pushing to `main` triggers automatic deployment via GitHub Actions:
+
+1. i18n extraction → Nuxt generate → Storybook build
+2. Static files deployed to CDN
+
+### API (Kubernetes / AKS)
+
+The API is containerised and deployed to AKS via Helm. CI/CD runs automatically on push to `main` when files under `src/api/**` or `k8s/**` change.
+
+#### Manual deployment from your machine
+
+The `package.json` scripts are the primary entry point; they delegate to `src/api/Makefile` under the hood.
+
+| Command | What it does |
+|---------|-------------|
+| `pnpm deploy:api` | Full pipeline: build image → push to ACR → deploy to AKS |
+| `pnpm deploy:api:push` | Push an already-built local image to ACR (skips Docker build) |
+| `pnpm deploy:api:redeploy` | Re-deploy to AKS using the image already in ACR — no Docker required |
+| `pnpm deploy:api:rollback` | Roll back to a specific image tag — prompts for `TAG` |
+
+`deploy:api` and `docker:api:build/run` start Colima automatically if it isn't running.
+
+##### Rollback example
+
+```bash
+# Roll back to a previously deployed image
+make -C src/api rollback TAG=1.0.0-42
+```
+
+#### Makefile targets (`src/api/Makefile`)
+
+You can also invoke the Makefile directly if you prefer.
+
+| Target | What it does |
+|--------|-------------|
+| `make build` | Builds the Docker image for `linux/amd64` and tags it with `<version>-<BUILD_NUMBER>` and `latest`. Uses layer cache from ACR to speed up builds. |
+| `make push-only` | Logs into ACR (`az acr login`) and pushes the locally-built image. Use this when the image is already built and you just want to publish it. |
+| `make push` | `build` + `push-only` — the most common full build-and-publish flow. |
+| `make deploy` | `push` + Helm deploy — builds, pushes, and deploys to AKS in one step. |
+| `make redeploy` | `push-only` + Helm deploy — skips the local Docker build; useful when you only rebuilt the image with `make build` separately. |
+| `make rollback TAG=<tag>` | Deploys an existing image tag already in ACR without building anything. Requires `TAG` (e.g. `1.0.0-42`). |
+
+The Makefile reads `version.txt` for the version and falls back to `BUILD_NUMBER=local` when run outside CI. It also auto-loads `.env` from the repo root (via `-include ../../.env`) so `PLAUSIBLE_API_TOKEN` and `PLAUSIBLE_API_URL` are picked up automatically.
 
 ## 📚 Additional Resources
 
@@ -321,4 +374,6 @@ The site uses Azure Static Web Apps with automatic deployment:
 | Vitest | https://vitest.dev/ |
 | Playwright | https://playwright.dev/ |
 | Azure Static Web Apps | https://learn.microsoft.com/en-us/azure/static-web-apps/ |
-| Azure Functions (.NET) | https://learn.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide |
+| ASP.NET Core Minimal APIs | https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis |
+| Azure Kubernetes Service | https://learn.microsoft.com/en-us/azure/aks/ |
+| Helm | https://helm.sh/docs/ |

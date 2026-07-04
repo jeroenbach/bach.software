@@ -52,7 +52,7 @@ When completing any code change (feature, fix, refactor):
    pnpm ci:lint        # must be clean
    pnpm ci:typecheck   # must be clean
    pnpm ci:test        # must pass; coverage must not decrease vs. main
-   dotnet test src/api/bach.software.sln   # if backend files changed
+   dotnet test src/api/Bach.Software.sln   # if backend files changed
    ```
 2. **Add tests** for any new logic — unit tests for pure functions/composables, component tests for `src/app/components/`, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov) — check this locally via `pnpm ci:test` coverage output where possible; if local coverage comparison isn't possible, wait for the PR and check the Codecov status/comment there instead.
 3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`). Commit the PNGs to `.github/screenshots/` on the feature branch and embed them in the PR description using raw GitHub URLs so reviewers can see before/after without leaving GitHub.
@@ -152,7 +152,7 @@ Clean architecture:
 - `Bach.Software.Core` — shared utilities.
 - `Bach.Software.Tests` — xUnit tests.
 
-Run backend tests: `dotnet test src/api/bach.software.sln`
+Run backend tests: `dotnet test src/api/Bach.Software.sln`
 
 ### ESLint
 

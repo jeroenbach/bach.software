@@ -8,6 +8,7 @@ export default antfu({
     'src/api/**',
     'src/app/services/backend/**',
     '**/*.md',
+    'k8s/**',
   ],
   rules: {
     // Allow throwing non-Error objects in test files
