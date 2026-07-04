@@ -54,7 +54,7 @@ When completing any code change (feature, fix, refactor):
    pnpm ci:test        # must pass; coverage must not decrease vs. main
    dotnet test src/api/bach.software.sln   # if backend files changed
    ```
-2. **Add tests** for any new logic — unit tests for pure functions/composables, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov).
+2. **Add tests** for any new logic — unit tests for pure functions/composables, component tests for `src/app/components/`, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov) — check this locally via `pnpm ci:test` coverage output where possible; if local coverage comparison isn't possible, wait for the PR and check the Codecov status/comment there instead.
 3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`). Commit the PNGs to `.github/screenshots/` on the feature branch and embed them in the PR description using raw GitHub URLs so reviewers can see before/after without leaving GitHub.
    ```bash
    # Start dev server, then run a Node script like:
@@ -63,6 +63,10 @@ When completing any code change (feature, fix, refactor):
    # Reference in PR: https://raw.githubusercontent.com/jeroenbach/bach.software/<branch>/.github/screenshots/<name>.png
    ```
 4. **Check the Cloudflare Pages deploy preview** — Cloudflare automatically creates a preview environment for every open PR. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
+
+## Remembering Instructions
+
+Whenever the user says "remember this" (or similar) about an instruction or preference, add it to this CLAUDE.md file in the appropriate section (create one if needed), then commit it. Keep CLAUDE.md as one single file — do not split it into partials.
 
 ## Architecture
 
@@ -92,10 +96,12 @@ i18n translation keys live in `src/app/locales/*.json`. Run `pnpm i18n-extract` 
 
 ### Context / Presentational Component Pattern
 
-This is the central architectural pattern:
+This is the central architectural pattern — a strict separation between presentational and context components:
 
-- **Presentational components** (`src/app/components/`) — pure UI: props in, events out. No router, no stores, no API calls. Testable in isolation and documented in Storybook.
-- **Context components/composables** (`src/app/contexts/`) — smart layer: fetch data, hold state, wire up external dependencies, then pass data down to presentational components. Named with the `Context` suffix (`AppHeaderContext.vue`, `useBlogPostsContext.ts`, etc.).
+- **Presentational components** (`src/app/components/`) — pure UI: **props in, emits out, nothing else**. They must cause **no side effects**: no router, no stores, no API calls, no access to shared state. Testable in isolation and documented in Storybook.
+- **Context components/composables** (`src/app/contexts/`) — the smart layer: **all API calls and all access to shared state live here**. They fetch data, hold state, wire up external dependencies, then pass data down to presentational components via props. Always named with the `Context` suffix (`AppHeaderContext.vue`, `useBlogPostsContext.ts`, etc.) and placed in the context folder.
+
+**Nesting via slots instead of prop drilling:** compose components at the **page or context level** by placing child components into slots, rather than passing lots of props down through intermediate components. For example: `AppHeaderContext` renders `AppHeader` and mounts `SearchContext` inside one of `AppHeader`'s slots. `AppHeader` stays presentational (it just provides the slot), and `SearchContext` gets its own data itself — no prop drilling through the header.
 
 ### Content & Data Flow
 
@@ -104,6 +110,21 @@ This is the central architectural pattern:
 Author data is joined into post results inside `useBlogPostsContext` — the content itself only stores `authorName`, and the context resolves the full `Author` object by querying `authors_{locale}`.
 
 URLs for posts and pages are computed by helpers in `locales.config.ts` (`createBlogPostUrl`, `createPageUrl`) and stored as `url` on the content item. A content item's `url` takes precedence over the path-based URL, and the page component redirects (301) if the current path doesn't match.
+
+### Reusable Content Snippets (shared text in products/posts/pages)
+
+Text that repeats across multiple content markdown files (e.g. the same care instructions, shipping info, or size guide in many products) must **not** be copy-pasted into each `.md` file. Instead, use shared snippets:
+
+- Shared text lives as its own markdown file in `src/app/content/{locale}/snippets/` (one folder per locale, translated like all other content, exposed as a `snippets_{locale}` collection in `content.config.ts`).
+- Content files include a snippet through an MDC block component in `src/app/components/content/` (global Nuxt Content components), e.g. a `ContentSnippet.vue` that queries the `snippets_{locale}` collection for the given name and renders it with `<ContentRenderer>`:
+
+  ```md
+  ::content-snippet{name="care-instructions"}
+  ::
+  ```
+
+- When editing repeated text, edit the snippet once — never the individual products/posts/pages.
+- The `snippets` collection and `ContentSnippet.vue` component don't exist yet — create them following the pattern above the first time a snippet is needed.
 
 ### Metadata & SEO
 
