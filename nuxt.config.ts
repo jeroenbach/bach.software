@@ -14,6 +14,10 @@ export default defineNuxtConfig({
         script: [{ innerHTML: `console.log("development environment");` }],
       },
     },
+    image: {
+      // In dev, fall back to the default ipx provider so images are transformed on the fly instead.
+      provider: 'ipx',
+    },
   },
   imports: {
     dirs: ['./composables', './utils', './contexts', './types'],
@@ -127,6 +131,9 @@ export default defineNuxtConfig({
     quality: 80,
     format: ['avif', 'webp', 'jpeg', 'jpg'],
     screens,
+    // cloudflare-pages preset has node=false and static=false, so @nuxt/image
+    // defaults to provider "none". Force ipxStatic for build-time optimization.
+    provider: 'ipxStatic',
   },
   i18n: {
     baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'https://bach.software',
