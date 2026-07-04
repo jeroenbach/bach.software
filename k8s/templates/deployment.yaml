@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bach-software-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: bach-software-web
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: bach-software-web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: bach-software-web
+    spec:
+      containers:
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: {{ .Values.env.aspnetcoreEnvironment | quote }}
+            - name: DOTNET_GCConserveMemory
+              value: {{ .Values.env.dotnetGCConserveMemory | quote }}
+            - name: PLAUSIBLE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bach-software-plausible
+                  key: api-token
+            {{- if .Values.plausible.apiUrl }}
+            - name: PLAUSIBLE_API_URL
+              value: {{ .Values.plausible.apiUrl | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

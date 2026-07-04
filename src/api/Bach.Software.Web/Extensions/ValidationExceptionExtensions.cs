@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bach.Software.API.Extensions;
+namespace Bach.Software.Web.Extensions;
 public static class ValidationExceptionExtensions
 {
     public static ValidationProblemDetails ToValidationProblemDetails(this ValidationException exception)

@@ -144,7 +144,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: 'https://bach.software', // can be overridden by NUXT_PUBLIC_BASE_URL environment variable
-      apiBase: '', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '', // baked in at build time, e.g. per-PR preview API host
       plausibleDomain: '', // can be overridden by NUXT_PUBLIC_PLAUSIBLE_DOMAIN environment variable
     },
   },

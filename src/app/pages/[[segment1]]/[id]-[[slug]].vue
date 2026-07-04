@@ -28,6 +28,19 @@ if (configuredPath.value && path !== configuredPath.value) {
 }
 
 useMetadata(pageType, (page?.value ?? post?.value)!, alternateUrls);
+
+if (isPost && post?.value) {
+  useReadProgressTracking(
+    {
+      wordCount: post.value.readingTime?.words ?? 0,
+      readingTime: post.value.readingTime?.time ?? 0,
+    },
+    {
+      author: post.value.authorName ?? '',
+      category: post.value.category ?? '',
+    },
+  );
+}
 </script>
 
 <template>
