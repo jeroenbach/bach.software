@@ -1,5 +1,5 @@
 <template>
-  <main class="pb-12 pt-6 text-base lg:py-20 lg:text-lg">
+  <main class="pb-12 pt-6 text-base lg:py-20 lg:text-lg" data-pagefind-body>
     <slot />
   </main>
 </template>

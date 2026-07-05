@@ -71,6 +71,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           {{ item.label }}
           <ArrowTopRightOnSquareIcon v-if="item.external" class="h-4 w-4" aria-hidden="true" />
         </AppLink>
+        <slot name="searchButton" />
         <LanguageSwitcher
           :language
           @update:language="emits('update:language', $event)"
@@ -80,7 +81,8 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           @update:colorMode="emits('update:colorMode', $event)"
         />
       </div>
-      <div class="ml-auto flex lg:hidden">
+      <div class="ml-auto flex items-center gap-1 lg:hidden">
+        <slot name="searchButton" />
         <AppButton
           type="button"
           class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
@@ -172,6 +174,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
       :key="notification.notificationId"
       v-bind="notification"
     />
+    <slot name="searchModal" />
   </header>
 </template>
 

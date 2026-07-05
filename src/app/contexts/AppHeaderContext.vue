@@ -26,6 +26,17 @@ const navigation = computed<NavigationItem[]>(() => {
   ];
 });
 
+const {
+  isOpen: searchOpen,
+  open: openSearch,
+  close: closeSearch,
+  query: searchQuery,
+  results: searchResults,
+  loading: searchLoading,
+  unavailable: searchUnavailable,
+  setQuery: setSearchQuery,
+} = useSearchContext();
+
 // Watch locale changes and refresh navigation
 watch(locale, async () => {
   await refreshNavigation();
@@ -53,5 +64,20 @@ async function setLocaleAndShowNotification(locale: LocaleStructure['code']) {
     :language="locale"
     @update:colorMode="updateColorMode"
     @update:language="setLocaleAndShowNotification"
-  />
+  >
+    <template #searchButton>
+      <SearchButton @click="openSearch" />
+    </template>
+    <template #searchModal>
+      <SearchModal
+        :open="searchOpen"
+        :query="searchQuery"
+        :results="searchResults"
+        :loading="searchLoading"
+        :unavailable="searchUnavailable"
+        @update:query="setSearchQuery"
+        @close="closeSearch"
+      />
+    </template>
+  </AppHeader>
 </template>

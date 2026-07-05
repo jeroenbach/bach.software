@@ -47,6 +47,14 @@
       "languageAiTranslated": "Diese Seite wurde automatisch mit KI übersetzt. Wenn Sie Fehler feststellen, lassen Sie es mich bitte wissen!"
     }
   },
+  "search": {
+    "open": "Suche öffnen",
+    "close": "Suche schließen",
+    "placeholder": "Suchen...",
+    "loading": "Suche läuft...",
+    "noResults": "Keine Ergebnisse gefunden",
+    "unavailable": "Die Suche ist im Entwicklungsmodus nicht verfügbar. Führen Sie zuerst den Build aus."
+  },
   "error": {
     "pageNotFound": "Seite nicht gefunden",
     "pageNotFoundDescription": "Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.",

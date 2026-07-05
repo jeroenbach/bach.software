@@ -6,6 +6,10 @@
 .cache
 dist
 
+# Pagefind index (generated post-build, not committed)
+src/app/public/pagefind/*
+!src/app/public/pagefind/.gitkeep
+
 # Node dependencies
 node_modules
 
