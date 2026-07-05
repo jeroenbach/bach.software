@@ -11,4 +11,11 @@ public interface IAnalyticsService
     /// <param name="url">The url of the page we want to check</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the number of page reads.</returns>
     Task<PageReads> GetPageReads(string url);
+
+    /// <summary>
+    /// Interface for analytics service to get page likes.
+    /// </summary>
+    /// <param name="url">The url of the page we want to check</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the number of page likes.</returns>
+    Task<PageLikes> GetPageLikes(string url);
 }

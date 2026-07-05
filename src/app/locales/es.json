@@ -11,6 +11,8 @@
     "Software": "Bach.Software"
   },
   "read": "{n} lectura | {n} lecturas",
+  "likes": "{n} me gusta | {n} me gusta",
+  "likeThisArticle": "Me gusta este artículo",
   "plausible": {
     "current": {
       "text": "Actualmente {status} incluyendo tus visitas.",

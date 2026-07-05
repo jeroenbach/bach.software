@@ -13,9 +13,21 @@ interface Props {
   post?: BlogPost
   baseUrl: string
   pageReads?: PageReads
+  /**
+   * The number of likes to display for the post
+   */
+  likes?: number | null
+  /**
+   * Whether the current user has already liked the post
+   */
+  hasLiked?: boolean
 }
 
 const { pageReads } = defineProps<Props>();
+
+defineEmits<{
+  like: []
+}>();
 /**
  * We've seen that the threeQuarterRead property gives a much higher count than the read property.
  * Probably this is the actual time most users take to read the article.
@@ -43,11 +55,12 @@ const readCount = computed(() => pageReads?.threeQuarterRead);
           <div
             v-if="isNotNullOrUndefined(readCount) && readCount > 0"
             :title="$t('read', { n: readCount })"
-            class="flex h-8 items-center gap-1"
+            class="me-4 flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
             <span>{{ readCount }}</span>
           </div>
+          <LikeButton :count="likes" :liked="hasLiked" @like="$emit('like')" />
           <aside class="ms-auto flex h-8 items-center gap-2">
             <span>{{ $t("Share") }}:</span>
             <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />

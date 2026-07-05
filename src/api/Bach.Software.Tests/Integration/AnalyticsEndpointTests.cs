@@ -51,4 +51,43 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
+
+    [Fact]
+    public async Task GetPageLikes_WithValidUrl_ReturnsOk()
+    {
+        // Arrange
+        var testUrl = "https://bach.software/test";
+
+        // Mock the external HTTP call to Plausible API
+        _factory.MockHttpHandler
+            .When("*")
+            .Respond("application/json", JsonSerializer.Serialize(new
+            {
+                results = new[]
+                {
+                    new { metrics = new[] { 7 }, dimensions = new[] { "like" } },
+                },
+            }));
+
+        // Act
+        var response = await _client.GetAsync($"/api/analytics/pageLikes?url={Uri.EscapeDataString(testUrl)}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("\"likes\":7", content);
+    }
+
+    [Fact]
+    public async Task GetPageLikes_WithInvalidUrl_ReturnsBadRequest()
+    {
+        // Arrange
+        var invalidUrl = "not-a-valid-url";
+
+        // Act
+        var response = await _client.GetAsync($"/api/analytics/pageLikes?url={Uri.EscapeDataString(invalidUrl)}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

@@ -70,6 +70,47 @@ public class PlausibleService : IAnalyticsService
         };
     }
 
+    public async Task<PageLikes> GetPageLikes(string url)
+    {
+        using var scope = _logger.BeginScope(new Dictionary<string, object> { { "url", url } });
+
+        var uri = new Uri(url);
+        var domain = uri.Host;
+        var relativeUrl = uri.PathAndQuery;
+
+        var payload = new
+        {
+            site_id = domain,
+            metrics = new[] { "visitors" }, // Get the unique number of Like events
+            date_range = "all",
+            filters = new[]{
+                new List<object> { "contains", "event:page", new[] { relativeUrl } },
+                new List<object> { "is", "event:goal", new[] { "like" } },
+            },
+            dimensions = new[] { "event:goal" },
+        };
+
+        var jsonPayload = JsonSerializer.Serialize(payload);
+        _logger.LogInformation("Payload: {jsonPayload}", jsonPayload);
+
+        var response = await SendRequest(jsonPayload);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        _logger.LogInformation("Response: {responseContent}", responseContent);
+
+        var queryResult = JsonSerializer.Deserialize<QueryResult>(responseContent);
+        if (queryResult == null)
+        {
+            throw new InvalidOperationException("Failed to deserialize the response content.");
+        }
+
+        var resultsDict = queryResult.Results.ToDictionary(x => x.Dimensions.First(), x => x.Metrics.First());
+
+        return new PageLikes
+        {
+            Likes = resultsDict.GetValueOrDefault("like"),
+        };
+    }
+
     private async Task<HttpResponseMessage> SendRequest(string jsonPayload)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(jsonPayload);

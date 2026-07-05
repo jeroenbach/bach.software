@@ -7,6 +7,15 @@ import { type AdditionalDataHolder, type ApiError, type Parsable, type ParseNode
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {PageLikes}
+ */
+// @ts-ignore
+export function createPageLikesFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoPageLikes;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {PageReads}
  */
 // @ts-ignore
@@ -39,6 +48,16 @@ export function createValidationProblemDetails_errorsFromDiscriminatorValue(pars
 // @ts-ignore
 export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoValidationProblemDetails;
+}
+/**
+ * The deserialization information for the current model
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoPageLikes(pageLikes: Partial<PageLikes> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+        "likes": n => { pageLikes.likes = n.getNumberValue(); },
+    }
 }
 /**
  * The deserialization information for the current model
@@ -92,6 +111,16 @@ export function deserializeIntoValidationProblemDetails(validationProblemDetails
 export function deserializeIntoValidationProblemDetails_errors(validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
     }
+}
+export interface PageLikes extends AdditionalDataHolder, Parsable {
+    /**
+     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
+     */
+    additionalData?: Record<string, unknown>;
+    /**
+     * The likes property
+     */
+    likes?: number | null;
 }
 export interface PageReads extends AdditionalDataHolder, Parsable {
     /**
@@ -148,6 +177,17 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      * The type property
      */
     type?: string | null;
+}
+/**
+ * Serializes information the current object
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializePageLikes(writer: SerializationWriter, pageLikes: Partial<PageLikes> | undefined | null = {}) : void {
+    if (pageLikes) {
+        writer.writeNumberValue("likes", pageLikes.likes);
+        writer.writeAdditionalData(pageLikes.additionalData);
+    }
 }
 /**
  * Serializes information the current object
