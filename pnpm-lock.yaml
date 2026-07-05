@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@bach.software/vue-dynamic-form':
+        specifier: 0.4.0
+        version: 0.4.0(@vee-validate/rules@4.15.1(vue@3.5.35(typescript@6.0.3)))(type-fest@5.7.0)(vee-validate@4.15.1(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
       '@headlessui/vue':
         specifier: 1.7.23
         version: 1.7.23(vue@3.5.35(typescript@6.0.3))
@@ -438,6 +441,14 @@ packages:
   '@babel/types@8.0.0':
     resolution: {integrity: sha512-K8ponJDxBwDHigkeFqaqT5wLGl4bTlwMafR8k7b5CPxr6Ww+UG9ls8Yx6Tcpboxu97eeGVEEyKcHmEyOwN1vSw==}
     engines: {node: ^22.18.0 || >=24.11.0}
+
+  '@bach.software/vue-dynamic-form@0.4.0':
+    resolution: {integrity: sha512-YtIbKGRpcJZo6ygc2pB0Y/jyT35g1+kny7tqJw3Ds0RuWSe7fRau4sy/yQqhcuVZ5JilFdhP/Iz3eGZmCRxxFw==}
+    peerDependencies:
+      '@vee-validate/rules': '>=4.15'
+      type-fest: '>=4.8.3'
+      vee-validate: '>=4.15'
+      vue: '>=3.5'
 
   '@bcoe/v8-coverage@1.0.2':
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
@@ -3624,6 +3635,9 @@ packages:
     resolution: {integrity: sha512-SSByXfEjhzPn8gXdEdgpYqpLMPSkLUH2HVE0GxZfOtNsJ0GgOHQs0g9T67ZZ1z0kTELLKdtOtYrzrbv9+ffF7g==}
     peerDependencies:
       vue: '>=3.5.18'
+
+  '@vee-validate/rules@4.15.1':
+    resolution: {integrity: sha512-2TGXq2MYt21nT8ysuxyFY/LBVQDcMPKn1hY0w3uIDmG333vzBkOtXAylmvrS93AsJ7N5coHMJjcCGG4JxCO2hQ==}
 
   '@vercel/nft@1.10.2':
     resolution: {integrity: sha512-w+WyX5Ulmj4dtTZrxaulqrjaLZHSbnPzx75SJsTNYmotKsqn1JlLnDJa+lz5hn90HJofhl/2MAtw0mCrgM3qYw==}
@@ -7605,6 +7619,10 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
+  type-fest@4.41.0:
+    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
+    engines: {node: '>=16'}
+
   type-fest@5.7.0:
     resolution: {integrity: sha512-1URUxUqfHFM1c+zfSPsa3gnkO7Aq21qyH75SIduNYz4SzY964rn1X2vCMQaHSHhktiw+0kPa2iyb6PUpXqB6Vg==}
     engines: {node: '>=20'}
@@ -7824,6 +7842,11 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  vee-validate@4.15.1:
+    resolution: {integrity: sha512-DkFsiTwEKau8VIxyZBGdO6tOudD+QoUBPuHj3e6QFqmbfCRj1ArmYWue9lEp6jLSWBIw4XPlDLjFIZNLdRAMSg==}
+    peerDependencies:
+      vue: ^3.4.26
 
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
@@ -8578,6 +8601,13 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 8.0.0
       '@babel/helper-validator-identifier': 8.0.0
+
+  '@bach.software/vue-dynamic-form@0.4.0(@vee-validate/rules@4.15.1(vue@3.5.35(typescript@6.0.3)))(type-fest@5.7.0)(vee-validate@4.15.1(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))':
+    dependencies:
+      '@vee-validate/rules': 4.15.1(vue@3.5.35(typescript@6.0.3))
+      type-fest: 5.7.0
+      vee-validate: 4.15.1(vue@3.5.35(typescript@6.0.3))
+      vue: 3.5.35(typescript@6.0.3)
 
   '@bcoe/v8-coverage@1.0.2': {}
 
@@ -11344,6 +11374,12 @@ snapshots:
       hookable: 6.1.1
       unhead: 2.1.15
       vue: 3.5.35(typescript@6.0.3)
+
+  '@vee-validate/rules@4.15.1(vue@3.5.35(typescript@6.0.3))':
+    dependencies:
+      vee-validate: 4.15.1(vue@3.5.35(typescript@6.0.3))
+    transitivePeerDependencies:
+      - vue
 
   '@vercel/nft@1.10.2(rollup@4.62.0)':
     dependencies:
@@ -16359,6 +16395,8 @@ snapshots:
 
   type-fest@2.19.0: {}
 
+  type-fest@4.41.0: {}
+
   type-fest@5.7.0:
     dependencies:
       tagged-tag: 1.0.0
@@ -16579,6 +16617,12 @@ snapshots:
       react: 19.2.7
 
   util-deprecate@1.0.2: {}
+
+  vee-validate@4.15.1(vue@3.5.35(typescript@6.0.3)):
+    dependencies:
+      '@vue/devtools-api': 7.7.9
+      type-fest: 4.41.0
+      vue: 3.5.35(typescript@6.0.3)
 
   vfile-location@5.0.3:
     dependencies:
