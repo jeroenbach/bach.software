@@ -41,6 +41,12 @@ if (isPost && post?.value) {
     },
   );
 }
+
+const tocLinks = computed(() => post?.value?.body?.toc?.links ?? []);
+const headingIds = computed(() =>
+  tocLinks.value.flatMap(link => [link.id, ...(link.children?.map(child => child.id) ?? [])]),
+);
+const { activeId } = useScrollspy(headingIds);
 </script>
 
 <template>
@@ -49,6 +55,26 @@ if (isPost && post?.value) {
       <ContentRenderer :value="page" />
     </AppProse>
     <ContentRenderer v-else-if="page" :value="page" />
-    <BlogPost v-else-if="post" :post="post" :baseUrl="config.public.baseUrl" :pageReads="pageReads" />
+    <div v-else-if="post" class="xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,65ch)_minmax(0,1fr)]">
+      <div class="min-w-0 xl:col-start-2">
+        <BlogPost :post="post" :baseUrl="config.public.baseUrl" :pageReads="pageReads">
+          <template #tableOfContents>
+            <TableOfContents
+              v-if="tocLinks.length"
+              :links="tocLinks"
+              collapsible
+              class="mt-6 xl:hidden"
+            />
+          </template>
+        </BlogPost>
+      </div>
+      <aside v-if="tocLinks.length" class="hidden xl:block">
+        <TableOfContents
+          :links="tocLinks"
+          :activeId="activeId"
+          class="sticky top-24 ms-12 max-h-[calc(100vh-8rem)] overflow-y-auto pe-4"
+        />
+      </aside>
+    </div>
   </PageContent>
 </template>

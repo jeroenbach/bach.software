@@ -61,3 +61,13 @@ html.dark {
     }
   }
 }
+
+/** Smooth scrolling for in-page anchors (table of contents). The offset below
+    the sticky header comes from the scroll-padding-top set in AppHeader.vue */
+html {
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
