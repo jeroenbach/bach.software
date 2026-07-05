@@ -4,18 +4,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddBachSoftwareServices(builder.Configuration);
-
-// Add OpenAPI/Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddBachSoftwareOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Serves the OpenAPI document at /openapi/v1.json (used by Kiota, see src/app/services/backend/README.md)
+    app.MapOpenApi();
 }
 
 app.UseCors();

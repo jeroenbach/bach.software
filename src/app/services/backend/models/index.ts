@@ -16,15 +16,6 @@ export function createPageReadsFromDiscriminatorValue(parseNode: ParseNode | und
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ProblemDetails_extensions}
- */
-// @ts-ignore
-export function createProblemDetails_extensionsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoProblemDetails_extensions;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {ProblemDetails}
  */
 // @ts-ignore
@@ -43,15 +34,6 @@ export function createValidationProblemDetails_errorsFromDiscriminatorValue(pars
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
- * @returns {ValidationProblemDetails_extensions}
- */
-// @ts-ignore
-export function createValidationProblemDetails_extensionsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
-    return deserializeIntoValidationProblemDetails_extensions;
-}
-/**
- * Creates a new instance of the appropriate class based on discriminator value
- * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {ValidationProblemDetails}
  */
 // @ts-ignore
@@ -66,6 +48,8 @@ export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: 
 export function deserializeIntoPageReads(pageReads: Partial<PageReads> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "halfRead": n => { pageReads.halfRead = n.getNumberValue(); },
+        "opened": n => { pageReads.opened = n.getNumberValue(); },
+        "peeked": n => { pageReads.peeked = n.getNumberValue(); },
         "quarterRead": n => { pageReads.quarterRead = n.getNumberValue(); },
         "read": n => { pageReads.read = n.getNumberValue(); },
         "threeQuarterRead": n => { pageReads.threeQuarterRead = n.getNumberValue(); },
@@ -79,7 +63,6 @@ export function deserializeIntoPageReads(pageReads: Partial<PageReads> | undefin
 export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "detail": n => { problemDetails.detail = n.getStringValue(); },
-        "extensions": n => { problemDetails.extensions = n.getObjectValue<ProblemDetails_extensions>(createProblemDetails_extensionsFromDiscriminatorValue); },
         "instance": n => { problemDetails.instance = n.getStringValue(); },
         "status": n => { problemDetails.status = n.getNumberValue(); },
         "title": n => { problemDetails.title = n.getStringValue(); },
@@ -91,20 +74,10 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
-export function deserializeIntoProblemDetails_extensions(problemDetails_extensions: Partial<ProblemDetails_extensions> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-    }
-}
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
 export function deserializeIntoValidationProblemDetails(validationProblemDetails: Partial<ValidationProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
         "detail": n => { validationProblemDetails.detail = n.getStringValue(); },
         "errors": n => { validationProblemDetails.errors = n.getObjectValue<ValidationProblemDetails_errors>(createValidationProblemDetails_errorsFromDiscriminatorValue); },
-        "extensions": n => { validationProblemDetails.extensions = n.getObjectValue<ValidationProblemDetails_extensions>(createValidationProblemDetails_extensionsFromDiscriminatorValue); },
         "instance": n => { validationProblemDetails.instance = n.getStringValue(); },
         "status": n => { validationProblemDetails.status = n.getNumberValue(); },
         "title": n => { validationProblemDetails.title = n.getStringValue(); },
@@ -120,15 +93,6 @@ export function deserializeIntoValidationProblemDetails_errors(validationProblem
     return {
     }
 }
-/**
- * The deserialization information for the current model
- * @returns {Record<string, (node: ParseNode) => void>}
- */
-// @ts-ignore
-export function deserializeIntoValidationProblemDetails_extensions(validationProblemDetails_extensions: Partial<ValidationProblemDetails_extensions> | undefined = {}) : Record<string, (node: ParseNode) => void> {
-    return {
-    }
-}
 export interface PageReads extends AdditionalDataHolder, Parsable {
     /**
      * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
@@ -138,6 +102,14 @@ export interface PageReads extends AdditionalDataHolder, Parsable {
      * The halfRead property
      */
     halfRead?: number | null;
+    /**
+     * The opened property
+     */
+    opened?: number | null;
+    /**
+     * The peeked property
+     */
+    peeked?: number | null;
     /**
      * The quarterRead property
      */
@@ -161,10 +133,6 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      */
     detail?: string | null;
     /**
-     * The extensions property
-     */
-    extensions?: ProblemDetails_extensions | null;
-    /**
      * The instance property
      */
     instance?: string | null;
@@ -181,12 +149,6 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      */
     type?: string | null;
 }
-export interface ProblemDetails_extensions extends AdditionalDataHolder, Parsable {
-    /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
-}
 /**
  * Serializes information the current object
  * @param writer Serialization writer to use to serialize this model
@@ -195,6 +157,8 @@ export interface ProblemDetails_extensions extends AdditionalDataHolder, Parsabl
 export function serializePageReads(writer: SerializationWriter, pageReads: Partial<PageReads> | undefined | null = {}) : void {
     if (pageReads) {
         writer.writeNumberValue("halfRead", pageReads.halfRead);
+        writer.writeNumberValue("opened", pageReads.opened);
+        writer.writeNumberValue("peeked", pageReads.peeked);
         writer.writeNumberValue("quarterRead", pageReads.quarterRead);
         writer.writeNumberValue("read", pageReads.read);
         writer.writeNumberValue("threeQuarterRead", pageReads.threeQuarterRead);
@@ -209,7 +173,6 @@ export function serializePageReads(writer: SerializationWriter, pageReads: Parti
 export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}) : void {
     if (problemDetails) {
         writer.writeStringValue("detail", problemDetails.detail);
-        writer.writeObjectValue<ProblemDetails_extensions>("extensions", problemDetails.extensions, serializeProblemDetails_extensions);
         writer.writeStringValue("instance", problemDetails.instance);
         writer.writeNumberValue("status", problemDetails.status);
         writer.writeStringValue("title", problemDetails.title);
@@ -222,21 +185,10 @@ export function serializeProblemDetails(writer: SerializationWriter, problemDeta
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProblemDetails_extensions(writer: SerializationWriter, problemDetails_extensions: Partial<ProblemDetails_extensions> | undefined | null = {}) : void {
-    if (problemDetails_extensions) {
-        writer.writeAdditionalData(problemDetails_extensions.additionalData);
-    }
-}
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
 export function serializeValidationProblemDetails(writer: SerializationWriter, validationProblemDetails: Partial<ValidationProblemDetails> | undefined | null = {}) : void {
     if (validationProblemDetails) {
         writer.writeStringValue("detail", validationProblemDetails.detail);
         writer.writeObjectValue<ValidationProblemDetails_errors>("errors", validationProblemDetails.errors, serializeValidationProblemDetails_errors);
-        writer.writeObjectValue<ValidationProblemDetails_extensions>("extensions", validationProblemDetails.extensions, serializeValidationProblemDetails_extensions);
         writer.writeStringValue("instance", validationProblemDetails.instance);
         writer.writeNumberValue("status", validationProblemDetails.status);
         writer.writeStringValue("title", validationProblemDetails.title);
@@ -254,16 +206,6 @@ export function serializeValidationProblemDetails_errors(writer: SerializationWr
         writer.writeAdditionalData(validationProblemDetails_errors.additionalData);
     }
 }
-/**
- * Serializes information the current object
- * @param writer Serialization writer to use to serialize this model
- */
-// @ts-ignore
-export function serializeValidationProblemDetails_extensions(writer: SerializationWriter, validationProblemDetails_extensions: Partial<ValidationProblemDetails_extensions> | undefined | null = {}) : void {
-    if (validationProblemDetails_extensions) {
-        writer.writeAdditionalData(validationProblemDetails_extensions.additionalData);
-    }
-}
 export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
      * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
@@ -277,10 +219,6 @@ export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError
      * The errors property
      */
     errors?: ValidationProblemDetails_errors | null;
-    /**
-     * The extensions property
-     */
-    extensions?: ValidationProblemDetails_extensions | null;
     /**
      * The instance property
      */
@@ -299,12 +237,6 @@ export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError
     type?: string | null;
 }
 export interface ValidationProblemDetails_errors extends AdditionalDataHolder, Parsable {
-    /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
-}
-export interface ValidationProblemDetails_extensions extends AdditionalDataHolder, Parsable {
     /**
      * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
      */

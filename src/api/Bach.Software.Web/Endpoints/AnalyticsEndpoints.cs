@@ -1,16 +1,10 @@
-using System.Net;
-using Bach.Software.Web.Extensions;
+using System.ComponentModel;
 using Bach.Software.Application.Interfaces;
 using Bach.Software.Application.Validation;
+using Bach.Software.Web.Extensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
-using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Models = Bach.Software.Application.Models;
 
 namespace Bach.Software.Web.Endpoints;
@@ -20,44 +14,38 @@ public static class AnalyticsEndpoints
     public static void MapAnalyticsEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/api/analytics/pageReads", GetPageReads)
-            .WithName("GetPageReads")
-            .WithOpenApi(operation =>
-            {
-                operation.OperationId = "pageReads";
-                operation.Tags = new List<OpenApiTag> { new() { Name = "Analytics" } };
-                operation.Summary = "Get read analytics for a page";
-                operation.Description = "Returns the read analytics for a given page.";
-
-                operation.Parameters[0].Description = "The URL of the page to get read analytics for.";
-                operation.Parameters[0].Required = true;
-
-                return operation;
-            });
+            .WithName("pageReads")
+            .WithTags("Analytics")
+            .WithSummary("Get read analytics for a page")
+            .WithDescription("Returns the read analytics for a given page.")
+            .ProducesProblem(StatusCodes.Status500InternalServerError);
     }
 
-    private static async Task<IResult> GetPageReads(string url, IAnalyticsService analyticsService, ILogger<Program> logger)
+    private static async Task<Results<Ok<Models.PageReads>, BadRequest<ValidationProblemDetails>, ProblemHttpResult>> GetPageReads(
+        [Description("The URL of the page to get read analytics for.")] string url,
+        IAnalyticsService analyticsService,
+        ILogger<Program> logger)
     {
         try
         {
             var validator = new UrlInputValidator();
             await validator.ValidateAndThrowAsync(new Models.UrlInput { Url = url });
 
-            var read = await analyticsService.GetPageReads(url!);
-            return Results.Ok(read);
+            var read = await analyticsService.GetPageReads(url);
+            return TypedResults.Ok(read);
         }
         catch (ValidationException ex)
         {
-            var validationProblemDetails = ex.ToValidationProblemDetails();
-            return Results.BadRequest(validationProblemDetails);
+            return TypedResults.BadRequest(ex.ToValidationProblemDetails());
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An unexpected error occurred while processing the request.");
 
-            return Results.Problem(
+            return TypedResults.Problem(
                 title: "Internal Server Error occurred",
                 detail: "An unexpected error occurred while processing your request.",
-                statusCode: (int)HttpStatusCode.InternalServerError);
+                statusCode: StatusCodes.Status500InternalServerError);
         }
     }
 }
