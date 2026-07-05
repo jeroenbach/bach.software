@@ -109,4 +109,23 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
+
+    [Fact]
+    public async Task GetPageLikes_WhenPlausibleResponseCannotBeDeserialized_ReturnsInternalServerError()
+    {
+        // Arrange
+        // Use a dedicated factory: the shared MockHttpHandler keeps its responders for the
+        // lifetime of the class fixture, so this responder would leak into other tests
+        using var factory = new CustomWebApplicationFactory();
+        factory.MockHttpHandler
+            .When("*")
+            .Respond("application/json", "null");
+        var client = factory.CreateClient();
+
+        // Act
+        var response = await client.GetAsync($"/api/analytics/pageLikes?url={Uri.EscapeDataString("https://bach.software/test")}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+    }
 }

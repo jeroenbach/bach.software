@@ -20,6 +20,7 @@ describe('usePageLikesContext', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    useRuntimeConfig().public.plausibleDomain = '';
   });
 
   it('should fetch the like count for the current page', async () => {
@@ -55,6 +56,19 @@ describe('usePageLikesContext', () => {
 
     expect(likes.value).toBe(43);
     expect(mock.useTrackEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('should query the likes on the configured plausible domain', async () => {
+    useRuntimeConfig().public.plausibleDomain = 'plausible.bach.software';
+
+    const { likes } = usePageLikesContext();
+
+    await vi.waitFor(() => expect(likes.value).toBe(42));
+    expect(mock.getPageLikes).toHaveBeenCalledWith({
+      queryParameters: {
+        url: expect.stringContaining('https://plausible.bach.software/'),
+      },
+    });
   });
 
   it('should remember a previous like of the visitor', async () => {
