@@ -2,6 +2,8 @@ import type { Collections } from '@nuxt/content';
 import { createBlogPostUrl } from '~/locales.config';
 import { toMap } from '~/utils/toMap';
 
+export const BLOG_PAGE_SIZE = 5;
+
 /**
  * Fetches blog posts data based on the provided options.
  *

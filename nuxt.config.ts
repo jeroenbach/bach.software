@@ -19,6 +19,10 @@ export default defineNuxtConfig({
       provider: 'ipx',
     },
   },
+  image: {
+    // In dev, fall back to the default ipx provider so images are transformed on the fly instead.
+    provider: 'ipx',
+  },
   imports: {
     dirs: ['./composables', './utils', './contexts', './types'],
   },

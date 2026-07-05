@@ -53,5 +53,18 @@
     "goBackHome": "Retour à l'accueil",
     "errorOccurred": "Une erreur s'est produite",
     "somethingWentWrong": "Quelque chose s'est mal passé."
+  },
+  "blog": {
+    "filter": {
+      "label": "Filtrer :",
+      "all": "Tous les articles",
+      "count": "{count} articles",
+      "noResults": "Aucun article trouvé pour ce filtre."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "← Préc",
+      "next": "Suiv →"
+    }
   }
 }
