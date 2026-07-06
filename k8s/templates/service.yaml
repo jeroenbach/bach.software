@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: bach-software-web
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: bach-software-web
+    app: {{ .Release.Name }}
   ports:
     - protocol: TCP
       port: 80
