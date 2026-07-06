@@ -43,10 +43,7 @@ if (isPost && post?.value) {
 }
 
 const tocLinks = computed(() => post?.value?.body?.toc?.links ?? []);
-const headingIds = computed(() =>
-  tocLinks.value.flatMap(link => [link.id, ...(link.children?.map(child => child.id) ?? [])]),
-);
-const { activeId } = useScrollspy(headingIds);
+const { activeId } = useScrollspy(() => flattenTocLinkIds(tocLinks.value));
 </script>
 
 <template>

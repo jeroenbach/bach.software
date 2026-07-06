@@ -1,6 +1,7 @@
+import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ref } from 'vue';
 
+import { defineComponent, nextTick, ref } from 'vue';
 import { useScrollspy } from './useScrollspy';
 
 const mock = vi.hoisted(() => ({
@@ -90,5 +91,28 @@ describe('useScrollspy', () => {
 
     expect(useScrollspy(['one']).activeId.value).toBeUndefined();
     expect(useScrollspy(['one'], { offset: 200 }).activeId.value).toBe('one');
+  });
+
+  it('re-evaluates after the component using it has mounted', async () => {
+    const component = defineComponent({
+      setup() {
+        // The heading only exists in the DOM after mounting, like the
+        // ContentRenderer output on a blog post page
+        const { activeId } = useScrollspy(['one']);
+        return { activeId };
+      },
+      template: '<div>{{ activeId }}</div>',
+    });
+
+    const w = mount(component);
+    createHeading('one', 50);
+    await nextTick();
+
+    expect(w.vm.activeId).toBeUndefined(); // the heading didn't exist during setup
+
+    w.unmount();
+    const w2 = mount(component);
+    await nextTick();
+    expect(w2.vm.activeId).toBe('one'); // onMounted picked it up
   });
 });

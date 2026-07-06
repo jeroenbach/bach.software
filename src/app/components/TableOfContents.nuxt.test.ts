@@ -1,20 +1,12 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { describe, expect, it } from 'vitest';
 
+import * as stories from './TableOfContents.stories';
+
 import TableOfContents from './TableOfContents.vue';
 
-const links = [
-  { id: 'intro', text: 'Introduction', depth: 2 },
-  {
-    id: 'setup',
-    text: 'Setup',
-    depth: 2,
-    children: [
-      { id: 'requirements', text: 'Requirements', depth: 3 },
-    ],
-  },
-  { id: 'conclusion', text: 'Conclusion', depth: 2 },
-];
+// Reuse the story fixtures so the tests cover the same scenarios as Storybook
+const { links } = stories.Default.args;
 
 describe('tableOfContents', () => {
   it('renders a link for every heading, including nested children', async () => {
@@ -22,35 +14,37 @@ describe('tableOfContents', () => {
 
     const anchors = w.findAll('a');
     expect(anchors.map(a => a.attributes('href'))).toEqual([
-      '#intro',
-      '#setup',
-      '#requirements',
+      '#what-is-plausible-io',
+      '#self-hosting-vs-hosted-solution',
+      '#hosting-costs',
+      '#maintenance',
       '#conclusion',
     ]);
     expect(anchors.map(a => a.text())).toEqual([
-      'Introduction',
-      'Setup',
-      'Requirements',
+      'What is Plausible.io?',
+      'Self-hosting vs. Hosted Solution',
+      'Hosting costs',
+      'Maintenance',
       'Conclusion',
     ]);
   });
 
   it('highlights only the active link', async () => {
     const w = await mountSuspended(TableOfContents, {
-      props: { links, activeId: 'requirements' },
+      props: { ...stories.WithActiveSection.args },
     });
 
     const active = w.findAll('a[aria-current="location"]');
     expect(active).toHaveLength(1);
-    expect(active[0]!.attributes('href')).toBe('#requirements');
+    expect(active[0]!.attributes('href')).toBe(`#${stories.WithActiveSection.args.activeId}`);
   });
 
   it('emits select with the heading id when a link is clicked', async () => {
     const w = await mountSuspended(TableOfContents, { props: { links } });
 
-    await w.find('a[href="#setup"]').trigger('click');
+    await w.find('a[href="#conclusion"]').trigger('click');
 
-    expect(w.emitted('select')).toEqual([['setup']]);
+    expect(w.emitted('select')).toEqual([['conclusion']]);
   });
 
   it('renders a disclosure that is collapsed by default when collapsible', async () => {
@@ -74,7 +68,7 @@ describe('tableOfContents', () => {
     await details.trigger('toggle');
     expect(details.attributes('open')).toBeDefined();
 
-    await w.find('a[href="#intro"]').trigger('click');
+    await w.find('a[href="#what-is-plausible-io"]').trigger('click');
     expect(details.attributes('open')).toBeUndefined();
   });
 });
