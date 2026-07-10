@@ -1,0 +1,132 @@
+/**
+ * Design tokens for bach.software
+ * =============================================================================
+ * This file is consumed by the ui-designer agent to keep HTML prototypes
+ * consistent with the real application. Inline these custom properties in the
+ * prototype's <style> block and use them (or the matching Tailwind utilities)
+ * instead of inventing new values.
+ *
+ * SOURCE OF TRUTH: this project uses Tailwind CSS v4 (CSS-based config in
+ * src/app/assets/css/tailwind.css). It deliberately relies on the Tailwind v4
+ * DEFAULT theme for spacing, typography scale, radii, shadows, and
+ * breakpoints; the only theme extensions are the em-based text sizes below.
+ * Where a category is "Tailwind default", that is a documented fact about the
+ * app, not a gap in this file. Do not invent replacement values.
+ *
+ * Colors come from the Tailwind default palette (gray, slate, stone, sky,
+ * plus the alert colors). Tailwind v4 defines them in oklch; the hex values
+ * below are the standard close equivalents, good enough for prototypes.
+ * Dark mode is class-based: `html.dark` (custom variant in tailwind.css),
+ * with `color-scheme: dark` set globally in app.vue.
+ */
+
+:root {
+  /* ==========================================================================
+   * Colors — semantic (light mode value / see dark section below)
+   * ======================================================================== */
+
+  /* Page backgrounds (AppBackground variants: 'white' | 'gray') */
+  --color-bg-page: #ffffff;            /* bg-white */
+  --color-bg-page-alt: #f9fafb;        /* bg-gray-50 (gray background variant, portfolio band) */
+
+  /* Text */
+  --color-text-body: #374151;          /* text-gray-700 — default body text (AppBackground) */
+  --color-text-heading: #111827;       /* text-gray-900 — headings (AppHero h1, AppHeader) */
+  --color-text-secondary: #4b5563;     /* text-gray-600 — subtitles (AppHero h2) */
+  --color-text-muted: #6b7280;         /* text-gray-500 — dates, metadata, CV labels */
+
+  /* Accent — sky is the single accent color of the app (links, hero intro,
+     share buttons). Gradients go from the darker to the lighter shade. */
+  --color-accent: #0284c7;             /* sky-600 */
+  --color-accent-light: #0ea5e9;       /* sky-500 (gradient end, e.g. ShareOn, AppLink color="blue") */
+  --color-accent-hover: #0369a1;       /* sky-700 */
+
+  /* Alert / notification severities (AlertBar, NotificationMessage):
+     light bg + default text in light mode */
+  --color-alert-success-bg: #f0fdf4;   /* green-50 */
+  --color-alert-error-bg: #fef2f2;     /* red-50 */
+  --color-alert-warning-bg: #fefce8;   /* yellow-50 */
+  --color-alert-info-bg: #eff6ff;      /* blue-50 */
+
+  /* Borders and separators */
+  --color-border: #e5e7eb;             /* border-gray-200 (header border, blog post meta bar) */
+  --color-border-input: #e2e8f0;       /* slate-200 (form inputs in prose, main.scss) */
+
+  /* Code blocks (prose-custom utility in tailwind.css) */
+  --color-code-bg: #fafaf9;            /* stone-50 */
+  --color-code-text: #9ca3af;          /* gray-400 */
+  --color-code-highlight: #fefce8;     /* yellow-50 (shiki highlighted lines, main.scss) */
+
+  /* ==========================================================================
+   * Colors — dark mode (html.dark)
+   * The app does NOT use a plain inversion; these are the actual pairings.
+   * ======================================================================== */
+  --color-dark-bg-page: #0f172a;       /* dark:bg-slate-900 (white variant) */
+  --color-dark-bg-page-alt: #1f2937;   /* dark:bg-gray-800 (gray variant, alert bg) */
+  --color-dark-text-body: #d1d5db;     /* dark:text-gray-300 */
+  --color-dark-text-heading: #f9fafb;  /* dark:text-gray-50 */
+  --color-dark-text-secondary: #9ca3af;/* dark:text-gray-400 */
+  --color-dark-accent: #38bdf8;        /* dark:text-sky-400 */
+  --color-dark-border: #6b7280;        /* dark:border-gray-500 */
+  --color-dark-code-bg: #334155;       /* slate-700 (prose-invert pre bg) */
+  --color-dark-input-bg: #475569;      /* slate-600 (form inputs) */
+
+  /* ==========================================================================
+   * Typography
+   * Font family: Tailwind default sans stack — NO custom webfont is loaded.
+   * ======================================================================== */
+  --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Type scale: Tailwind v4 defaults (text-xs 0.75rem ... text-4xl 2.25rem).
+     Project extensions from src/app/assets/css/tailwind.css — em-based sizes
+     that scale with the parent (used inside prose, e.g. BlogPostSummary): */
+  --text-xs-em: 0.75em;
+  --text-sm-em: 0.875em;
+
+  /* Weights actually used: font-medium (500) for headings-in-prose and
+     emphasis, font-semibold (600) for author names / error titles. Long-form
+     content uses the @tailwindcss/typography plugin via AppProse
+     (prose prose-custom max-w-prose dark:prose-invert lg:prose-lg,
+     prose-h1:font-medium). */
+
+  /* ==========================================================================
+   * Spacing
+   * Tailwind v4 default scale (base --spacing: 0.25rem). No custom values.
+   * Common rhythms in this app: p-4/px-4 lg:px-6 (PageContent gutters),
+   * py-12 lg:py-20 (footer), py-24 lg:py-28 (hero), gap-4/gap-8/gap-12.
+   * ======================================================================== */
+  --spacing: 0.25rem;
+
+  /* ==========================================================================
+   * Border radii — Tailwind defaults; the ones this app actually uses:
+   * ======================================================================== */
+  --radius-input: 4px;                 /* form inputs in prose (main.scss) */
+  --radius-lg: 0.5rem;                 /* rounded-lg — portfolio cards */
+  --radius-2xl: 1rem;                  /* rounded-2xl — blog post images */
+  --radius-full: calc(infinity * 1px); /* rounded-full — chips, avatars, share buttons */
+
+  /* ==========================================================================
+   * Shadows — Tailwind defaults; the ones this app actually uses:
+   * shadow-sm + ring-1 ring-black/5 (portfolio cards, dark: ring-white/15),
+   * drop-shadow-md (blog post summary images).
+   * ======================================================================== */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --ring-card: 0 0 0 1px rgb(0 0 0 / 0.05);
+
+  /* ==========================================================================
+   * Breakpoints — Tailwind v4 defaults (no customization). The app designs
+   * mostly with max-md (stacking) and lg (desktop layout).
+   * ======================================================================== */
+  --breakpoint-sm: 40rem;   /* 640px */
+  --breakpoint-md: 48rem;   /* 768px */
+  --breakpoint-lg: 64rem;   /* 1024px */
+  --breakpoint-xl: 80rem;   /* 1280px */
+  --breakpoint-2xl: 96rem;  /* 1536px */
+
+  /* ==========================================================================
+   * Layout containers
+   * ======================================================================== */
+  --container-page: 80rem;  /* max-w-7xl — header nav width */
+  --container-prose: 65ch;  /* max-w-prose — article/content column */
+}
