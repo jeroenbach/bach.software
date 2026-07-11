@@ -10,7 +10,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue';
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useScroll } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
@@ -32,6 +32,8 @@ const emits = defineEmits<{
   (e: 'update:colorMode', value: ColorMode): void
   (e: 'update:language', value: LocalesCode): void
 }>();
+
+const linkTarget = (item: NavigationItem) => item.external ? '_blank' : '_self';
 
 const mobileMenuOpen = ref(false);
 const close = () => (mobileMenuOpen.value = false);
@@ -63,9 +65,11 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           v-for="item in navigation"
           :key="item.label"
           :to="item.to"
-          class="text-sm font-semibold leading-6"
+          :target="linkTarget(item)"
+          class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6"
         >
           {{ item.label }}
+          <ArrowTopRightOnSquareIcon v-if="item.external" class="h-4 w-4" aria-hidden="true" />
         </AppLink>
         <LanguageSwitcher
           :language
@@ -138,10 +142,12 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                     v-for="item in navigation"
                     :key="item.label"
                     :to="item.to"
-                    class="-mx-3 block rounded-lg px-3 py-2 font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    :target="linkTarget(item)"
+                    class="-mx-3 flex items-center gap-x-1 rounded-lg px-3 py-2 font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-gray-800"
                     @click="close"
                   >
                     {{ item.label }}
+                    <ArrowTopRightOnSquareIcon v-if="item.external" class="h-4 w-4" aria-hidden="true" />
                   </AppLink>
                 </div>
                 <div class="space-y-2 py-6 flex gap-3">

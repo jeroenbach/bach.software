@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
 import type { LocaleStructure } from '~/locales.config';
+import type { NavigationItem } from '~/types/NavigationItem';
 import { defaultLocale } from '~/locales.config';
 
 interface Props {
@@ -11,7 +12,19 @@ const { border } = defineProps<Props>();
 const { notifications, add } = useNotificationStore();
 const { locale, setLocale, t } = useI18n();
 
-const { data: navigation, refresh: refreshNavigation } = await useContentNavigationContext();
+const { data: contentNavigation, refresh: refreshNavigation } = await useContentNavigationContext();
+
+const navigation = computed<NavigationItem[]>(() => {
+  const items = contentNavigation.value ?? [];
+  return [
+    ...items,
+    {
+      label: t('OpenSource.VueDynamicForm'),
+      to: 'https://vue-dynamic-form.bach.software/',
+      external: true,
+    },
+  ];
+});
 
 // Watch locale changes and refresh navigation
 watch(locale, async () => {

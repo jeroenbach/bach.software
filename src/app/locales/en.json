@@ -66,5 +66,8 @@
       "previous": "← Prev",
       "next": "Next →"
     }
+  },
+  "OpenSource": {
+    "VueDynamicForm": "Vue Dynamic Form"
   }
 }
