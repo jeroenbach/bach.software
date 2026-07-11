@@ -2,8 +2,9 @@
 import type { MetadataType } from '~/types/MetadataType';
 import { postsPaths } from '~/locales.config';
 
-const { path, params } = useRoute();
-const { pathSegments } = params as { pathSegments: string[] };
+const route = useRoute();
+const { path } = route;
+const { pathSegments } = route.params as { pathSegments: string[] };
 
 const isRoot = !pathSegments?.length;
 const isBlogRoot = postsPaths.has(`/${pathSegments?.[0]}`) || isRoot; // temporary show the blog root on root path
@@ -29,8 +30,12 @@ if (page.value.url && page.value.url !== path && path !== '/') { // temporary sh
 const metadataType: MetadataType = isBlogRoot ? 'blog' : 'page';
 useMetadata(metadataType, page.value, alternateUrls, allPosts?.value);
 
-const { activeCategory, currentPage, categories, totalFilteredCount, paginatedPosts }
-  = useBlogPostFilter(allPosts ?? ref(undefined));
+const { blogPageSize } = useAppConfig();
+const activeCategory = computed(() => route.query.category as string | undefined);
+const currentPage = computed(() => Number(route.query.page) || 1);
+
+const { categories, filteredPosts } = useBlogPostCategoryFilter(allPosts ?? ref(undefined), activeCategory);
+const { totalCount, paginatedItems: paginatedPosts } = useBlogPostPagination(filteredPosts, currentPage, blogPageSize);
 </script>
 
 <template>
@@ -44,8 +49,8 @@ const { activeCategory, currentPage, categories, totalFilteredCount, paginatedPo
       <BlogPostFilter
         v-if="categories.length > 0"
         :categories="categories"
-        :activeCategory="activeCategory"
-        :totalCount="totalFilteredCount"
+        :query="route.query"
+        :totalCount="totalCount"
         class="mt-10 sm:mt-16"
         :class="{ 'mx-auto max-w-prose': page?.enableProse }"
       />
@@ -64,9 +69,9 @@ const { activeCategory, currentPage, categories, totalFilteredCount, paginatedPo
       </BlogPosts>
       <BlogPostPagination
         :page="currentPage"
-        :pageSize="BLOG_PAGE_SIZE"
-        :totalCount="totalFilteredCount"
-        :activeCategory="activeCategory"
+        :pageSize="blogPageSize"
+        :totalCount="totalCount"
+        :query="route.query"
         :class="{ 'mx-auto max-w-prose': page?.enableProse }"
       />
     </template>

@@ -1,22 +1,20 @@
 <script lang="ts" setup>
-const { page, pageSize, totalCount, activeCategory } = defineProps<{
+import type { LocationQuery } from 'vue-router';
+
+const { page, pageSize, totalCount, query = {} } = defineProps<{
   page: number
   pageSize: number
   totalCount: number
-  activeCategory?: string
+  query?: LocationQuery
 }>();
-
-const route = useRoute();
 
 const totalPages = computed(() => Math.ceil(totalCount / pageSize));
 
 function pageQuery(pageNum: number) {
-  const query: Record<string, string> = {};
-  if (activeCategory)
-    query.category = activeCategory;
-  if (pageNum > 1)
-    query.page = String(pageNum);
-  return { path: route.path, query };
+  // Keep all other query parameters (filters etc.), only change the page
+  const rest: LocationQuery = { ...query };
+  delete rest.page;
+  return pageNum > 1 ? { query: { ...rest, page: String(pageNum) } } : { query: rest };
 }
 
 const pagesToShow = computed<(number | '...')[]>(() => {

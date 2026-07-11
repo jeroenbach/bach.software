@@ -28,7 +28,7 @@ const formattedDatePublished = computed(() => formatDate(post?.datePublished));
     <div class="flex flex-col items-start justify-between">
       <div class="flex items-center gap-x-4">
         <time
-          class="text-xs-em text-gray-500 dark:text-gray-500"
+          class="text-xs-em text-gray-500 dark:text-gray-400"
           :datetime="post.datePublished"
         >
           {{ formattedDatePublished }}
