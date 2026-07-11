@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import type { RouteLocationRaw } from 'vue-router';
+
 export interface Props {
-  to?: string
+  to?: RouteLocationRaw
   text?: string
   color?: 'gray' | 'blue' | 'default'
   target?: '_blank' | '_self' | '_parent' | '_top'

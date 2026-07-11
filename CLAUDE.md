@@ -55,18 +55,24 @@ When completing any code change (feature, fix, refactor):
    dotnet test src/api/Bach.Software.sln   # if backend files changed
    ```
 2. **Add tests** for any new logic — unit tests for pure functions/composables, component tests for `src/app/components/`, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov) — check this locally via `pnpm ci:test` coverage output where possible; if local coverage comparison isn't possible, wait for the PR and check the Codecov status/comment there instead.
-3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`). Commit the PNGs to `.github/screenshots/` on the feature branch and embed them in the PR description using raw GitHub URLs so reviewers can see before/after without leaving GitHub.
+3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`), and show the screenshots directly in the chat for review. Screenshots are local-only scratch output (`.github/screenshots/`, gitignored) — never commit them and never add them to the PR description.
    ```bash
-   # Start dev server, then run a Node script like:
+   # Start dev server, then run:
    # node --input-type=module < scripts/take-screenshots.js
-   # Screenshots go to .github/screenshots/<name>.png
-   # Reference in PR: https://raw.githubusercontent.com/jeroenbach/bach.software/<branch>/.github/screenshots/<name>.png
+   # Screenshots go to .github/screenshots/<name>.png — read them and show them in chat.
    ```
-4. **Check the Cloudflare Pages deploy preview** — Cloudflare automatically creates a preview environment for every open PR. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
+4. **Check the Cloudflare Pages deploy preview instead of adding screenshots to the PR.** Cloudflare automatically creates a preview environment for every open PR; that's what reviewers use to check the change live, not static images in the PR body. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
+
+   **Always surface the Cloudflare Pages preview URL when you report a PR — not just the GitHub PR URL.** The URL is not posted as a commit status or bot comment; it is printed by the `Deploy Job` step of `20-build-deploy-playwright.yml` in the `cloudflare/wrangler-action` output (`✨ Deployment alias URL: ...`). Retrieve it from that job's logs once the Deploy Job succeeds. The deploy aliases PRs with `--branch=pr-<PR-number>`, so the **stable preview URL for a PR is `https://pr-<PR-number>.bach.software`** (e.g. PR #1 → `https://pr-1.bach.software`). It always points at the latest deploy of that PR. Include this URL in your reply to the user and in the PR description, and when a change touches specific pages, link directly to them on the preview host (e.g. `.../products`).
 
 ## Remembering Instructions
 
-Whenever the user says "remember this" (or similar) about an instruction or preference, add it to this CLAUDE.md file in the appropriate section (create one if needed), then commit it. Keep CLAUDE.md as one single file — do not split it into partials.
+Whenever the user says "remember this" (or similar) about an instruction or preference, add it to this CLAUDE.md file in the appropriate section (create one if needed). Keep CLAUDE.md as one single file — do not split it into partials.
+
+## Interactive vs Autonomous Sessions
+
+- **Working together (interactive session)**: only make the changes — do **not** commit or push; the user handles git themselves.
+- **Working autonomously (e.g. GitHub Actions, scheduled agents, or when explicitly asked to finish a task end-to-end)**: follow the full workflow above, including commits, screenshots, and the PR.
 
 ## Architecture
 
@@ -102,6 +108,16 @@ This is the central architectural pattern — a strict separation between presen
 - **Context components/composables** (`src/app/contexts/`) — the smart layer: **all API calls and all access to shared state live here**. They fetch data, hold state, wire up external dependencies, then pass data down to presentational components via props. Always named with the `Context` suffix (`AppHeaderContext.vue`, `useBlogPostsContext.ts`, etc.) and placed in the context folder.
 
 **Nesting via slots instead of prop drilling:** compose components at the **page or context level** by placing child components into slots, rather than passing lots of props down through intermediate components. For example: `AppHeaderContext` renders `AppHeader` and mounts `SearchContext` inside one of `AppHeader`'s slots. `AppHeader` stays presentational (it just provides the slot), and `SearchContext` gets its own data itself — no prop drilling through the header.
+
+**Links and routing in presentational components:** distinguish *rendering* navigation from *performing* navigation:
+
+- Presentational components **may render** links (`AppLink`/`ChipLink`/`NuxtLink`) with a `to` prop — a rendered `<a href>` is declarative output, like rendered text; the navigation side effect is initiated by the user/browser, not the component. Real anchors are required anyway (SEO, middle-click, no-JS). Never replace a link with a click-emit that makes the context call `router.push` — navigation is content to render, not an action to emit.
+- Presentational components **may not call** `useRoute()`, `useRouter()`, or `navigateTo()` — reading the route is ambient shared state and breaks the props-in/emits-out contract. Anything route-derived (current query, active filter, current page) must be read at the page/context level and passed down as a prop.
+- When building link targets that modify the current URL's query string, pass the **whole `route.query`** down as a `query: LocationQuery` prop (not individual values like `activeCategory`), spread it, and change only the relevant key — this preserves unrelated query parameters. Omit `path` in the `to` object (`{ query: ... }` resolves relative to the current route). A filter link must also drop `page` so changing a filter resets pagination.
+
+### App-level Configuration Constants
+
+App-wide, non-secret tuning values (page sizes, display toggles, etc.) belong in `src/app/app.config.ts` via `defineAppConfig`, read with `useAppConfig()` at the page/context level — never exported as constants from contexts or composables. Composables should receive such values as parameters so they stay generic (e.g. `useBlogPostPagination(items, page, pageSize)` gets `blogPageSize` from `useAppConfig()` in the page).
 
 ### Content & Data Flow
 

@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import type { Props } from '~/components/AppLink.vue';
+import type { Props as AppLinkProps } from '~/components/AppLink.vue';
+
+interface Props extends AppLinkProps {
+  chipColor?: 'gray' | 'blue'
+}
 
 const props = defineProps<Props>();
 </script>
 
 <template>
   <AppLink v-bind="props">
-    <AppChip
-      class="bg-linear-to-r from-gray-100 to-gray-50 font-medium hover:from-gray-200 hover:to-gray-100 dark:from-gray-800 dark:to-gray-700 dark:hover:from-gray-700 dark:hover:to-gray-600"
-    >
+    <AppChip :color="chipColor">
       <slot> {{ text }} </slot>
     </AppChip>
   </AppLink>
