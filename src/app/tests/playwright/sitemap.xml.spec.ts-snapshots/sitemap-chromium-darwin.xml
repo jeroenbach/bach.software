@@ -110,4 +110,11 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://bach.software/es/articulos/5-conversion-de-array-a-map-en-typescript-con-seguridad-de-tipos"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/5-array-to-map-conversion-in-typescript-with-type-safety"/>
   </url>
+  <url>
+    <loc>https://bach.software/posts/6-complex-forms-without-the-complexity:-introducing-vue-dynamic-form</loc>
+    <lastmod>2026-07-03T19:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bach.software/posts/6-complex-forms-without-the-complexity:-introducing-vue-dynamic-form"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/6-complex-forms-without-the-complexity:-introducing-vue-dynamic-form"/>
+  </url>
 </urlset>
