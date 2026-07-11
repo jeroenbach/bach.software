@@ -5,5 +5,5 @@ partial: true
 ---
 
 Conçu dans Figma et construit avec Vue.js, Nuxt.js et Tailwind CSS.
-Déployé via Azure Static Web App et Azure Functions.
-Les analyses du site web sont alimentées par Plausible Analytics, déployé en utilisant Azure Kubernetes Service.
+Déployé via Cloudflare Pages et Cloudflare Workers, l'API étant hébergée sur Azure Kubernetes Service.
+Les analyses du site web sont alimentées par Plausible Analytics, également déployé en utilisant Azure Kubernetes Service.
