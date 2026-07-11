@@ -33,7 +33,7 @@ test.describe('Structured Data Tests', () => {
             'url': 'https://bach.software/pages/about',
             'image': {
               '@type': 'ImageObject',
-              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+              'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
               'height': '768',
               'width': '768',
             },
@@ -42,7 +42,7 @@ test.describe('Structured Data Tests', () => {
             '@type': 'Organization',
             '@id': 'https://bach.software',
             'name': 'Bach.Software',
-            'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+            'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
           },
           'image': {
             '@type': 'ImageObject',
@@ -100,7 +100,7 @@ test.describe('Structured Data Tests', () => {
                 'image': {
                   '@type': 'ImageObject',
                   'height': '768',
-                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                   'width': '768',
                 },
                 'name': 'Jeroen Bach',
@@ -123,7 +123,7 @@ test.describe('Structured Data Tests', () => {
               'publisher': {
                 '@id': 'https://bach.software',
                 '@type': 'Organization',
-                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                 'name': 'Bach.Software',
               },
               'url': 'https://bach.software/posts/5-array-to-map-conversion-in-typescript-with-type-safety',
@@ -135,7 +135,7 @@ test.describe('Structured Data Tests', () => {
                 'image': {
                   '@type': 'ImageObject',
                   'height': '768',
-                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                   'width': '768',
                 },
                 'name': 'Jeroen Bach',
@@ -159,7 +159,7 @@ test.describe('Structured Data Tests', () => {
               'publisher': {
                 '@id': 'https://bach.software',
                 '@type': 'Organization',
-                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                 'name': 'Bach.Software',
               },
               'url': 'https://bach.software/posts/4-deploy-a-production-ready-kubernetes-cluster-on-azure-with-terraform',
@@ -177,7 +177,7 @@ test.describe('Structured Data Tests', () => {
                 'url': 'https://bach.software/pages/about',
                 'image': {
                   '@type': 'ImageObject',
-                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                   'height': '768',
                   'width': '768',
                 },
@@ -186,7 +186,7 @@ test.describe('Structured Data Tests', () => {
                 '@type': 'Organization',
                 '@id': 'https://bach.software',
                 'name': 'Bach.Software',
-                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
               },
               'image': {
                 '@type': 'ImageObject',
@@ -204,7 +204,7 @@ test.describe('Structured Data Tests', () => {
                 'image': {
                   '@type': 'ImageObject',
                   'height': '768',
-                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                   'width': '768',
                 },
                 'name': 'Jeroen Bach',
@@ -214,7 +214,7 @@ test.describe('Structured Data Tests', () => {
               'publisher': {
                 '@id': 'https://bach.software',
                 '@type': 'Organization',
-                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                 'name': 'Bach.Software',
               },
               'dateModified': '2025-10-04T13:00:00+02:00',
@@ -237,7 +237,7 @@ test.describe('Structured Data Tests', () => {
                 'image': {
                   '@type': 'ImageObject',
                   'height': '768',
-                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                  'url': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                   'width': '768',
                 },
                 'name': 'Jeroen Bach',
@@ -256,7 +256,7 @@ test.describe('Structured Data Tests', () => {
               'publisher': {
                 '@id': 'https://bach.software',
                 '@type': 'Organization',
-                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+                'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
                 'name': 'Bach.Software',
               },
               'dateModified': '2025-05-27T11:30:00+02:00',
@@ -280,7 +280,7 @@ test.describe('Structured Data Tests', () => {
           'publisher': {
             '@id': 'https://bach.software',
             '@type': 'Organization',
-            'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-_A7R5652-HD-SQUARE-zoom.jpg',
+            'logo': 'https://bach.software/_ipx/w_768&f_jpeg&q_80/JEROEN-4238-SQUARE-zoom.jpeg',
             'name': 'Bach.Software',
           },
         });

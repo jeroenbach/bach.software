@@ -1,4 +1,3 @@
-import { resolve } from 'node:path';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import process from 'node:process';
 import tailwindcss from '@tailwindcss/vite';
@@ -127,7 +126,9 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    dir: 'public/images',
+    // Outside the public dir so Nuxt doesn't also publish it at /images/**;
+    // @nuxt/image registers this dir as a nitro publicAsset at the site root.
+    dir: 'images',
     quality: 80,
     format: ['avif', 'webp', 'jpeg', 'jpg'],
     screens,
@@ -157,9 +158,6 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'cloudflare-pages',
-    publicAssets: [
-      { dir: resolve('src/app/public/images'), baseURL: '/' },
-    ],
     prerender: {
       autoSubfolderIndex: false,
       crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status
