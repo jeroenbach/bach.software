@@ -19,11 +19,12 @@ export KIOTA_OFFLINE_ENABLED=true
 
 ## Generate the client
 
-1. Run the backend locally
+1. Run the backend locally (`pnpm dev:api` — the OpenAPI document is served at
+   `http://localhost:8080/openapi/v1.json` in the Development environment)
 2. Run the command below in this folder
 
 ```bash
-kiota generate -l typescript -d http://localhost:7071/api/swagger.json -c BackendApiClient -n Backend -o . --exclude-backward-compatible
+kiota generate -l typescript -d http://localhost:8080/openapi/v1.json -c BackendApiClient -n Backend -o . --exclude-backward-compatible
 
 ```
 

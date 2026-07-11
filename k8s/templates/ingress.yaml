@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: bach-software-web
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
@@ -22,7 +22,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: bach-software-web
+                name: {{ .Release.Name }}
                 port:
                   number: 80
 {{- end }}

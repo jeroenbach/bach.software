@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bach-software-web
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: bach-software-web
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: bach-software-web
+      app: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: bach-software-web
+        app: {{ .Release.Name }}
     spec:
       containers:
         - name: web
@@ -34,7 +34,7 @@ spec:
             - name: PLAUSIBLE_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: bach-software-plausible
+                  name: {{ .Release.Name }}-plausible
                   key: api-token
             {{- if .Values.plausible.apiUrl }}
             - name: PLAUSIBLE_API_URL
