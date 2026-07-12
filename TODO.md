@@ -1,0 +1,14 @@
+Both are good ideas, but for different reasons and different audiences. Let me give you an honest take on each.
+
+Writing about the technical improvements
+This is the lower-hanging fruit and you should do it first. You have two genuinely interesting case studies sitting right there — the context/presentational component architecture reducing bugs from 2.5 to 0.6, and the dynamic form library reducing form development from 8-13 points to 2-3. These aren't generic "here's how to use Storybook" posts. They're real problems, real solutions, real outcomes with numbers. That's rare and people notice it.
+A post structured as "here's the problem we had, here's what we tried, here's what we measured" is exactly the kind of content that gets shared in frontend communities. It also directly supports your CV — if a hiring manager Googles you and finds a detailed post explaining the exact metric on your CV, your credibility goes up significantly. The number stops being a claim and becomes a documented story.
+
+Writing about management
+This is more valuable for your career transition but harder to do well, and there's a timing consideration. Right now you don't yet have the EM title. Writing authoritatively about engineering management as a freelance engineer can come across as presumptuous if not framed carefully. It's not a reason not to do it, but the framing matters.
+The angle that works well is the transition story — writing honestly about moving from IC to management thinking, what you're learning, what surprised you. That's relatable and authentic rather than presenting yourself as an authority you're not yet formally credentialed as. Posts like "what I noticed about team dynamics when I stopped focusing on my own output" or "what managing a team at PVH taught me about feedback" are interesting precisely because they're personal and specific.
+The other management angle that plays to your strengths is the intersection of technical and people decisions — things like "how introducing Storybook changed our team dynamics, not just our code quality." That bridges your technical blog identity with management thinking without requiring a hard pivot.
+
+Practical suggestion
+Write the two technical case studies first — they're ready to go, you have the data, and they directly support your job search right now. Then start one management-adjacent post framed as a personal reflection rather than expert advice. See how it feels. If it comes naturally, keep going. If it feels forced, stay technical for now — a strong technical blog is itself an asset for an EM role because it proves you can communicate complex ideas clearly, which is a core management skill.
+Also worth making sure your blog is linked on your CV and LinkedIn. Given the library and the case studies you're sitting on, bach.software could become a meaningful differentiator in your application — most candidates don't have it.
