@@ -1,6 +1,7 @@
 import type { NavigationItem } from '~/types/NavigationItem';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import AppHeader from './AppHeader.vue';
 
 const navigation: NavigationItem[] = [
@@ -26,5 +27,21 @@ describe('appHeader', () => {
     expect(internal).toBeDefined();
     expect(internal!.attributes('target')).not.toBe('_blank');
     expect(internal!.find('svg').exists()).toBe(false);
+  });
+
+  it('renders external navigation items in the mobile menu with target _blank and an external link icon', async () => {
+    const wrapper = await mountSuspended(AppHeader, { props: { navigation } });
+
+    await wrapper.find('button').trigger('click');
+    await nextTick();
+    await nextTick();
+
+    const mobileExternal = wrapper
+      .findAll('a')
+      .find(link => link.classes().includes('rounded-lg') && link.text().includes('Vue Dynamic Form'));
+
+    expect(mobileExternal).toBeDefined();
+    expect(mobileExternal!.attributes('target')).toBe('_blank');
+    expect(mobileExternal!.find('svg').exists()).toBe(true);
   });
 });
