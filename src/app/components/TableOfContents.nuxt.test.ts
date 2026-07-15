@@ -14,6 +14,7 @@ describe('tableOfContents', () => {
 
     const anchors = w.findAll('a');
     expect(anchors.map(a => a.attributes('href'))).toEqual([
+      '#top',
       '#what-is-plausible-io',
       '#self-hosting-vs-hosted-solution',
       '#hosting-costs',
@@ -21,12 +22,21 @@ describe('tableOfContents', () => {
       '#conclusion',
     ]);
     expect(anchors.map(a => a.text())).toEqual([
+      'On this page',
       'What is Plausible.io?',
       'Self-hosting vs. Hosted Solution',
       'Hosting costs',
       'Maintenance',
       'Conclusion',
     ]);
+  });
+
+  it('links the heading to the top of the page', async () => {
+    const w = await mountSuspended(TableOfContents, { props: { links } });
+
+    const heading = w.find('a[href="#top"]');
+    expect(heading.exists()).toBe(true);
+    expect(heading.text()).toBe('On this page');
   });
 
   it('highlights only the active link', async () => {

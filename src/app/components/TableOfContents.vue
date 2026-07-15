@@ -58,9 +58,12 @@ function select(id: string) {
       />
     </details>
     <template v-else>
-      <p class="mb-3 font-medium text-gray-700 dark:text-gray-300">
+      <a
+        href="#top"
+        class="mb-3 block font-medium text-gray-700 transition-colors hover:text-sky-600 dark:text-gray-300 dark:hover:text-sky-400"
+      >
         {{ $t("On this page") }}
-      </p>
+      </a>
       <TableOfContentsList
         :links="links"
         :activeId="activeId"
