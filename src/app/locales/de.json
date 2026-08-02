@@ -13,12 +13,12 @@
   "read": "{n} mal gelesen | {n} mal gelesen",
   "likes": "{n} Like | {n} Likes",
   "Like this article": "Diesen Artikel liken",
-  "You liked this article": "Du hast diesen Artikel geliked",
+  "You liked this article": "Ihnen gefällt dieser Artikel",
   "plausible": {
     "current": {
-      "text": "Wir {status} derzeit Ihre Besuche.",
-      "not": "berücksichtigen nicht",
-      "are": "berücksichtigen"
+      "text": "Ihre Besuche werden derzeit {status}.",
+      "not": "nicht berücksichtigt",
+      "are": "berücksichtigt"
     },
     "title": "Plausible Ausschluss",
     "description": "Klicken Sie auf die Schaltfläche unten, um Ihren Ausschluss in den Analysen für diese Website zu ändern",

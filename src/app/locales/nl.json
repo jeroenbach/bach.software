@@ -16,9 +16,9 @@
   "You liked this article": "Je vindt dit artikel leuk",
   "plausible": {
     "current": {
-      "text": "We {status} momenteel je bezoeken.",
-      "not": "nemen niet mee",
-      "are": "nemen mee"
+      "text": "Je bezoeken worden momenteel {status}.",
+      "not": "niet meegeteld",
+      "are": "meegeteld"
     },
     "title": "Plausible Uitsluiting",
     "description": "Klik op de knop hieronder om je uitsluiting in analytics voor deze site te wijzigen",
@@ -55,7 +55,7 @@
     "open": "Zoeken openen",
     "close": "Zoeken sluiten",
     "placeholder": "Zoeken...",
-    "loading": "Zoeken...",
+    "loading": "Bezig met zoeken...",
     "noResults": "Geen resultaten gevonden",
     "unavailable": "Zoeken is niet beschikbaar in de ontwikkelmodus. Voer eerst de build uit."
   },
