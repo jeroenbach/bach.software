@@ -22,7 +22,7 @@ pnpm playwright    # E2E tests (Playwright)
 
 # A single test file (examples):
 TZ=Europe/Amsterdam npx vitest run src/app/composables/useStopWatch.test.ts
-TZ=Europe/Amsterdam npx vitest run src/app/components/ResponsiveImage.test.nuxt.ts
+TZ=Europe/Amsterdam npx vitest run src/app/components/ResponsiveImage.nuxt.test.ts
 
 # Code quality
 pnpm lint          # ESLint
@@ -109,6 +109,8 @@ Content is duplicated per locale in `src/app/content/{locale}/`. Nuxt Content co
 
 i18n translation keys live in `src/app/locales/*.json`. Run `pnpm i18n-extract` (or just `pnpm dev`) to add/remove keys automatically after adding `$t('key')` calls.
 
+**Key naming convention:** flat (top-level) keys are the plain English text itself (e.g. `$t('Like this article')`, `$t('Copied to clipboard!')`). camelCase names are only used for keys inside a tree structure (e.g. `search.open`, `error.pageNotFound`, `blog.filter.label`).
+
 ### Context / Presentational Component Pattern
 
 This is the central architectural pattern — a strict separation between presentational and context components:
@@ -165,6 +167,8 @@ Two Vitest project configurations in `vitest.config.ts`:
 - **`nuxt`** (full Nuxt environment via `@nuxt/test-utils`) — for anything that needs Nuxt runtime (routing, i18n, `useHead`, etc.). Test files must end in `*.nuxt.test.ts` / `*.nuxt.spec.ts`.
 
 Always use `TZ=Europe/Amsterdam` when running tests (dates are timezone-sensitive). This is baked into the `pnpm test` and `pnpm ci:test` scripts.
+
+**No HTML snapshot tests.** Never assert component markup with `expect(wrapper.html()).toMatchSnapshot()` (or inline/file HTML snapshots) in component tests. Instead, for every component: add it to Storybook (`ComponentName.stories.ts`) and register its story id in `src/app/tests/playwright/components.spec.ts`, which takes an actual screenshot of the story and compares it visually (run via `pnpm ci:playwright:docker`, update baselines with `pnpm ci:playwright:docker:update`). Unit/component tests should only assert behaviour (props, emits, rendered text/attributes) — never full markup.
 
 Playwright E2E tests are in `src/app/tests/playwright/`. Visual snapshot tests use Docker for reproducibility across OS environments (see `pnpm ci:playwright:docker`).
 

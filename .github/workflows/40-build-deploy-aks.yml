@@ -87,6 +87,20 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy to AKS
     steps:
+      - name: Check required secrets
+        env:
+          PLAUSIBLE_API_TOKEN: ${{ secrets.PLAUSIBLE_API_TOKEN }}
+          PLAUSIBLE_API_URL: ${{ secrets.PLAUSIBLE_API_URL }}
+        run: |
+          MISSING=0
+          if [ -z "$PLAUSIBLE_API_TOKEN" ]; then
+            echo "::error::PLAUSIBLE_API_TOKEN secret is not set"; MISSING=1
+          fi
+          if [ -z "$PLAUSIBLE_API_URL" ]; then
+            echo "::error::PLAUSIBLE_API_URL secret is not set"; MISSING=1
+          fi
+          exit $MISSING
+
       - uses: actions/checkout@v4
 
       - name: Azure login (OIDC)

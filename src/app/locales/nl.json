@@ -12,7 +12,8 @@
   },
   "read": "{n} keer gelezen | {n} keer gelezen",
   "likes": "{n} vind-ik-leuk | {n} vind-ik-leuks",
-  "likeThisArticle": "Vind dit artikel leuk",
+  "Like this article": "Vind dit artikel leuk",
+  "You liked this article": "Je vindt dit artikel leuk",
   "plausible": {
     "current": {
       "text": "We {status} momenteel je bezoeken.",

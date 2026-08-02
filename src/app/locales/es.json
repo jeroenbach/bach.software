@@ -12,7 +12,8 @@
   },
   "read": "{n} lectura | {n} lecturas",
   "likes": "{n} me gusta | {n} me gusta",
-  "likeThisArticle": "Me gusta este artículo",
+  "Like this article": "Me gusta este artículo",
+  "You liked this article": "Te ha gustado este artículo",
   "plausible": {
     "current": {
       "text": "Actualmente {status} incluyendo tus visitas.",

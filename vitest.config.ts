@@ -34,10 +34,10 @@ export default defineConfig({
       ],
       thresholds: {
         autoUpdate: true,
-        statements: 54.69,
-        branches: 44.76,
-        functions: 52.3,
-        lines: 55.18,
+        statements: 60.45,
+        branches: 54.86,
+        functions: 55.94,
+        lines: 61.2,
       },
     },
     projects: [

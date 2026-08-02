@@ -18,11 +18,6 @@ function mountStory(story: Story, argsOverride?: Story['args']) {
 }
 
 describe('likeButton', () => {
-  it('should have the same html output', async () => {
-    const w = mountStory(stories.Default);
-    expect(w.html()).toMatchSnapshot();
-  });
-
   it('should render the like count', async () => {
     const w = mountStory(stories.Default);
     expect(w.find('span').text()).toBe('11');
@@ -47,5 +42,21 @@ describe('likeButton', () => {
   it('should not mark the button as pressed when not liked', async () => {
     const w = mountStory(stories.Default);
     expect(w.find('button').attributes('aria-pressed')).toBe('false');
+  });
+
+  it('should tell in the tooltip that the article was already liked', async () => {
+    const w = mountStory(stories.Liked);
+    expect(w.find('button').attributes('title')).toBe('You liked this article');
+  });
+
+  it('should show the like count in the tooltip when not liked yet', async () => {
+    const w = mountStory(stories.Default);
+    expect(w.find('button').attributes('title')).toBe('likes');
+  });
+
+  it('should not look clickable anymore once liked', async () => {
+    const w = mountStory(stories.Liked);
+    expect(w.find('button').classes()).toContain('cursor-default');
+    expect(w.find('button').classes()).not.toContain('cursor-pointer');
   });
 });

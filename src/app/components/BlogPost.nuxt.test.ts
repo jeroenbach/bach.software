@@ -20,11 +20,6 @@ function mountStory(story: Story, argsOverride?: Story['args']) {
 }
 
 describe('blogPost', () => {
-  it('should have the same html output', () => {
-    const w = mountStory(stories.Default);
-    expect(w.html()).toMatchSnapshot();
-  });
-
   it('should render the post title', () => {
     const w = mountStory(stories.Default);
     expect(w.find('h1').text()).toBe(stories.Default.args.post?.title);

@@ -51,6 +51,7 @@ export function createValidationProblemDetailsFromDiscriminatorValue(parseNode: 
 }
 /**
  * The deserialization information for the current model
+ * @param PageLikes The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -61,6 +62,7 @@ export function deserializeIntoPageLikes(pageLikes: Partial<PageLikes> | undefin
 }
 /**
  * The deserialization information for the current model
+ * @param PageReads The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -76,6 +78,7 @@ export function deserializeIntoPageReads(pageReads: Partial<PageReads> | undefin
 }
 /**
  * The deserialization information for the current model
+ * @param ProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -90,6 +93,7 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
 }
 /**
  * The deserialization information for the current model
+ * @param ValidationProblemDetails The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -105,6 +109,7 @@ export function deserializeIntoValidationProblemDetails(validationProblemDetails
 }
 /**
  * The deserialization information for the current model
+ * @param ValidationProblemDetails_errors The instance to deserialize into.
  * @returns {Record<string, (node: ParseNode) => void>}
  */
 // @ts-ignore
@@ -114,19 +119,11 @@ export function deserializeIntoValidationProblemDetails_errors(validationProblem
 }
 export interface PageLikes extends AdditionalDataHolder, Parsable {
     /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
-    /**
      * The likes property
      */
     likes?: number | null;
 }
 export interface PageReads extends AdditionalDataHolder, Parsable {
-    /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
     /**
      * The halfRead property
      */
@@ -154,10 +151,6 @@ export interface PageReads extends AdditionalDataHolder, Parsable {
 }
 export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
-    /**
      * The detail property
      */
     detail?: string | null;
@@ -180,77 +173,78 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param PageLikes The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializePageLikes(writer: SerializationWriter, pageLikes: Partial<PageLikes> | undefined | null = {}) : void {
-    if (pageLikes) {
-        writer.writeNumberValue("likes", pageLikes.likes);
-        writer.writeAdditionalData(pageLikes.additionalData);
-    }
+export function serializePageLikes(writer: SerializationWriter, pageLikes: Partial<PageLikes> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!pageLikes || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("likes", pageLikes.likes);
+    writer.writeAdditionalData(pageLikes.additionalData);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param PageReads The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializePageReads(writer: SerializationWriter, pageReads: Partial<PageReads> | undefined | null = {}) : void {
-    if (pageReads) {
-        writer.writeNumberValue("halfRead", pageReads.halfRead);
-        writer.writeNumberValue("opened", pageReads.opened);
-        writer.writeNumberValue("peeked", pageReads.peeked);
-        writer.writeNumberValue("quarterRead", pageReads.quarterRead);
-        writer.writeNumberValue("read", pageReads.read);
-        writer.writeNumberValue("threeQuarterRead", pageReads.threeQuarterRead);
-        writer.writeAdditionalData(pageReads.additionalData);
-    }
+export function serializePageReads(writer: SerializationWriter, pageReads: Partial<PageReads> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!pageReads || isSerializingDerivedType) { return; }
+    writer.writeNumberValue("halfRead", pageReads.halfRead);
+    writer.writeNumberValue("opened", pageReads.opened);
+    writer.writeNumberValue("peeked", pageReads.peeked);
+    writer.writeNumberValue("quarterRead", pageReads.quarterRead);
+    writer.writeNumberValue("read", pageReads.read);
+    writer.writeNumberValue("threeQuarterRead", pageReads.threeQuarterRead);
+    writer.writeAdditionalData(pageReads.additionalData);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProblemDetails The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}) : void {
-    if (problemDetails) {
-        writer.writeStringValue("detail", problemDetails.detail);
-        writer.writeStringValue("instance", problemDetails.instance);
-        writer.writeNumberValue("status", problemDetails.status);
-        writer.writeStringValue("title", problemDetails.title);
-        writer.writeStringValue("type", problemDetails.type);
-        writer.writeAdditionalData(problemDetails.additionalData);
-    }
+export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!problemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", problemDetails.detail);
+    writer.writeStringValue("instance", problemDetails.instance);
+    writer.writeNumberValue("status", problemDetails.status);
+    writer.writeStringValue("title", problemDetails.title);
+    writer.writeStringValue("type", problemDetails.type);
+    writer.writeAdditionalData(problemDetails.additionalData);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ValidationProblemDetails The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeValidationProblemDetails(writer: SerializationWriter, validationProblemDetails: Partial<ValidationProblemDetails> | undefined | null = {}) : void {
-    if (validationProblemDetails) {
-        writer.writeStringValue("detail", validationProblemDetails.detail);
-        writer.writeObjectValue<ValidationProblemDetails_errors>("errors", validationProblemDetails.errors, serializeValidationProblemDetails_errors);
-        writer.writeStringValue("instance", validationProblemDetails.instance);
-        writer.writeNumberValue("status", validationProblemDetails.status);
-        writer.writeStringValue("title", validationProblemDetails.title);
-        writer.writeStringValue("type", validationProblemDetails.type);
-        writer.writeAdditionalData(validationProblemDetails.additionalData);
-    }
+export function serializeValidationProblemDetails(writer: SerializationWriter, validationProblemDetails: Partial<ValidationProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!validationProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeStringValue("detail", validationProblemDetails.detail);
+    writer.writeObjectValue<ValidationProblemDetails_errors>("errors", validationProblemDetails.errors, serializeValidationProblemDetails_errors);
+    writer.writeStringValue("instance", validationProblemDetails.instance);
+    writer.writeNumberValue("status", validationProblemDetails.status);
+    writer.writeStringValue("title", validationProblemDetails.title);
+    writer.writeStringValue("type", validationProblemDetails.type);
+    writer.writeAdditionalData(validationProblemDetails.additionalData);
 }
 /**
  * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ValidationProblemDetails_errors The instance to serialize from.
  * @param writer Serialization writer to use to serialize this model
  */
 // @ts-ignore
-export function serializeValidationProblemDetails_errors(writer: SerializationWriter, validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined | null = {}) : void {
-    if (validationProblemDetails_errors) {
-        writer.writeAdditionalData(validationProblemDetails_errors.additionalData);
-    }
+export function serializeValidationProblemDetails_errors(writer: SerializationWriter, validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!validationProblemDetails_errors || isSerializingDerivedType) { return; }
+    writer.writeAdditionalData(validationProblemDetails_errors.additionalData);
 }
 export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
-    /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
     /**
      * The detail property
      */
@@ -277,10 +271,6 @@ export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError
     type?: string | null;
 }
 export interface ValidationProblemDetails_errors extends AdditionalDataHolder, Parsable {
-    /**
-     * Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
-     */
-    additionalData?: Record<string, unknown>;
 }
 /* tslint:enable */
 /* eslint-enable */

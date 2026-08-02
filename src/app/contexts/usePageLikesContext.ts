@@ -20,7 +20,10 @@ import { useApiClient } from '~/services/backend';
  */
 export function usePageLikesContext(extraTrackingProps?: MaybeRefOrGetter<Record<string, string>>) {
   const { path } = useRoute();
-  const hasLiked = useLocalStorage(`liked:${path}`, false);
+  // Read the stored value only after mount: reading it during setup makes the
+  // client render "liked" while the server-rendered HTML says "not liked", and
+  // Vue never patches that hydration mismatch — the thumb would stay inactive.
+  const hasLiked = useLocalStorage(`liked:${path}`, false, { initOnMounted: true });
   // Optimistically count the visitor's own like, as Plausible only reports it on the next query
   const optimisticLikes = ref(0);
 

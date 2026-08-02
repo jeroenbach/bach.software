@@ -24,11 +24,13 @@ const emit = defineEmits<{
 <template>
   <button
     type="button"
-    class="flex h-8 cursor-pointer items-center gap-1 transition-colors hover:text-sky-600 dark:hover:text-sky-400"
-    :class="{ 'text-sky-600 dark:text-sky-400': liked }"
+    class="flex h-8 items-center gap-1 transition-colors"
+    :class="liked
+      ? 'cursor-default text-sky-600 dark:text-sky-400'
+      : 'cursor-pointer hover:text-sky-600 dark:hover:text-sky-400'"
     :aria-pressed="liked"
-    :aria-label="$t('likeThisArticle')"
-    :title="isNotNullOrUndefined(count) && count > 0 ? $t('likes', { n: count }) : $t('likeThisArticle')"
+    :aria-label="$t('Like this article')"
+    :title="liked ? $t('You liked this article') : isNotNullOrUndefined(count) && count > 0 ? $t('likes', { n: count }) : $t('Like this article')"
     @click="emit('like')"
   >
     <HandThumbUpIconSolid v-if="liked" class="inline-block size-4" />

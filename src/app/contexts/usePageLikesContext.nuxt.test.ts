@@ -1,5 +1,7 @@
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { defineComponent, h } from 'vue';
 
 import { usePageLikesContext } from './usePageLikesContext';
 
@@ -79,5 +81,26 @@ describe('usePageLikesContext', () => {
 
     like();
     expect(mock.useTrackEvent).not.toHaveBeenCalled();
+  });
+
+  it('should read the previous like only after mount, to avoid a hydration mismatch', async () => {
+    localStorage.setItem('liked:/', 'true');
+
+    let hasLikedDuringSetup: boolean | undefined;
+    let hasLiked: Ref<boolean> | undefined;
+    const component = defineComponent({
+      setup() {
+        ({ hasLiked } = usePageLikesContext());
+        hasLikedDuringSetup = hasLiked.value;
+        return () => h('div');
+      },
+    });
+
+    mount(component);
+
+    // During setup (= what gets hydrated) the value must match the server-rendered "false"
+    expect(hasLikedDuringSetup).toBe(false);
+    // After mount the stored like kicks in as a regular reactive update
+    expect(hasLiked!.value).toBe(true);
   });
 });
