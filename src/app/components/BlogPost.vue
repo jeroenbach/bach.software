@@ -53,6 +53,7 @@ const readCount = computed(() => pageReads?.threeQuarterRead);
             <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />
           </aside>
         </div>
+        <slot name="tableOfContents" />
       </div>
       <ContentRenderer :value="post" itemprop="articleBody" />
     </article>
