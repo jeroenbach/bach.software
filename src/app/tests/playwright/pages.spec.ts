@@ -6,9 +6,14 @@ async function createScreenshot(page: Page) {
   const testInfo = test.info();
   testInfo.snapshotSuffix = ''; // Remove OS-specific suffixes fo CI pipeline consistency
 
+  // The header switchers are inside <ClientOnly>, so they only enter the DOM
+  // once hydration finishes. Wait for one of them (attached, not visible —
+  // they are CSS-hidden on mobile viewports) before taking the screenshot.
+  await page.getByTitle('Switch color mode').first().waitFor({ state: 'attached' });
+
   await expect(page).toHaveScreenshot(`${testInfo.title}.png`, {
     fullPage: true,
-    maxDiffPixelRatio: 0.015,
+    maxDiffPixels: 1000,
   });
 }
 

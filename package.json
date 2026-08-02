@@ -36,7 +36,7 @@
     "playwright:docker:update": "pnpm build && pnpm ci:playwright:docker:update",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "check": "pnpm lint:fix && nuxi typecheck && pnpm ci:test:coverage && pnpm playwright:docker",
+    "check": "bash scripts/check.sh",
     "ci:test": "TZ=Europe/Amsterdam vitest run",
     "ci:test:coverage": "TZ=Europe/Amsterdam vitest run --coverage",
     "ci:playwright": "playwright test --config=playwright.config.ci.ts",
