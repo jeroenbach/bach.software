@@ -12,7 +12,7 @@ defineProps<Props>();
   <ol class="mx-auto flex max-w-prose flex-col gap-12">
     <li
       v-for="(
-        { title, description, company, date, technologies }, i
+        { title, description, company, date, keyPoints, technologies }, i
       ) in curriculumVitae"
       :key="`${i}-${title}`"
       class="grid gap-y-2 transition-all sm:grid-cols-4 sm:gap-8 md:gap-4"
@@ -31,6 +31,13 @@ defineProps<Props>();
           :text="description"
         />
         <ul class="flex flex-wrap gap-x-1.5 gap-y-2">
+          <li v-for="keyPoint in keyPoints" :key="keyPoint">
+            <AppChip
+              class="bg-linear-to-r from-gray-200 to-gray-100 font-medium text-orange-600 dark:from-gray-700 dark:to-gray-600 dark:text-orange-400"
+            >
+              {{ keyPoint }}
+            </AppChip>
+          </li>
           <li v-for="technology in technologies" :key="technology">
             <AppChip
               class="bg-linear-to-r from-gray-200 to-gray-100 font-medium text-sky-600 dark:from-gray-700 dark:to-gray-600 dark:text-sky-400"

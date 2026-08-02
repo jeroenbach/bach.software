@@ -7,6 +7,10 @@ const curriculumVitae: CurriculumVitaeItem[] = [
     title: 'Software Engineer | Team Lead',
     company: 'Bach.Software',
     date: 'Jul 2018 - Present',
+    keyPoints: [
+      'Led teams of 4-8 engineers',
+      'Technical leadership & mentoring',
+    ],
     description: 'As freelancer I delivered a wide range of full-stack solutions for both public and private sector clients, with a strong focus on scalable, secure and maintainable architectures. Highlights include:\n- Built a secure data management portal for cross-border investigations, using Kubernetes, Vue 3, .NET 8, and Azure DevOps, for a large European Institution.\n- Designed and developed several modern e-commerce platforms for B2C and B2B clients, using Vue.js, React, Node.js, and Salesforce.\n Projects included implementing server-side rendering, containerized deployments, and CI/CD on Azure.\n- Led a cross-functional team of 8, including developers, testers and UX specialist, to deliver a full-featured webshop and customer portal tailored for business users.',
     technologies: [
       'Vue.js',

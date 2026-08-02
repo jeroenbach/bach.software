@@ -45,6 +45,10 @@ pnpm ci:playwright:docker:update   # Update snapshots in Docker without building
 
 > **Important**: `pnpm dev` and `pnpm generate` both auto-run `i18n-extract` first. If translations are out of sync you'll see TypeScript errors — run `pnpm dev` once to re-sync.
 
+## Writing Style
+
+- **Never use em dashes (—)** in any text you write: content, copy, descriptions, PR text, etc. Rephrase the sentence or use a comma, colon, or parentheses instead.
+
 ## Workflow — Before Finishing Any Change
 
 When completing any code change (feature, fix, refactor):
