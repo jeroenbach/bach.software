@@ -34,10 +34,10 @@ export default defineConfig({
       ],
       thresholds: {
         autoUpdate: true,
-        statements: 54.69,
-        branches: 44.76,
-        functions: 52.3,
-        lines: 55.18,
+        statements: 69.11,
+        branches: 65.8,
+        functions: 64.87,
+        lines: 69.18,
       },
     },
     projects: [
@@ -46,6 +46,9 @@ export default defineConfig({
           alias: {
             '~': fileURLToPath(new URL('./src/app', import.meta.url)),
             '@': fileURLToPath(new URL('./src/app', import.meta.url)),
+            // Nuxt's virtual #imports module only exists in the Nuxt runtime;
+            // point it at a mock so composables importing from it stay unit-testable.
+            '#imports': fileURLToPath(new URL('./src/app/tests/mocks/nuxt-imports.ts', import.meta.url)),
           },
         },
         test: {

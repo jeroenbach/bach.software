@@ -20,11 +20,6 @@ function mountStory(story: Story, argsOverride?: Story['args']) {
 }
 
 describe('responsiveImage', () => {
-  it('should have the same html output', async () => {
-    const w = mountStory(stories.Default);
-    expect(w.html()).toMatchSnapshot();
-  });
-
   it('should render alt', async () => {
     const w = mountStory(stories.Default);
     const img = await find(w, 'img');
@@ -83,12 +78,12 @@ describe('responsiveImage', () => {
     const img = await find(w, 'img');
     expect(img.classes()).toEqual(
       expect.arrayContaining([
-        'xs:aspect-1/1',
-        'sm:aspect-2/1',
-        'md:aspect-video',
-        'lg:aspect-square',
-        'xl:aspect-2/1',
-        '2xl:aspect-16/9',
+        'xs:aspect-[1/1]',
+        'sm:aspect-[2/1]',
+        'md:aspect-[16/9]',
+        'lg:aspect-[1/1]',
+        'xl:aspect-[2/1]',
+        '2xl:aspect-[16/9]',
       ]),
     );
   });

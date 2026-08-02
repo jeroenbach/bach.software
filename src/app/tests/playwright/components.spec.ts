@@ -21,8 +21,12 @@ async function createScreenshot(page: Page) {
   'blogpost--default',
   'chiplink--default',
   'curriculumvitaetable--default',
+  'likebutton--default',
+  'likebutton--liked',
   'notificationmessage--default',
   'portfoliogrid--default',
+  'responsiveimage--default',
+  'tableofcontents--default',
 ].forEach((story) => {
   test(`${story}`, async ({ page, storybookUrl }) => {
     await page.goto(

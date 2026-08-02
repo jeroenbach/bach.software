@@ -18,5 +18,15 @@ export const Default: Story = {
     pageReads: {
       threeQuarterRead: 11,
     },
+    likes: 5,
+    hasLiked: false,
+  },
+};
+
+export const Liked: Story = {
+  args: {
+    ...Default.args,
+    likes: 6,
+    hasLiked: true,
   },
 };

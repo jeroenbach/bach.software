@@ -16,6 +16,12 @@ const alternateUrls = await useAlternateUrls(pageType, Number(id));
 const { data: page } = isPage ? await usePagesContext(Number(id)) : { data: undefined };
 const { data: post } = isPost ? await useBlogPostsContext({ id: Number(id) }) : { data: undefined };
 const { pageReads } = isPost ? await usePageReadsContext() : { pageReads: undefined };
+const { likes, hasLiked, like } = isPost
+  ? usePageLikesContext(() => ({
+      author: post?.value?.authorName ?? '',
+      category: post?.value?.category ?? '',
+    }))
+  : { likes: undefined, hasLiked: undefined, like: undefined };
 
 if (!page?.value && !post?.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
@@ -54,7 +60,14 @@ const { activeId } = useScrollspy(() => flattenTocLinkIds(tocLinks.value));
     <ContentRenderer v-else-if="page" :value="page" />
     <div v-else-if="post" class="xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,65ch)_minmax(0,1fr)]">
       <div class="min-w-0 xl:col-start-2">
-        <BlogPost :post="post" :baseUrl="config.public.baseUrl" :pageReads="pageReads">
+        <BlogPost
+          :post="post"
+          :baseUrl="config.public.baseUrl"
+          :pageReads="pageReads"
+          :likes="likes"
+          :hasLiked="hasLiked"
+          @like="like?.()"
+        >
           <template #tableOfContents>
             <TableOfContents
               v-if="tocLinks.length"
