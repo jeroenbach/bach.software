@@ -34,10 +34,10 @@ export default defineConfig({
       ],
       thresholds: {
         autoUpdate: true,
-        statements: 49.02,
-        branches: 40.13,
-        functions: 45.84,
-        lines: 49.44,
+        statements: 54.69,
+        branches: 44.76,
+        functions: 52.3,
+        lines: 55.18,
       },
     },
     projects: [
@@ -68,6 +68,9 @@ export default defineConfig({
             '~': fileURLToPath(new URL('./src/app', import.meta.url)),
             '@': fileURLToPath(new URL('./src/app', import.meta.url)),
             '@plausible-analytics/tracker': fileURLToPath(new URL('./node_modules/@plausible-analytics/tracker/plausible.js', import.meta.url)),
+            // The pagefind bundle only exists after a full static build; point
+            // its runtime url at a controllable mock so useSearchContext is testable.
+            '/pagefind/pagefind.js': fileURLToPath(new URL('./src/app/tests/mocks/pagefind.ts', import.meta.url)),
           },
         },
         test: {

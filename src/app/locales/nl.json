@@ -47,6 +47,14 @@
       "languageAiTranslated": "Deze pagina is automatisch vertaald met AI. Mocht je fouten tegenkomen, laat het me dan weten!"
     }
   },
+  "search": {
+    "open": "Zoeken openen",
+    "close": "Zoeken sluiten",
+    "placeholder": "Zoeken...",
+    "loading": "Zoeken...",
+    "noResults": "Geen resultaten gevonden",
+    "unavailable": "Zoeken is niet beschikbaar in de ontwikkelmodus. Voer eerst de build uit."
+  },
   "error": {
     "pageNotFound": "Pagina niet gevonden",
     "pageNotFoundDescription": "De pagina die je zoekt bestaat niet of is verplaatst.",

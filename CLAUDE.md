@@ -53,6 +53,7 @@ pnpm ci:playwright:docker:update   # Update snapshots in Docker without building
 
 When completing any code change (feature, fix, refactor):
 
+0. **Verify `node_modules` is actually installed before running any of the steps below** (e.g. `ls node_modules | head`) — don't assume it is. Fresh/sandboxed checkouts can start with an empty `node_modules`, and tools like bare `npx eslint`/`npx tsc` will then fail with confusing module-not-found errors (e.g. `Cannot find package '@antfu/eslint-config'`) that look unrelated to the real cause. If it's missing or empty, run `pnpm install` first.
 1. **Run all pipeline checks locally** and fix every error before pushing:
    ```bash
    pnpm lint:fix       # must be clean (auto-fixes what it can)

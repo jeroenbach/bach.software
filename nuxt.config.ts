@@ -1,7 +1,8 @@
+import { resolve } from 'node:path';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import process from 'node:process';
-import tailwindcss from '@tailwindcss/vite';
 
+import tailwindcss from '@tailwindcss/vite';
 import { defaultLocale, locales } from './locales.config';
 import { routeRules } from './route-rules';
 import { screens } from './src/app/utils/screen';
@@ -30,6 +31,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        // pagefind/pagefind.js is generated post-build and served as a static asset.
+        // Marking it external prevents Rollup from trying to resolve it during the build.
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
     optimizeDeps: {
       include: [
         '@headlessui/vue',
@@ -158,6 +166,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'cloudflare-pages',
+    publicAssets: [
+      // pagefind files are generated post-build by the pagefind CLI.
+      // Registering this baseURL ensures the Cloudflare Worker routes
+      // /pagefind/* requests to env.ASSETS instead of falling through to SSR.
+      { dir: resolve('src/app/public/pagefind'), baseURL: '/pagefind', maxAge: 60 * 60 * 24 * 365 },
+    ],
     prerender: {
       autoSubfolderIndex: false,
       crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status

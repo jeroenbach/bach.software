@@ -16,7 +16,7 @@ const meta = {
       const colorMode = ref('system');
       return { args, colorMode };
     },
-    template: `<AppHeader v-bind="args" v-model="colorMode"  />`,
+    template: `<AppHeader v-bind="args" v-model="colorMode" />`,
   }),
 } satisfies Meta<typeof AppHeader>;
 

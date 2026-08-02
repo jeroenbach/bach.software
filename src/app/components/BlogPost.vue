@@ -26,8 +26,10 @@ const readCount = computed(() => pageReads?.threeQuarterRead);
 <template>
   <AppProse>
     <article v-if="post">
-      <h1>{{ post.title }}</h1>
-      <div class="not-prose">
+      <h1 data-pagefind-weight="10" data-pagefind-meta="title">
+        {{ post.title }}
+      </h1>
+      <div class="not-prose" data-pagefind-ignore>
         <AuthorInformation v-bind="post.author" class="mb-8">
           <template #bottomLine>
             <span>{{ post.readingTime?.text }}</span>
