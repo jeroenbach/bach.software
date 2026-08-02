@@ -45,6 +45,45 @@ function mountModal(props: InstanceType<typeof SearchModal>['$props']) {
 const mainResult = { url: '/post-a', meta: { title: 'Post A' }, excerpt: 'main excerpt' };
 
 describe('searchModal', () => {
+  it('emits update:query when typing in the input', async () => {
+    const wrapper = mountModal({ open: true, query: '' });
+
+    await wrapper.find('input').setValue('vue');
+
+    expect(wrapper.emitted('update:query')).toEqual([['vue']]);
+  });
+
+  it('emits close when the close button is clicked', async () => {
+    const wrapper = mountModal({ open: true, query: '' });
+
+    await wrapper.find('button').trigger('click');
+
+    expect(wrapper.emitted('close')).toHaveLength(1);
+  });
+
+  it('falls back to the url when a result has no title', () => {
+    const wrapper = mountModal({ open: true, query: 'test', results: [{ url: '/post-a', excerpt: 'main excerpt' }] });
+
+    expect(wrapper.find('ul a span').text()).toBe('/post-a');
+  });
+
+  it('shows the unavailable message when search is unavailable', () => {
+    const wrapper = mountModal({ open: true, query: 'test', unavailable: true });
+
+    expect(wrapper.text()).toContain('search.unavailable');
+  });
+
+  it('shows the loading message while searching', () => {
+    const wrapper = mountModal({ open: true, query: 'test', loading: true });
+
+    expect(wrapper.text()).toContain('search.loading');
+  });
+
+  it('shows the no-results message for a query without results', () => {
+    const wrapper = mountModal({ open: true, query: 'test' });
+
+    expect(wrapper.text()).toContain('search.noResults');
+  });
   it('renders no sub-results list when a result has none', () => {
     const wrapper = mountModal({ open: true, query: 'test', results: [mainResult] });
 
@@ -157,6 +196,16 @@ describe('searchModal', () => {
 
       await wrapper.setProps({ results: [{ url: '/post-c', meta: { title: 'Post C' }, excerpt: 'new' }] });
       expect(input.attributes('aria-activedescendant')).toBe('search-result-0');
+    });
+
+    it('moves the highlight to the hovered item on mouseenter', async () => {
+      const wrapper = mountModal({ open: true, query: 'test', results: resultsWithSubs });
+
+      await wrapper.find('#search-result-2').trigger('mouseenter');
+      expect(wrapper.find('input').attributes('aria-activedescendant')).toBe('search-result-2');
+
+      await wrapper.find('#search-result-1').trigger('mouseenter');
+      expect(wrapper.find('input').attributes('aria-activedescendant')).toBe('search-result-1');
     });
 
     it('does nothing on Enter when there are no results', async () => {
