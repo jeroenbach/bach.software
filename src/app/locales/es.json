@@ -66,5 +66,8 @@
       "previous": "← Ant",
       "next": "Sig →"
     }
+  },
+  "OpenSource": {
+    "VueDynamicForm": "Vue Dynamic Form"
   }
 }
