@@ -46,34 +46,39 @@ const { totalCount, paginatedItems: paginatedPosts } = useBlogPostPagination(fil
     <ContentRenderer v-else-if="page" :value="page" />
 
     <template v-if="isBlogRoot">
-      <BlogPostFilter
-        v-if="categories.length > 0"
-        :categories="categories"
-        :query="route.query"
-        :totalCount="totalCount"
-        class="mt-10 sm:mt-16"
-        :class="{ 'mx-auto max-w-prose': page?.enableProse }"
-      />
-      <BlogPosts :class="{ 'mx-auto max-w-prose': page?.enableProse }">
-        <BlogPostSummary
-          v-for="post in paginatedPosts"
-          :key="post.path"
-          :post="post"
+      <!-- Each post's title/excerpt is already indexed on its own canonical page;
+           re-indexing them here would let the blog root compete with (and dilute
+           relevance for) the actual post pages. -->
+      <div data-pagefind-ignore>
+        <BlogPostFilter
+          v-if="categories.length > 0"
+          :categories="categories"
+          :query="route.query"
+          :totalCount="totalCount"
+          class="mt-10 sm:mt-16"
+          :class="{ 'mx-auto max-w-prose': page?.enableProse }"
         />
-        <p
-          v-if="paginatedPosts.length === 0"
-          class="text-sm text-gray-500 dark:text-gray-400"
-        >
-          {{ $t('blog.filter.noResults') }}
-        </p>
-      </BlogPosts>
-      <BlogPostPagination
-        :page="currentPage"
-        :pageSize="blogPageSize"
-        :totalCount="totalCount"
-        :query="route.query"
-        :class="{ 'mx-auto max-w-prose': page?.enableProse }"
-      />
+        <BlogPosts :class="{ 'mx-auto max-w-prose': page?.enableProse }">
+          <BlogPostSummary
+            v-for="post in paginatedPosts"
+            :key="post.path"
+            :post="post"
+          />
+          <p
+            v-if="paginatedPosts.length === 0"
+            class="text-sm text-gray-500 dark:text-gray-400"
+          >
+            {{ $t('blog.filter.noResults') }}
+          </p>
+        </BlogPosts>
+        <BlogPostPagination
+          :page="currentPage"
+          :pageSize="blogPageSize"
+          :totalCount="totalCount"
+          :query="route.query"
+          :class="{ 'mx-auto max-w-prose': page?.enableProse }"
+        />
+      </div>
     </template>
   </PageContent>
 </template>

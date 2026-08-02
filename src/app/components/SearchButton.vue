@@ -16,11 +16,11 @@ const title = computed(() => `${t('search.open')} (${isMac.value ? '⌘K' : 'Ctr
 
 <template>
   <AppButton
-    class="-m-1 flex items-center rounded p-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+    class="-m-1 flex items-center rounded p-1 "
     :title="title"
     @click="emits('click')"
   >
-    <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
+    <MagnifyingGlassIcon class="size-6" aria-hidden="true" />
     <span class="sr-only">{{ $t('search.open') }}</span>
   </AppButton>
 </template>

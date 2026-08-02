@@ -22,7 +22,7 @@ defineProps<Props>();
         >
           {{ intro }}
         </span>
-        <h1 v-if="title" class="text-4xl text-gray-900 dark:text-gray-50">
+        <h1 v-if="title" class="text-4xl text-gray-900 dark:text-gray-50" data-pagefind-weight="10">
           {{ title }}
         </h1>
         <h2

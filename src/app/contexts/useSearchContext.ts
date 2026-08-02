@@ -1,11 +1,30 @@
 import { useDebounceFn } from '@vueuse/core';
 import { ref, watch } from 'vue';
+import { stripHtmlExtension } from '~/utils/url';
+
+export interface SearchSubResult {
+  url: string
+  title: string
+  excerpt: string
+}
 
 export interface SearchResult {
   url: string
   meta?: { title?: string }
   excerpt: string
+  sub_results?: SearchSubResult[]
 }
+
+// Pagefind's default ranking is tuned for larger, more uniform sites. This is a
+// small site with a handful of long, in-depth posts alongside short pages (home,
+// about) — the default pageLength weight (0.75) penalises the long posts relative
+// to the site's (low) average page length. Dropping it lets post length stop
+// being a ranking factor almost entirely, so relevance is driven by term matches
+// instead. Tune further via the Pagefind debug tools if results still feel off:
+// https://pagefind.app/docs/ranking/
+const RANKING = {
+  pageLength: 0.15,
+};
 
 // Module-level cache so we only download the index once per language per session.
 // Pagefind reads <html lang=""> at init time; if the user switches locale the
@@ -33,7 +52,7 @@ export function useSearchContext() {
       const pagefindUrl = '/pagefind/pagefind.js';
       const pf = await import(/* @vite-ignore */ pagefindUrl);
       if (pfLang !== lang) {
-        await pf.options({ language: lang });
+        await pf.options({ language: lang, ranking: RANKING });
       }
       pfInstance = pf;
       pfLang = lang;
@@ -57,7 +76,18 @@ export function useSearchContext() {
         return;
       }
       const { results: hits } = await pf.search(q);
-      results.value = await Promise.all(hits.slice(0, 8).map((r: any) => r.data()));
+      const data: SearchResult[] = await Promise.all(hits.slice(0, 8).map((r: any) => r.data()));
+      // Pagefind indexes the generated `.html` files and returns their raw
+      // file URLs; strip the extension so links match the app's routes —
+      // otherwise the canonical redirect drops sub-result #anchors.
+      results.value = data.map(result => ({
+        ...result,
+        url: stripHtmlExtension(result.url),
+        sub_results: result.sub_results?.map(subResult => ({
+          ...subResult,
+          url: stripHtmlExtension(subResult.url),
+        })),
+      }));
     }
     finally {
       loading.value = false;
