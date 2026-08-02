@@ -164,6 +164,26 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'cloudflare-pages',
+    cloudflare: {
+      pages: {
+        routes: {
+          // Cloudflare Pages allows at most 100 include/exclude rules in _routes.json.
+          // Nitro auto-generates one exclude rule per output file and silently truncates
+          // the list at 100, which previously pushed all localized pages and most _ipx
+          // image variants off the list, so they were SSR'd by the Worker on every
+          // request (~400-700ms) instead of being served as static assets (~50ms).
+          // These wildcards collapse whole directories into single rules so every
+          // prerendered page fits. Guarded by scripts/verify-cf-routes.mjs at build time.
+          exclude: [
+            '/_ipx/*', // build-time optimized images; the Worker cannot generate variants at runtime anyway
+            '/ico/*',
+            '/portfolio/*', // portfolio images (no page routes live under /portfolio)
+            '/__nuxt_content/*', // Nuxt Content client-side sql dumps
+            '/_storybook/*', // built into dist after nuxt build, so Nitro's auto-generation never sees it
+          ],
+        },
+      },
+    },
     publicAssets: [
       // pagefind files are generated post-build by the pagefind CLI.
       // Registering this baseURL ensures the Cloudflare Worker routes
