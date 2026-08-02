@@ -8,7 +8,7 @@ async function createScreenshot(page: Page) {
 
   await expect(page).toHaveScreenshot(`${testInfo.title}.png`, {
     fullPage: true,
-    maxDiffPixelRatio: 0.015,
+    maxDiffPixels: 1000,
   });
 }
 
