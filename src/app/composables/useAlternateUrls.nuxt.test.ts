@@ -20,7 +20,7 @@ describe('useAlternateUrls', () => {
       },
       2: {
         en: { url: '/portfolio', locale: 'en', contentId: 2, type: 'page', title: 'Portfolio', dateModified: '', path: '/portfolio' },
-        fr: { url: '/fr/portfolio', locale: 'fr', contentId: 2, type: 'page', title: 'Portfolio', dateModified: '', path: '/fr/portfolio' },
+        nl: { url: '/nl/portfolio', locale: 'nl', contentId: 2, type: 'page', title: 'Portfolio', dateModified: '', path: '/nl/portfolio' },
       },
     },
     blogPost: {
@@ -86,7 +86,7 @@ describe('useAlternateUrls', () => {
     expect(result).toHaveLength(2);
     expect(result).toEqual([
       { href: '/portfolio', hreflang: 'en' },
-      { href: '/fr/portfolio', hreflang: 'fr' },
+      { href: '/nl/portfolio', hreflang: 'nl' },
     ]);
   });
 
@@ -161,7 +161,7 @@ describe('useAlternateUrls', () => {
     const customUrlMap: ContentUrlMap = {
       page: {
         5: {
-          es: { url: '/es/pagina', locale: 'es', contentId: 5, type: 'page', title: 'Página', dateModified: '', path: '/es/pagina' },
+          de: { url: '/de/seite', locale: 'de', contentId: 5, type: 'page', title: 'Seite', dateModified: '', path: '/de/seite' },
         },
       },
       blogPost: {},
@@ -178,7 +178,7 @@ describe('useAlternateUrls', () => {
     const result = await useAlternateUrls('page', 5);
 
     expect(result).toEqual([
-      { href: '/es/pagina', hreflang: 'es' },
+      { href: '/de/seite', hreflang: 'de' },
     ]);
   });
 });

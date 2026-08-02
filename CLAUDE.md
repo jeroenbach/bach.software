@@ -103,7 +103,7 @@ The `segment1` part of the URL (`/posts/`, `/articles/`, `/content/`, etc.) is l
 
 ### Internationalisation (i18n)
 
-Five locales: `en` (default/catchall), `fr`, `nl`, `de`, `es`. Strategy is `prefix_except_default` — English URLs have no prefix, others have `/fr/`, `/nl/`, etc.
+Three locales: `en` (default/catchall), `nl`, `de`. Strategy is `prefix_except_default` — English URLs have no prefix, others have `/nl/`, `/de/`, etc.
 
 Content is duplicated per locale in `src/app/content/{locale}/`. Nuxt Content collections are generated dynamically in `content.config.ts` as `posts_{locale}`, `pages_{locale}`, and `authors_{locale}`. Always use the locale-specific collection name (e.g. `queryCollection('posts_en')`).
 

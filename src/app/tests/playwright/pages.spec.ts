@@ -43,11 +43,6 @@ test.describe('Different language versions', () => {
     test.skip(testInfo.project.name !== 'chromium');
   });
 
-  test('about-page-fr', async ({ page }) => {
-    await page.goto(`/fr/content/30-a-propos`);
-
-    await createScreenshot(page);
-  });
   test('about-page-nl', async ({ page }) => {
     await page.goto(`/nl/content/30-over`);
 
@@ -55,11 +50,6 @@ test.describe('Different language versions', () => {
   });
   test('about-page-de', async ({ page }) => {
     await page.goto(`/de/content/30-uber-mich`);
-
-    await createScreenshot(page);
-  });
-  test('about-page-es', async ({ page }) => {
-    await page.goto(`/es/content/30-acerca-de`);
 
     await createScreenshot(page);
   });

@@ -47,8 +47,6 @@ export default defineNuxtConfig({
         'dayjs',
         'dayjs/locale/de',
         'dayjs/locale/en',
-        'dayjs/locale/es',
-        'dayjs/locale/fr',
         'dayjs/locale/nl',
         'dayjs/plugin/*.js',
         'dayjs/plugin/relativeTime',
