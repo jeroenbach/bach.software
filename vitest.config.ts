@@ -32,6 +32,13 @@ export default defineConfig({
         '**/*.{test,spec}.{ts,js}',
         '**/*.nuxt.{test,spec}.{ts,js}',
       ],
+      thresholds: {
+        autoUpdate: true,
+        statements: 43.87,
+        branches: 34.71,
+        functions: 40.86,
+        lines: 44.51,
+      },
     },
     projects: [
       {

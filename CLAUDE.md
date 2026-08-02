@@ -37,8 +37,10 @@ pnpm preview       # Preview generated site locally
 pnpm storybook     # Start Storybook dev server on port 6006
 
 # Screenshot / visual regression tests (requires Docker/colima on macOS)
-pnpm ci:playwright:docker          # Run Playwright in Docker (matches CI environment)
-pnpm ci:playwright:docker:update   # Update snapshots in Docker
+pnpm playwright:docker             # Build the site, then run Playwright in Docker (matches CI environment)
+pnpm playwright:docker:update      # Build the site, then update snapshots in Docker
+pnpm ci:playwright:docker          # Run Playwright in Docker without building first (assumes an existing build)
+pnpm ci:playwright:docker:update   # Update snapshots in Docker without building first
 ```
 
 > **Important**: `pnpm dev` and `pnpm generate` both auto-run `i18n-extract` first. If translations are out of sync you'll see TypeScript errors — run `pnpm dev` once to re-sync.
@@ -49,11 +51,13 @@ When completing any code change (feature, fix, refactor):
 
 1. **Run all pipeline checks locally** and fix every error before pushing:
    ```bash
-   pnpm ci:lint        # must be clean
+   pnpm lint:fix       # must be clean (auto-fixes what it can)
    pnpm ci:typecheck   # must be clean
    pnpm ci:test        # must pass; coverage must not decrease vs. main
+   pnpm playwright:docker   # builds the site, then runs E2E + visual regression tests in Docker (requires Docker/colima)
    dotnet test src/api/Bach.Software.sln   # if backend files changed
    ```
+   When a step fails, fix the error and re-run **only that step** — don't restart the whole list from the top (the earlier steps already passed). If the failing tool supports scoping, narrow the re-run to just the affected area first (e.g. `npx eslint --fix <file>`, `TZ=Europe/Amsterdam npx vitest run <test-file>`, `pnpm ci:playwright -- <spec>` inside Docker, or `dotnet test --filter <TestName>`), then run the full step once more to confirm it's clean before moving on.
 2. **Add tests** for any new logic — unit tests for pure functions/composables, component tests for `src/app/components/`, `.nuxt.test.ts` for anything needing Nuxt runtime. Coverage must not decrease (tracked by Codecov) — check this locally via `pnpm ci:test` coverage output where possible; if local coverage comparison isn't possible, wait for the PR and check the Codecov status/comment there instead.
 3. **Screenshot UI changes** using the Playwright script below or the Storybook dev server (`pnpm storybook`), and show the screenshots directly in the chat for review. Screenshots are local-only scratch output (`.github/screenshots/`, gitignored) — never commit them and never add them to the PR description.
    ```bash

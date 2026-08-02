@@ -32,16 +32,17 @@ describe('appHeader', () => {
   it('renders external navigation items in the mobile menu with target _blank and an external link icon', async () => {
     const wrapper = await mountSuspended(AppHeader, { props: { navigation } });
 
-    await wrapper.find('button').trigger('click');
+    const openButton = wrapper.findAll('button').find(button => button.text().includes('Open main menu'));
+    await openButton!.trigger('click');
     await nextTick();
     await nextTick();
 
-    const mobileExternal = wrapper
-      .findAll('a')
-      .find(link => link.classes().includes('rounded-lg') && link.text().includes('Vue Dynamic Form'));
+    // The mobile menu Dialog teleports to document.body, outside the wrapper
+    const mobileExternal = Array.from(document.body.querySelectorAll('a'))
+      .find(link => link.classList.contains('rounded-lg') && link.textContent?.includes('Vue Dynamic Form'));
 
     expect(mobileExternal).toBeDefined();
-    expect(mobileExternal!.attributes('target')).toBe('_blank');
-    expect(mobileExternal!.find('svg').exists()).toBe(true);
+    expect(mobileExternal!.getAttribute('target')).toBe('_blank');
+    expect(mobileExternal!.querySelector('svg')).not.toBeNull();
   });
 });
