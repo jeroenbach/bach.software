@@ -1,3 +1,3 @@
 # Only index individual blog posts and content pages (where MD files live).
 # Excludes: blog listing pages, plausible proxy pages, redirect stubs under /pages/.
-glob = "{posts,de/posts,nl/posts,fr/articles,es/articulos,content,de/content,nl/content,fr/content,es/content}/*.html"
+glob = "{posts,de/posts,nl/posts,content,de/content,nl/content}/*.html"

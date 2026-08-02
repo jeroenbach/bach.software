@@ -144,7 +144,7 @@ Shared presentational components live in `src/app/components/` (props in, emits 
 
 ## LanguageSwitcher
 - **Location:** components/LanguageSwitcher.vue
-- **Purpose:** Locale dropdown for the five supported locales.
+- **Purpose:** Locale dropdown for the three supported locales.
 - **Props / variants:** `language?: LocalesCode` (default is the default locale). Emits `update:language`.
 - **Used for:** Header language selection.
 

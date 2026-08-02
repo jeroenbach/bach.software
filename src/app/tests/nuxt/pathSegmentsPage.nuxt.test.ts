@@ -79,8 +79,8 @@ describe('[...pathSegments] page', () => {
   });
 
   it('should show the blog root page on a localized posts path', async () => {
-    arrangeRoute('/fr/articles', ['articles']);
-    arrangePage({ title: 'Blog', url: '/fr/articles', enableProse: false });
+    arrangeRoute('/de/posts', ['posts']);
+    arrangePage({ title: 'Blog', url: '/de/posts', enableProse: false });
 
     await mountPage();
 

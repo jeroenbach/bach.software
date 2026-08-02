@@ -11,10 +11,8 @@ export interface LocaleStructure extends LocaleObject {
 
 export const locales: LocaleStructure[] = [
   { code: 'en', language: 'en', file: 'en.json', pagesPath: '/content', postsPath: '/posts', authorsPath: '/authors', isCatchallLocale: true },
-  { code: 'fr', language: 'fr', file: 'fr.json', pagesPath: '/content', postsPath: '/articles', authorsPath: '/auteurs' },
   { code: 'nl', language: 'nl', file: 'nl.json', pagesPath: '/content', postsPath: '/posts', authorsPath: '/auteurs' },
   { code: 'de', language: 'de', file: 'de.json', pagesPath: '/content', postsPath: '/posts', authorsPath: '/autoren' },
-  { code: 'es', language: 'es', file: 'es.json', pagesPath: '/content', postsPath: '/articulos', authorsPath: '/autores' },
 ];
 
 export type LocalesCode = Parameters<typeof localesMap.get>[0];
