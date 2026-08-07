@@ -196,12 +196,12 @@ Uses `@antfu/eslint-config` with `formatters: true` and `nuxt: true`. Key enforc
 
 #### Static-vs-Worker routing on Cloudflare Pages (`_routes.json`)
 
-Cloudflare Pages decides per URL whether to serve a static asset or invoke the Worker, based solely on the include/exclude rules in `dist/_routes.json`. There is no fallback: a URL not covered by an exclude rule always invokes the Worker, even when a prerendered file exists, and the Worker then re-renders the page with D1 queries on every request (roughly 400-700 ms instead of ~50 ms). Pages allows at most **100 rules total** and Nitro silently truncates its auto-generated list to fit, so pages can silently lose their static serving as the site grows.
+Cloudflare Pages decides per URL whether to serve a static asset or invoke the Worker, based solely on the include/exclude rules in `dist/_routes.json`. There is no fallback: a URL not covered by an exclude rule always invokes the Worker, even when a prerendered file exists, and the Worker then re-renders the page with D1 queries on every request (roughly 400-700 ms instead of ~50 ms). Pages allows at most **100 rules total** and **100 characters per rule**. Nitro silently truncates its auto-generated list to fit the rule count (so pages can silently lose their static serving as the site grows) and does not check rule length at all (long blog post slugs produce rules that make wrangler reject the entire deployment).
 
 Defenses in this repo:
 
 - `nuxt.config.ts` (`nitro.cloudflare.pages.routes.exclude`) collapses whole directories into single wildcard rules (`/_ipx/*`, `/ico/*`, etc.) so all page routes fit.
-- `scripts/verify-cf-routes.mjs` runs after every `pnpm build` / `pnpm generate` and **fails the build** if any prerendered page is not covered by `_routes.json`. A warning about uncovered `_payload.json` files is acceptable (client-side navigation prefetches; they still work via the Worker).
+- `scripts/verify-cf-routes.mjs` runs after every `pnpm build` / `pnpm generate`. It is a read-only verifier: it inspects `dist/_routes.json` and the prerendered output but never modifies the generated file. It **fails the build** when any rule exceeds 100 characters, when the total number of rules exceeds 100, or when a prerendered HTML page is not covered by an exclude rule. Over-long post URLs are the durable fix's responsibility, not the script's: shorten them by adding a `slug` field to the post's YAML frontmatter so the generated route stays under the 100-character limit. A warning about uncovered `_payload.json` files is acceptable (client-side navigation prefetches; they still work via the Worker).
 
 **When `verify-cf-routes` fails**, in order of preference:
 

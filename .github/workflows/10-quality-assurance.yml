@@ -217,6 +217,12 @@ jobs:
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
+          # Apply the severity filter to the SARIF report as well. Without this
+          # the action scans at ALL severities and exit-code fires on any
+          # finding, so a MEDIUM/LOW advisory fails the build despite the
+          # CRITICAL,HIGH filter above (this is what broke CI on the MEDIUM
+          # postcss CVE-2026-69153).
+          limit-severities-for-sarif: true
           exit-code: 1
 
       - name: Upload Trivy scan results to GitHub Security tab
