@@ -57,6 +57,7 @@ jobs:
         with:
           name: generated-site-zip
           path: generated-site.zip
+          retention-days: 1
 
   deploy_job:
     needs: build_job
