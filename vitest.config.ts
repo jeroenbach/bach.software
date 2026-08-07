@@ -35,7 +35,7 @@ export default defineConfig({
       thresholds: {
         autoUpdate: true,
         statements: 69.11,
-        branches: 65.8,
+        branches: 66.52,
         functions: 64.87,
         lines: 69.18,
       },
@@ -78,6 +78,12 @@ export default defineConfig({
         },
         test: {
           name: 'nuxt',
+          // Each .nuxt.test.ts boots its own full Nuxt environment. Under v8
+          // coverage the parallel setups starve the CPU and the default 10s
+          // hook / 5s test timeouts flake intermittently (see `pnpm check`).
+          // Give the Nuxt boot headroom while keeping full parallelism.
+          testTimeout: 30_000,
+          hookTimeout: 60_000,
           include: [
             'src/app/components/**/*.nuxt.{test,spec}.{ts,js}',
             'src/app/composables/**/*.nuxt.{test,spec}.{ts,js}',

@@ -170,7 +170,7 @@ test.describe('Structured Data Tests', () => {
                 'Track how many people read your articles, using Plausible.io, Vue.js and Azure functions',
               'datePublished': '2025-08-03T15:45:00+02:00',
               'dateModified': '2025-08-03T15:45:00+02:00',
-              'url': 'https://bach.software/posts/3-track-how-many-people-read-your-articles-using-plausible_io-vue_js-and-azure-functions',
+              'url': 'https://bach.software/posts/3-track-article-reads-plausible-vue-azure-functions',
               'author': {
                 '@type': 'Person',
                 'name': 'Jeroen Bach',
