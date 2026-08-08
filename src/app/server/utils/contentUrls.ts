@@ -22,7 +22,7 @@ export async function getContentUrlMap(event: any): Promise<ContentUrlMap> {
   for (const locale of locales) {
     // Pages
     const pagesCollection = `pages_${locale.code}` as Extract<keyof Collections, `pages_${string}`>;
-    let pages = await queryCollectionNavigation(event, pagesCollection, ['contentId', 'url', 'dateModified'])
+    let pages = await queryCollectionNavigation(event, pagesCollection, ['contentId', 'url', 'dateModified', 'slug'])
       .orWhere(q => q.where('partial', 'IS NULL').where('partial', '=', false))
       .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false)) as ContentNavigationItemExtended[];
 
@@ -40,7 +40,7 @@ export async function getContentUrlMap(event: any): Promise<ContentUrlMap> {
 
     // Posts
     const postsCollection = `posts_${locale.code}` as Extract<keyof Collections, `posts_${string}`>;
-    let posts = await queryCollectionNavigation(event, postsCollection, ['contentId', 'dateModified'])
+    let posts = await queryCollectionNavigation(event, postsCollection, ['contentId', 'dateModified', 'slug'])
       .orWhere(q => q.where('draft', 'IS NULL').where('draft', '=', false)) as ContentNavigationItemExtended[];
 
     if (locale?.postsPath && locale.postsPath !== '/') {

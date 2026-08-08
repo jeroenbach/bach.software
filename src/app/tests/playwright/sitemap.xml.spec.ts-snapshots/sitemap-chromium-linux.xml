@@ -60,17 +60,17 @@
     <changefreq>monthly</changefreq>
     <xhtml:link rel="alternate" hreflang="en" href="https://bach.software/posts/2-ditching-the-cookie-banners:-run-plausible-analytics-on-azure-kubernetes"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://bach.software/nl/posts/2-afscheid-van-cookie-banners:-draai-plausible-analytics-op-azure-kubernetes"/>
-    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/2-abschied-von-cookie-bannern:-plausible-analytics-auf-azure-kubernetes-betreiben"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/2-plausible-analytics-azure-kubernetes-ohne-cookie-banner"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/2-ditching-the-cookie-banners:-run-plausible-analytics-on-azure-kubernetes"/>
   </url>
   <url>
-    <loc>https://bach.software/posts/3-track-how-many-people-read-your-articles-using-plausible_io-vue_js-and-azure-functions</loc>
+    <loc>https://bach.software/posts/3-track-article-reads-plausible-vue-azure-functions</loc>
     <lastmod>2025-08-03T13:45:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
-    <xhtml:link rel="alternate" hreflang="en" href="https://bach.software/posts/3-track-how-many-people-read-your-articles-using-plausible_io-vue_js-and-azure-functions"/>
-    <xhtml:link rel="alternate" hreflang="nl" href="https://bach.software/nl/posts/3-volg-hoeveel-mensen-je-artikelen-lezen-met-plausible_io-vue_js-en-azure-functions"/>
-    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/3-verfolgen-sie-wie-viele-menschen-ihre-artikel-lesen-mit-plausible_io-vue_js-und-azure-functions"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/3-track-how-many-people-read-your-articles-using-plausible_io-vue_js-and-azure-functions"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://bach.software/posts/3-track-article-reads-plausible-vue-azure-functions"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bach.software/nl/posts/3-artikel-lezingen-volgen-plausible-vue-azure-functions"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/3-artikel-aufrufe-verfolgen-plausible-vue-azure-functions"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/3-track-article-reads-plausible-vue-azure-functions"/>
   </url>
   <url>
     <loc>https://bach.software/posts/4-deploy-a-production-ready-kubernetes-cluster-on-azure-with-terraform</loc>
@@ -78,7 +78,7 @@
     <changefreq>monthly</changefreq>
     <xhtml:link rel="alternate" hreflang="en" href="https://bach.software/posts/4-deploy-a-production-ready-kubernetes-cluster-on-azure-with-terraform"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://bach.software/nl/posts/4-implementeer-een-productie-klaar-kubernetes-cluster-op-azure-met-terraform"/>
-    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/4-einen-produktionsreifen-kubernetes-cluster-auf-azure-mit-terraform-bereitstellen"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://bach.software/de/posts/4-produktionsreifer-kubernetes-cluster-azure-terraform"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bach.software/posts/4-deploy-a-production-ready-kubernetes-cluster-on-azure-with-terraform"/>
   </url>
   <url>
