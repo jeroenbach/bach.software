@@ -5,9 +5,8 @@ argument-hint: short description of the change
 
 Read `CLAUDE.md` and the referenced spec before acting.
 
-Quick lane for: $ARGUMENTS
+Quick lane lifecycle: `draft → adversarial-review → awaiting-approval → approved → implementing → done`.
 
-Process:
 1. Create `docs/specs/QUICK-XXX-<kebab-name>/spec.md` (numbered sequentially based on existing QUICK specs) with this mini-template:
 
    ```markdown
@@ -33,8 +32,14 @@ Process:
    ## Adversarial review
    ```
 
-2. Fill in the problem, proposed change, affected files, and test impact by investigating the codebase.
-3. Invoke the adversarial-reviewer agent in lite mode on the new spec.
-4. Set the status to `awaiting-approval` and STOP for Jeroen's review. Never set `status: approved`; that is Jeroen's alone.
+   Fill Problem, Proposed change, Affected files (inspect the code, do not guess), and Test impact from the description below.
 
-After Jeroen approves, `/spec:implement QUICK-XXX` implements it. The quick lane skips design, architecture, and story splitting, but NOT the components.md update rule or the Tailwind variant rules.
+2. Invoke the **adversarial-reviewer** agent in STORY (lite) mode on the new spec.
+
+3. Set the spec status to `awaiting-approval` and STOP for Jeroen's review. Only Jeroen may set `status: approved`.
+
+After approval, `/spec:implement QUICK-XXX` implements it, including the `docs/components.md` update obligation and the Tailwind variant rules.
+
+Change description:
+
+$ARGUMENTS

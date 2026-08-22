@@ -4,7 +4,13 @@ type: feature
 status: draft
 created: YYYY-MM-DD
 approved_by: ""
+epic: ""
 ---
+
+<!-- epic: optional. Set to the parent EPIC-XXX id when this feature belongs to an
+     epic; leave "" for a standalone feature. Features are never nested under the
+     epic folder, they only reference it here (flat model). -->
+
 
 # Feature: <name>
 

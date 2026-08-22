@@ -46,7 +46,7 @@ jobs:
 
       - name: Build Site
         env:
-          NUXT_PUBLIC_API_BASE: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.api.bach.software', github.event.pull_request.number) || '' }}
+          NUXT_PUBLIC_API_BASE: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.api.bach.software', github.event.pull_request.number) || 'https://api.bach.software' }}
         run: pnpm build
 
       - name: Zip generated site (no compression)

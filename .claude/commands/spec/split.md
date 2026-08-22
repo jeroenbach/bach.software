@@ -5,8 +5,10 @@ argument-hint: FEAT-XXX
 
 Read `CLAUDE.md` and the referenced spec before acting.
 
-Invoke the scrum-master agent on the feature: $ARGUMENTS
+**Approval gate (repeat of the workflow hard rule):** the feature spec's frontmatter must have `status: approved`, set by Jeroen. If it does not, do NOT split; report the current status and stop. Only Jeroen may approve, and a feature is only split after its design and architecture are approved.
 
-APPROVAL GATE (enforced here and by the agent): the feature spec's frontmatter status must be exactly `approved`, set by Jeroen with `approved_by` filled. If it is anything else, do NOT split; report the current status and stop. A feature is only split after Jeroen approved its design and architecture.
+If (and only if) the gate passes, invoke the **scrum-master** agent on the feature identified below. It splits the feature along the architecture's slicing seams into small, vertically sliced, dependency-ordered stories under `stories/ST-YY-<name>/spec.md`, updates the feature's Stories section, sets the feature status to `in-progress`, and each story to `qa`.
 
-The scrum-master slices the approved feature into vertically sliced, dependency-ordered stories under `stories/`, updates the feature's Stories section, sets the feature to `in-progress`, and each story to `qa`.
+Arguments:
+
+$ARGUMENTS

@@ -1,0 +1,68 @@
+name: Cleanup PR Preview Deployments
+
+# When a PR is closed (merged or not), Cloudflare Pages keeps every preview
+# deployment it ever built for that PR forever. They have no rollback value
+# (each PR push redeploys a fresh preview), so we delete them here. Production
+# deployments (the `main` branch) are never touched and stay available for
+# rollback.
+
+on:
+  pull_request:
+    types: [closed]
+
+# Don't race the deploy workflow for the same PR.
+concurrency:
+  group: cleanup-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    name: Delete preview deployments
+    steps:
+      - name: Delete this PR's Cloudflare Pages preview deployments
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: bach-software
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |8
+          set -euo pipefail
+
+          api="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${PROJECT}/deployments"
+          auth=(-H "Authorization: Bearer ${CF_API_TOKEN}")
+
+          # The deploy step uses `--branch=${{ github.ref_name }}`, which on a
+          # pull_request event is "<number>/merge". We also match "pr-<number>"
+          # so this keeps working if the branch naming ever changes.
+          b1="${PR_NUMBER}/merge"
+          b2="pr-${PR_NUMBER}"
+
+          deleted=0
+          page=1
+          while :; do
+            resp="$(curl -sf "${auth[@]}" "${api}?env=preview&page=${page}&per_page=25")"
+
+            ids="$(echo "$resp" | jq -r \
+              --arg b1 "$b1" --arg b2 "$b2" \
+              '.result[]
+                 | select(.environment == "preview")
+                 | select(.deployment_trigger.metadata.branch == $b1
+                          or .deployment_trigger.metadata.branch == $b2)
+                 | .id')"
+
+            for id in $ids; do
+              echo "Deleting preview deployment $id"
+              # force=true is required to delete a branch's most-recent deployment.
+              curl -sf -X DELETE "${auth[@]}" "${api}/${id}?force=true" > /dev/null
+              deleted=$((deleted + 1))
+            done
+
+            count="$(echo "$resp" | jq '.result | length')"
+            if [ "$count" -lt 25 ]; then
+              break
+            fi
+            page=$((page + 1))
+          done
+
+          echo "Deleted ${deleted} preview deployment(s) for PR #${PR_NUMBER}."
