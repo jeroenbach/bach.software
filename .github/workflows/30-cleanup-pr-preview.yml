@@ -26,7 +26,7 @@ jobs:
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           PROJECT: bach-software
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |8
+        run: |
           set -euo pipefail
 
           api="https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${PROJECT}/deployments"

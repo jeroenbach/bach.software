@@ -5,7 +5,7 @@ argument-hint: short description of the change
 
 Read `CLAUDE.md` and the referenced spec before acting.
 
-Quick lane lifecycle: `draft → adversarial-review → awaiting-approval → approved → implementing → done`.
+Quick lane lifecycle: `draft → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → implementing → done`.
 
 1. Create `docs/specs/QUICK-XXX-<kebab-name>/spec.md` (numbered sequentially based on existing QUICK specs) with this mini-template:
 
@@ -34,9 +34,9 @@ Quick lane lifecycle: `draft → adversarial-review → awaiting-approval → ap
 
    Fill Problem, Proposed change, Affected files (inspect the code, do not guess), and Test impact from the description below.
 
-2. Invoke the **adversarial-reviewer** agent in STORY (lite) mode on the new spec.
+2. Invoke the **adversarial-reviewer** agent (model: opus, pass this explicitly on the Agent tool call, see `.claude/agents/adversarial-reviewer.md`) in STORY (lite) mode on the new spec.
 
-3. Set the spec status to `awaiting-approval` and STOP for Jeroen's review. Only Jeroen may set `status: approved`.
+3. STOP for Jeroen's review at whichever status the reviewer set: `awaiting-approval` if it left nothing open, `awaiting-discussion` if it left an unresolved blocker or should-fix. For a genuinely quick fix, expect the former; landing in `awaiting-discussion` is a hint the change is not actually quick-lane material. Only Jeroen may set `status: approved`.
 
 After approval, `/spec:implement QUICK-XXX` implements it, including the `docs/components.md` update obligation and the Tailwind variant rules.
 
