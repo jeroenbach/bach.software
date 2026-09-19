@@ -1,0 +1,160 @@
+name: Update Playwright Snapshots
+
+# Regenerates the visual-regression baselines and commits them back to the
+# branch.
+#
+# Why this exists: the baselines in src/app/tests/playwright/*-snapshots/ are
+# defined by the mcr.microsoft.com/playwright:v1.60.0-jammy image, because that
+# is the container 20-build-deploy-playwright.yml verifies them in. The specs
+# also set `testInfo.snapshotSuffix = ''`, so there is a single OS-agnostic
+# baseline set with no per-platform fallback. Regenerating them anywhere else
+# (a dev's macOS host, an agent sandbox, a plain ubuntu-latest runner) silently
+# replaces them with images that only match that environment's font stack, and
+# the pipeline then fails permanently for reasons that are hard to trace.
+#
+# So: this workflow is the only supported way to update baselines besides
+# `pnpm playwright:docker:update` locally. It runs in the exact same image that
+# verifies them.
+#
+# Trigger it either by running the workflow on your branch (`pnpm
+# update-snapshots`), or by commenting `/update-snapshots` on a pull request.
+#
+# Note: the playwright image has no `gh` CLI, so API calls go through
+# actions/github-script (a JavaScript action, which the runner executes inside
+# the container) rather than the shell.
+
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update_snapshots:
+    # For comments, only react to `/update-snapshots` on a pull request (not on
+    # plain issues, which have no branch to commit to).
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (github.event.issue.pull_request
+          && startsWith(github.event.comment.body, '/update-snapshots'))
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.60.0-jammy
+      options: --user root
+    env:
+      HOME: /root
+    name: Update Snapshots
+    steps:
+      # Also resolves the branch to commit to. A comment event has no ref of
+      # its own, so the PR's head branch has to come from the API.
+      - name: Acknowledge the comment and resolve the branch
+        id: pr
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            await github.rest.reactions.createForIssueComment({
+              owner,
+              repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes',
+            });
+            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: issue_number });
+            if (pr.head.repo.full_name !== `${owner}/${repo}`) {
+              core.setFailed('This PR comes from a fork. GITHUB_TOKEN cannot push to it, so update the snapshots locally with `pnpm playwright:docker:update` instead.');
+              return;
+            }
+            core.setOutput('branch', pr.head.ref);
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+          # Empty on workflow_dispatch, which correctly falls back to the ref
+          # the workflow was started on.
+          ref: ${{ steps.pr.outputs.branch }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # `pnpm build` already runs i18n-extract, pagefind, and storybook:build,
+      # so this covers both webServers the Playwright config starts. The API
+      # base mirrors what 20-build-deploy-playwright.yml uses for PR builds, so
+      # the regenerated baselines come from the same build the verify job runs.
+      - name: Build site
+        env:
+          # 20-build-deploy-playwright.yml builds on a runner whose system
+          # timezone is set to Europe/Amsterdam; TZ mirrors that here because
+          # timedatectl is not available inside the container.
+          TZ: Europe/Amsterdam
+          NUXT_PUBLIC_API_BASE: ${{ github.event_name == 'issue_comment' && format('https://pr-{0}.api.bach.software', github.event.issue.number) || '' }}
+        run: pnpm build
+
+      # Snapshot updates always "pass", so a non-zero exit here means a real
+      # failure (build broken, server never came up) and should stop the run
+      # before anything gets committed.
+      - name: Update snapshots
+        run: pnpm ci:playwright --update-snapshots
+
+      - name: Commit updated snapshots
+        id: commit
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/app/tests/playwright
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No snapshot changes; nothing to commit."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git commit -m "chore: update Playwright snapshots"
+            git push
+          fi
+
+      - name: Report back on the pull request
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        env:
+          CHANGED: ${{ steps.commit.outputs.changed }}
+        with:
+          script: |
+            const body = process.env.CHANGED === 'true'
+              ? 'Updated the Playwright snapshots and pushed them to this branch.\n\nNote: commits pushed with `GITHUB_TOKEN` do not re-trigger workflows, so push another commit or re-run **Build, Deploy & Playwright** manually to verify the new baselines.'
+              : 'Ran the snapshot update, but the baselines were already up to date. Nothing was committed.';
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5

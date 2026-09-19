@@ -41,6 +41,8 @@ pnpm playwright:docker             # Build the site, then run Playwright in Dock
 pnpm playwright:docker:update      # Build the site, then update snapshots in Docker
 pnpm ci:playwright:docker          # Run Playwright in Docker without building first (assumes an existing build)
 pnpm ci:playwright:docker:update   # Update snapshots in Docker without building first
+pnpm update-snapshots              # Update snapshots via CI (no local Docker needed);
+                                   # or comment /update-snapshots on the PR
 ```
 
 > **Important**: `pnpm dev` and `pnpm generate` both auto-run `i18n-extract` first. If translations are out of sync you'll see TypeScript errors — run `pnpm dev` once to re-sync.
@@ -48,6 +50,20 @@ pnpm ci:playwright:docker:update   # Update snapshots in Docker without building
 ## Writing Style
 
 - **Never use em dashes (—)** in any text you write: content, copy, descriptions, PR text, etc. Rephrase the sentence or use a comma, colon, or parentheses instead.
+
+## Code Conventions
+
+- **Vue: always use camelCase, never kebab-case** (component names, props, event names, ...). This is also enforced by ESLint (see the ESLint section below).
+- **Every user-runnable script gets a `package.json` script.** Whenever you add a script meant to be run by the user (e.g. anything under `scripts/`), add a matching entry to the `scripts` section of `package.json` so it can be run via `pnpm <name>` instead of a long raw command. Name it clearly (e.g. `upload-images` for `scripts/upload-product-images.mjs`).
+
+## Git
+
+- **Commit message wrapping: no hard line breaks mid-sentence.** Write each paragraph and each bullet as one continuous line, so the editor's word-wrap handles the display. Only insert a real newline where a new paragraph, bullet, or the subject/body separation actually starts. Never hard-wrap a sentence across multiple lines at a fixed column, because those breaks show up as awkward mid-sentence line breaks when pasted into the VS Code commit box.
+- To backdate a commit, set both the committer and the author date:
+
+  ```bash
+  GIT_COMMITTER_DATE="Sun Aug 03 20:02:43 2025 +0200" git commit --amend --date="Sun Aug 03 20:02:43 2025 +0200" --no-edit
+  ```
 
 ## Workflow — Before Finishing Any Change
 
@@ -73,6 +89,8 @@ When completing any code change (feature, fix, refactor):
 4. **Check the Cloudflare Pages deploy preview instead of adding screenshots to the PR.** Cloudflare automatically creates a preview environment for every open PR; that's what reviewers use to check the change live, not static images in the PR body. The preview URL is posted as a GitHub commit status once `20-build-deploy-playwright.yml` completes. Verify the changed pages render and work correctly end-to-end in the preview. On merge to `main`, Cloudflare deploys to production automatically.
 
    **Always surface the Cloudflare Pages preview URL when you report a PR — not just the GitHub PR URL.** The URL is not posted as a commit status or bot comment; it is printed by the `Deploy Job` step of `20-build-deploy-playwright.yml` in the `cloudflare/wrangler-action` output (`✨ Deployment alias URL: ...`). Retrieve it from that job's logs once the Deploy Job succeeds. The deploy aliases PRs with `--branch=pr-<PR-number>`, so the **stable preview URL for a PR is `https://pr-<PR-number>.bach.software`** (e.g. PR #1 → `https://pr-1.bach.software`). It always points at the latest deploy of that PR. Include this URL in your reply to the user and in the PR description, and when a change touches specific pages, link directly to them on the preview host (e.g. `.../products`).
+
+5. **Always check the PR pipeline and fix any problems.** After pushing (and again on every later push), watch the GitHub Actions runs for the PR — `10-quality-assurance.yml` (lint, typecheck, unit tests, backend tests, coverage, Trivy) and `20-build-deploy-playwright.yml` (build, deploy, Playwright E2E). If any check fails or is red, investigate the logs, reproduce and fix the failure locally, then push the fix and re-check — repeat until the whole pipeline is green. Do not consider a change done while its PR pipeline is failing.
 
 ## Remembering Instructions
 
@@ -171,6 +189,19 @@ Always use `TZ=Europe/Amsterdam` when running tests (dates are timezone-sensitiv
 **No HTML snapshot tests.** Never assert component markup with `expect(wrapper.html()).toMatchSnapshot()` (or inline/file HTML snapshots) in component tests. Instead, for every component: add it to Storybook (`ComponentName.stories.ts`) and register its story id in `src/app/tests/playwright/components.spec.ts`, which takes an actual screenshot of the story and compares it visually (run via `pnpm ci:playwright:docker`, update baselines with `pnpm ci:playwright:docker:update`). Unit/component tests should only assert behaviour (props, emits, rendered text/attributes) — never full markup.
 
 Playwright E2E tests are in `src/app/tests/playwright/`. Visual snapshot tests use Docker for reproducibility across OS environments (see `pnpm ci:playwright:docker`).
+
+#### Visual baselines: only ever regenerate them in the jammy container
+
+The baselines in `src/app/tests/playwright/*-snapshots/` are defined by `mcr.microsoft.com/playwright:v1.60.0-jammy`, the container `20-build-deploy-playwright.yml` verifies them in. The specs also set `testInfo.snapshotSuffix = ''`, so there is a **single OS-agnostic baseline set with no per-platform fallback**. Regenerating them in any other environment (a macOS host, an agent sandbox, a plain `ubuntu-latest` runner) replaces them with images that only match that environment's font stack, and the pipeline then fails permanently for reasons that are hard to trace.
+
+There are exactly two supported ways to update them:
+
+- **Locally, with Docker:** `pnpm playwright:docker:update`.
+- **Via CI, no Docker needed:** `pnpm update-snapshots` on your branch, or comment `/update-snapshots` on the PR. This runs `30-update-snapshots.yml`, which rebuilds and regenerates the baselines inside the same jammy container and commits them back to the branch.
+
+Agents without Docker must use the CI path. Never run `pnpm ci:playwright --update-snapshots` directly, and never resolve a visual diff by hand-editing or deleting snapshot files. If a diff is not an intended result of your change, it is a real regression: fix the code, not the baseline.
+
+Note that snapshot commits are pushed with `GITHUB_TOKEN`, which does not re-trigger workflows, so re-run `20-build-deploy-playwright.yml` (or push another commit) to verify the new baselines.
 
 ### Backend (.NET)
 

@@ -226,6 +226,16 @@ export interface BlogPostSummary extends Metadata {
 - **Bug branches**: `bug/description-of-bug`
 - **Pull requests**: Required for all changes — include tests and a description of what changed and why
 
+### Spec-driven Workflow
+
+Larger changes are planned as specs under [`docs/specs/`](docs/specs/README.md) before any code is written: an optional **epic** groups **features**, a feature is split into **stories**, and a **quick** lane handles trivial fixes. Each spec carries a `status` in its frontmatter that moves through its lifecycle:
+
+- **Feature**: `draft → design → architecture → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → in-progress → done`
+- **Story**: `draft → qa → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → implementing → verifying → done`
+- **`awaiting-discussion`** (conditional) means something is genuinely open and needs a decision from Jeroen (`/spec:discuss`); **`awaiting-approval`** means nothing is open and only his stamp is needed (`/spec:approve`). These are the only approval gates. **`deferred`** is a terminal parking state for specs decided against (rationale recorded in the spec), separate from `done`.
+
+Run `/spec:status` for the full pipeline, or `/spec:continue FEAT-XXX` to run every phase up to the next approval gate in one go. See [`docs/specs/README.md`](docs/specs/README.md) for the complete workflow and the `/spec:*` commands.
+
 ## 🧪 Testing Strategy
 
 We use a comprehensive testing pyramid:
