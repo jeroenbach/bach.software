@@ -2,7 +2,6 @@
 id: EPIC-000
 type: epic
 status: draft
-created: YYYY-MM-DD
 approved_by: ""
 ---
 

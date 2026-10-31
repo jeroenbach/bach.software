@@ -49,7 +49,12 @@ pnpm update-snapshots              # Update snapshots via CI (no local Docker ne
 
 ## Writing Style
 
-- **Never use em dashes (—)** in any text you write: content, copy, descriptions, PR text, etc. Rephrase the sentence or use a comma, colon, or parentheses instead.
+- **Never use em dashes (—) to connect two clauses/sentences** in any text you write: content, copy, descriptions, PR text, etc. Rephrase the sentence or use a comma, colon, or parentheses instead. Other uses of the em-dash character are fine (e.g. a placeholder glyph for a missing value, a literal character being preserved from existing/ported behavior).
+
+## Code Comments
+
+- **Never reference specs, features, stories, or process artifacts in code comments or test names**: no FEAT-001, ST-05, AC4, ADR-2, "QA plan", "feature spec", "finding 3", "decision 4", etc. Specs are process artifacts; the code must stand on its own for a reader who has never seen them.
+- Write sensible comments: short and powerful. Let function and variable names carry the explanation; a comment only earns its place when it states a constraint or rationale the code itself cannot show.
 
 ## Code Conventions
 
@@ -58,6 +63,7 @@ pnpm update-snapshots              # Update snapshots via CI (no local Docker ne
 
 ## Git
 
+- **Commit messages lead with the business purpose, not the mechanism.** Open with why this matters, the problem it solves for whoever hits it (a site visitor, a reader, Jeroen maintaining the site), before any technical detail. Technical detail (which flag, which component, why a particular approach was chosen) can follow after that, only if it matters, and should stay brief. **If the business purpose isn't already documented and can't be inferred with confidence, ask Jeroen rather than guessing at one.** For spec-driven work it's usually already written down: pull it from the feature's `Problem & goal` or the story's `User story` section instead of re-deriving it from the diff. When starting a new feature spec, the product-owner should make sure `Problem & goal` actually captures the business purpose (the why, for whom), since it gets reused verbatim later for commit messages.
 - **Commit message wrapping: no hard line breaks mid-sentence.** Write each paragraph and each bullet as one continuous line, so the editor's word-wrap handles the display. Only insert a real newline where a new paragraph, bullet, or the subject/body separation actually starts. Never hard-wrap a sentence across multiple lines at a fixed column, because those breaks show up as awkward mid-sentence line breaks when pasted into the VS Code commit box.
 - To backdate a commit, set both the committer and the author date:
 
@@ -94,12 +100,16 @@ When completing any code change (feature, fix, refactor):
 
 ## Remembering Instructions
 
-Whenever the user says "remember this" (or similar) about an instruction or preference, add it to this CLAUDE.md file in the appropriate section (create one if needed). Keep CLAUDE.md as one single file — do not split it into partials.
+Whenever the user says "remember this" (or similar) about an instruction or preference, add it to this CLAUDE.md file in the appropriate section (create one if needed). Keep CLAUDE.md as one single file, do not split it into partials. Whether to commit that edit follows the same rule as everything else (see "Interactive vs Autonomous Sessions"): in an interactive session, make the edit and stop there; the user commits it themselves.
 
 ## Interactive vs Autonomous Sessions
 
-- **Working together (interactive session)**: only make the changes — do **not** commit or push; the user handles git themselves.
+- **Working together (interactive session)**: only make the changes, do **not** touch git state in any way: no commits, no pushes, and no staging (`git add`). The user stages changes himself deliberately, so he can see what changed in the working tree; staging on his behalf destroys that overview. Read-only git commands (status, diff, log) are fine. When implementing a feature's stories (e.g. via `/spec:continue`), do **not** stop after each story: implement and verify all approved stories in dependency order in one run, leaving everything uncommitted. Only stop early for a parked story, a story waiting on an approval gate, or a story that depends on one of those.
 - **Working autonomously (e.g. GitHub Actions, scheduled agents, or when explicitly asked to finish a task end-to-end)**: follow the full workflow above, including commits, screenshots, and the PR.
+
+## Spec-Driven Development
+
+Larger work runs through the spec workflow in `docs/specs/` (see `docs/specs/README.md` for the full lifecycle): epics, features, and stories with approval gates that only Jeroen may pass. The `/spec:*` commands in `.claude/commands/spec/` drive it, the agents live in `.claude/agents/`, and `docs/components.md` is the living inventory of shared components (keep it up to date on every shared component change). Bug fixes and trivial changes can use `/spec:quick`.
 
 ## Architecture
 

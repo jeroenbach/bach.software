@@ -2,7 +2,6 @@
 id: FEAT-000
 type: feature
 status: draft
-created: YYYY-MM-DD
 approved_by: ""
 epic: ""
 ---

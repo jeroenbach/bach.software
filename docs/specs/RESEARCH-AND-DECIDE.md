@@ -32,7 +32,7 @@ The same question is worth interrupting Jeroen for before he has reviewed the fe
 
 So there are two bars, and which one applies is a fact about the spec, not a judgement call:
 
-- **The feature is not yet approved** (chain 1, `/spec:discuss`, any epic or feature spec still short of `approved`): use the **clear-winner bar** in step 2a.
+- **The feature is not yet approved** (chain 1, `/spec:discuss`, any epic or feature spec still short of `approved`): use the **clear-winner bar** in step 2a. Chain 1 runs this research step right after the adversarial review, so the spec reaches Jeroen with the clear winners already settled; `/spec:discuss` then opens by presenting those decisions for him to override and researches only what the chain missed. Pre-approval, never write `ASSUMED` entries and never break ties: what fails the bar simply stays open for the discussion.
 - **The feature is approved** (chain 2 and chain 3, all story prep and implementation, quick specs after approval): use the **post-approval ladder** in step 2b. Its whole purpose is to leave nothing for Jeroen.
 
 ## Step 2a: the clear-winner bar (before approval)
@@ -60,19 +60,19 @@ When in doubt, ask. A question Jeroen waves through in five seconds costs far le
 
 Once the feature is approved, "take it to Jeroen" is no longer an acceptable default. The lists in step 2a still describe what a *significant* decision looks like, but here they are a prompt to look harder, not a licence to escalate.
 
-Research the point first, exactly as in step 1. If research produces a clear winner, record it as `DECIDED (research, <date>)` and move on. If it does not, **do not stop and do not guess**. Walk this ladder in order and take the first rung that discriminates between the options:
+Research the point first, exactly as in step 1. If research produces a clear winner, record it as `DECIDED (research)` and move on. If it does not, **do not stop and do not guess**. Walk this ladder in order and take the first rung that discriminates between the options:
 
 1. **The approved feature spec.** Its design, prototype anchors, architecture, ADRs, and existing `DECIDED` entries. Does one option follow from what was already approved, or contradict it? This rung answers more than it looks like it will, because the question usually arose from reading the spec in the first place.
 2. **The existing codebase pattern.** `docs/components.md`, `docs/design/tokens.css`, sibling specs, and the surrounding code. If this codebase already does it one way, matching it wins. Consistency is a real reason, not a tiebreak of last resort.
 3. **Reversibility.** Prefer the option that is a local edit to undo over the one that is a refactor.
 4. **Smallest scope.** Prefer the option that adds least: no new dependency, no new public surface, no new env var, the narrowest change that satisfies the story.
 
-Rungs 1 and 2 produce evidence, so they record as `DECIDED (research, <date>)` with the source. Rungs 3 and 4 do not: they break a genuine tie by policy, and they record honestly as `ASSUMED (story prep, <date>)` (see step 3). Labelling those differently is what makes running unattended safe rather than reckless, because Jeroen can find every one of them at PR review and see that it was a tie rather than a finding.
+Rungs 1 and 2 produce evidence, so they record as `DECIDED (research)` with the source. Rungs 3 and 4 do not: they break a genuine tie by policy, and they record honestly as `ASSUMED (story prep)` (see step 3). Labelling those differently is what makes running unattended safe rather than reckless, because Jeroen can find every one of them at PR review and see that it was a tie rather than a finding.
 
 **What is left after the ladder, and only this, is Jeroen's:**
 
 1. **It needs a fact only he has:** credentials, account access, budget, a third-party account, a business or legal call. No amount of research produces these.
-2. **Answering it means contradicting something already approved:** the feature's design or architecture, or an existing `DECIDED (Jeroen, ...)` entry. Never overturn his call quietly, and never let a story locally override the feature it belongs to.
+2. **Answering it means contradicting something already approved:** the feature's design or architecture, or an existing `DECIDED (Jeroen)` entry. Never overturn his call quietly, and never let a story locally override the feature it belongs to.
 3. **The approved feature has a real gap:** the codebase does not fill it, and every option changes what ships in a way he would notice.
 
 Case 3 is a defect in the **feature**, not in the story that surfaced it. Say so in those words, and name the feature section that is missing, so it gets fixed at the level where it is wrong.
@@ -92,20 +92,20 @@ If several stories of the same feature park, do not report them as separate inci
 
 ## Step 3: record it
 
-Write the decision back into the spec **immediately**, in place, directly under the question or finding it resolves. Do not batch them up until the end.
+Write the decision back into the spec **immediately**, in place, directly under the question or finding it resolves. Do not batch them up until the end. Never put a date in any of these entries; git records when each line was written (see the no-dates principle in `README.md`).
 
 For a decision you made from research:
 
 ```
-DECIDED (research, 2026-09-02): Use native loading="lazy" instead of an IntersectionObserver polyfill.
+DECIDED (research): Use native loading="lazy" instead of an IntersectionObserver polyfill.
 Why: supported by every browser in the project's target matrix, and it drops a dependency.
-Sources: developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading, caniuse.com/loading-lazy-attr (96.4%, checked 2026-09-02)
+Sources: developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading, caniuse.com/loading-lazy-attr (96.4%)
 ```
 
 For a post-approval tie you broke on ladder rung 3 or 4, where there was no winner on the merits:
 
 ```
-ASSUMED (story prep, 2026-09-04): Put the share row above the category chips, not below them.
+ASSUMED (story prep): Put the share row above the category chips, not below them.
 Why: no clear winner. The feature spec and the codebase are both silent on the order.
 Tie broken on: reversibility (moving one block in one template).
 Alternative: below the chips. Reversing costs a one-line template move and one updated snapshot.
@@ -116,7 +116,7 @@ Always name the alternative and what reversing it costs. An `ASSUMED` entry with
 For a decision Jeroen made, the existing convention is unchanged:
 
 ```
-DECIDED (Jeroen, 2026-09-02): <the decision, in one or two sentences>
+DECIDED (Jeroen): <the decision, in one or two sentences>
 ```
 
 For something you are deliberately leaving to him:
@@ -136,7 +136,7 @@ Settled from research during <phase>, not reviewed by Jeroen. Override any of th
 - AR-2 → drop the IntersectionObserver dependency
 ```
 
-Rules for the rollup: one line per decision, linking the item id to the outcome in a handful of words. It is a skim aid, the reasoning stays inline. If Jeroen later overrides one, rewrite that entry inline as `DECIDED (Jeroen, <date>)` and remove its line from the rollup, since it is no longer a decision made without him. When the rollup empties, delete the section.
+Rules for the rollup: one line per decision, linking the item id to the outcome in a handful of words. It is a skim aid, the reasoning stays inline. If Jeroen later overrides one, rewrite that entry inline as `DECIDED (Jeroen)` and remove its line from the rollup, since it is no longer a decision made without him. When the rollup empties, delete the section.
 
 `ASSUMED` entries get their own rollup, directly under the first one, because they carry less confidence and are the ones most worth a glance at PR review:
 
@@ -148,7 +148,7 @@ Ties broken by policy during <phase>, not decided on the merits. Each names its 
 - Q2 → share row above the category chips (reversible: one template move)
 ```
 
-Same rules apply: one line each, delete the section when it empties, and promote an entry to `DECIDED (Jeroen, <date>)` if he rules on it later.
+Same rules apply: one line each, delete the section when it empties, and promote an entry to `DECIDED (Jeroen)` if he rules on it later.
 
 If the answer changes scope, behavior, or a design or architecture call rather than merely clarifying it, edit that section of the spec too, not just the question.
 
@@ -156,4 +156,4 @@ If the answer changes scope, behavior, or a design or architecture call rather t
 
 - **Never advances `status:` frontmatter.** Status belongs to the phase commands. Researching and deciding is orthogonal to the lifecycle and moves nothing forward on its own. There is exactly one exception, and it moves nothing forward: parking a spec at `awaiting-discussion` per step 2c, which hands it back to Jeroen rather than advancing it.
 - **Never sets `status: approved`,** and never suggests doing so. The three approval gates in `README.md` belong to Jeroen alone, and nothing here weakens that. Settling an open point is not approving a spec.
-- **Never overturns a decision Jeroen already made.** If research says an existing `DECIDED (Jeroen, ...)` entry is wrong, do not quietly revise it. Surface the conflict and let him rule.
+- **Never overturns a decision Jeroen already made.** If research says an existing `DECIDED (Jeroen)` entry is wrong, do not quietly revise it. Surface the conflict and let him rule.

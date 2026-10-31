@@ -3,7 +3,6 @@ id: ST-00
 type: story
 feature: FEAT-000
 status: draft
-created: YYYY-MM-DD
 approved_by: ""
 pr: ""
 ---
