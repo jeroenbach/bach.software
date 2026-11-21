@@ -1,0 +1,232 @@
+---
+id: ST-08
+type: story
+feature: FEAT-001
+status: done
+approved_by: "auto (delegated by feature approval)"
+pr: ""
+---
+
+# Story: Component interface cleanup, test builders and translated UI labels (FE-02, FE-04, FE-08)
+
+## Functional
+### User story
+As a site visitor reading in Dutch or German, I want the close buttons, mobile menu toggle and color-mode switcher title in my own language, and as Jeroen (the maintainer), I want component props to use view models and single status values and test builders to live outside the components folder, so that components stay decoupled from API types and the test helpers do not look like components.
+
+### Acceptance criteria
+FE-02 (component interfaces):
+1. Given `src/app/components/BlogPost.vue`, then its props no longer reference the API type `PageReads`; the page/context maps `PageReads` to a view model type (in `~/types/`) and passes that, and the displayed read statistics are unchanged.
+2. Given `src/app/components/SearchModal.vue`, then the `loading` and `unavailable` boolean props are replaced by one `status` prop (a string union covering the existing states, for example idle/loading/unavailable), `useSearchContext.ts` passes the status, and no combination of booleans can express an impossible state.
+3. Given `src/app/components/SearchButton.vue`, then the bare `click` emit is renamed to a named domain event (for example `open`), and `AppHeader.vue`/its context listeners are updated.
+4. Given the three changes, then their component tests (`BlogPost.nuxt.test.ts`, `SearchModal.nuxt.test.ts`, `SearchButton.nuxt.test.ts`, `useSearchContext.nuxt.test.ts`) and existing stories are updated and pass; visual baselines are unchanged.
+
+FE-04 (builders):
+5. Given `src/app/components/__tests__/{authorBuilder,pageBuilder,postBuilder,blogBuilder,companyBuilder}.ts`, then they are moved out of the components folder (to a test-support location such as `src/app/tests/builders/`), every import is updated, and `src/app/components/__tests__/` no longer contains builders.
+
+FE-08 (translations):
+6. Given the then-current tree (re-verify the list first: ST-06 retires `AlertBar.vue` and `NotificationMessage.vue`, so their two `"Close"` strings must already be gone, and `MessageBar`'s close label must already use `$t(...)`), then the remaining hardcoded user-facing strings are translated: `aria-label="Global"`, `"Open main menu"` and `"Close menu"` in `AppHeader.vue` (about lines 54, 95, 140) and `title="Switch color mode"` in `ColorModeSwitcher.vue` (about line 36), plus any other raw user-facing string the re-verification finds.
+7. Given `src/app/locales/{en,nl,de}.json`, then each new string has a flat English-text key per the CLAUDE.md convention and a Dutch and German translation, and `pnpm dev`'s i18n-extract leaves the files in sync.
+8. Given the German or Dutch locale, then the mobile menu toggle's accessible name, the close menu label, the navigation `aria-label` and the color-mode switcher `title` render in that locale (asserted in component tests by rendering with the locale and checking the attribute value).
+9. Optional, non-blocking: wire the `@intlify/eslint-plugin-vue-i18n` no-raw-text rule when it can be enabled without a flood of unrelated findings; if wired, `pnpm lint:fix` is clean, if skipped, the decision is noted in Implementation notes and `specs/enforcement.md`.
+
+General:
+10. Given `specs/components.md`, then the `BlogPost` entry shows the view-model prop, and `SearchButton` and `SearchModal` (not yet inventoried) are added with their new `status` prop and named event; the edit is coordinated with the entries changed in ST-05 and ST-06.
+11. Given `pnpm lint:fix`, `pnpm ci:typecheck`, `pnpm ci:test` and `pnpm playwright:docker`, then all pass and coverage does not decrease vs. `main`.
+
+### Edge cases
+- Locale files must stay valid JSON and in sync; a missing translation falls back to English visibly, so check all three locales.
+- Moving the builders must not make Vitest pick them up as tests or drop them from type-checking.
+- If the view model for `BlogPost` needs fields the page already has, do not add new fetches.
+
+### Out of scope
+- Any visual change; stories for these components (ST-11); `data-testid` additions (ST-09).
+- Translating strings that are not user-facing (logs, test fixtures).
+
+## Design reference
+No visual change.
+
+## Architecture reference
+Implements area 9 (FE-02, FE-04, FE-08 subset), the combined micro-cleanup story as decided. Files and areas: `src/app/components/{BlogPost,SearchModal,SearchButton,AppHeader,ColorModeSwitcher}.vue` and their tests, `src/app/contexts/useSearchContext.ts`, the page that renders `BlogPost` (`src/app/pages/[[segment1]]/[id]-[[slug]].vue`), `src/app/types/` (new view model), the five builder files in `src/app/components/__tests__/` and all their importers, `src/app/locales/{en,nl,de}.json`, optionally `eslint.config.js`, `specs/components.md`, `specs/enforcement.md`.
+
+Dependencies: ST-06 (the two retired `Close` strings resolve by replacement, `AppHeader` prop surface settled), ST-05 (MessageBar's close label already translated), ST-07 (work against the final file names). Blocks ST-11 (stories should be written against the final `SearchModal`, `SearchButton` and `BlogPost` interfaces, not rewritten). No release bookkeeping.
+
+## QA plan
+
+Planned against the current tree plus the ST-05/ST-06/ST-07 outcomes this story depends on. Test names follow the project style: `describe('componentName')` with a lowercase first letter and `it('sentence in plain English')`. Never mention specs, ACs or findings in test names or comments (CLAUDE.md).
+
+### Order of work (characterize first)
+1. Before touching any interface, run the existing `SearchModal`, `SearchButton`, `BlogPost`, `AppHeader`, `useSearchContext`, `AppHeaderContext` and `idSlugPage` tests green, so the refactor starts from a known baseline.
+2. Add the characterization tests marked "pin first" below against the old interface, then change the interface and adapt only the prop names in those tests. Behaviour assertions must not change.
+3. Re-verify the hardcoded-string list (see "FE-08 sweep") before writing the translation tests, because ST-06 changes `AppHeader.vue` and retires two of the original strings.
+
+### Acceptance criteria to tests
+
+| AC | Test (file, name) | Kind |
+|---|---|---|
+| 1 | `BlogPost.nuxt.test.ts`: `shows the read count with its translated title when the view model has reads`, `hides the read count when the count is zero`, `hides the read count when no reads are passed` (pin first; today no test covers the read display) | component |
+| 1 | `BlogPost.stories.ts` `Default` args switch to the view model and still show 11 reads; `blogpost--default` baseline unchanged | visual |
+| 1 | Mapper test, where the mapping lives (exported pure function or the context): `maps threeQuarterRead to the read count`, `ignores read when threeQuarterRead is present` (input `{ read: 3, threeQuarterRead: 11 }` gives 11), `maps missing or null counts to no count`, `maps undefined to undefined`. If the mapping stays inline in the page, the same cases are asserted through `idSlugPage.nuxt.test.ts` instead | unit |
+| 1 | `idSlugPage.nuxt.test.ts`: update `should render a blog post with its reads and likes` (it asserts `pageReads` equals `{ reads: 10 }`, a field `PageReads` does not even have) to feed a realistic `{ threeQuarterRead: 10 }` and assert the BlogPost stub receives the view model, never the API object. Add `should not pass the API reads object to BlogPost` (stub props contain no `threeQuarterRead`/`halfRead`) | nuxt page |
+| 1 | Type-level: `pnpm ci:typecheck` fails if `BlogPost.vue` still imports `~/services/backend`; plus the grep in "Static checks" | static |
+| 2 | `SearchModal.nuxt.test.ts`: rewrite `shows the unavailable message...` and `shows the loading message...` to `status: 'unavailable'` / `status: 'loading'`; keep `shows the no-results message for a query without results` (status omitted, defaults to idle) | component |
+| 2 | `SearchModal.nuxt.test.ts` precedence block (pin first, then port to `status`): `shows results instead of any status message when results exist` (for idle, loading and unavailable), `shows the unavailable message even when the query is empty`, `shows the loading message while loading`, `shows nothing for idle with an empty query` | component |
+| 2 | `useSearchContext.nuxt.test.ts`: replace the `loading`/`unavailable` assertions with `status`. New: `starts idle`, `is loading while a search is pending and idle when it settles` (hold `pagefind.search` open with a deferred promise, assert `loading` mid-flight), `stays idle for a blank query`, `becomes unavailable when pagefind fails to initialise` (existing test, ported), `stays unavailable after the failed search settles` (guards the `finally` that used to reset only `loading`), and `keeps the previous unavailable outcome on a later search` or its chosen alternative (see flag A) | context |
+| 2 | `AppHeaderContext.nuxt.test.ts`: `passes the search status to the search modal` (`SearchModal` prop `status` is `idle`, not `loading`/`unavailable` props) | context |
+| 2 | Type-level: the `loading`/`unavailable` props no longer exist on `SearchModal`, so an impossible state cannot be expressed. Verified by `pnpm ci:typecheck` plus the grep in "Static checks" (no `@ts-expect-error` test needed) | static |
+| 3 | `SearchButton.nuxt.test.ts`: rename `emits click when pressed` to `emits open when pressed` and assert `emitted('open')` has length 1; add `declares open as its only event` (`SearchButton.emits` equals `['open']`, so a leftover `click` declaration fails) | component |
+| 3 | `AppHeaderContext.nuxt.test.ts`: `opens the search modal when the search button emits open` (emit `open` from the first `SearchButton`, assert `SearchModal` prop `open` becomes true). This is the guard for the fallthrough hazard below | context |
+| 3 | `AppHeader.nuxt.test.ts`: the default `searchButton` slot content still renders a `SearchButton` (no listener needed there); no test change expected beyond the import tree | component |
+| 4 | All of the above ported and green; existing stories updated (`BlogPost.stories.ts`); `pnpm playwright:docker` shows no diff for `blogpost--default`, `blogpost` is the only story whose args change; `header--default` unchanged | visual |
+| 5 | `git ls-files src/app/components/__tests__` returns nothing; builders exist under `src/app/tests/builders/`; `pnpm ci:typecheck`, `pnpm ci:test` and `pnpm storybook:build` green (storybook imports `postBuilder`); grep shows zero `components/__tests__` strings | static + run |
+| 5 | Builders not collected as tests: confirm `pnpm ci:test` reports the same number of test files before and after (+ the new ones), and that `src/app/tests/builders/` matches none of the `include` globs in `vitest.config.ts` (only `src/app/tests/nuxt/**` does) | run |
+| 5 | Builders still type-checked: one-off sanity check, introduce a deliberate type error in a moved builder, confirm `pnpm ci:typecheck` fails, revert (not committed) | manual |
+| 6 | `AppHeader.nuxt.test.ts` (extend): `renders the navigation label in nl and de`, `renders the mobile menu toggle name in nl and de`, `renders the close menu label in nl and de` (open the menu, query `document.body`, the dialog teleports) | component |
+| 6 | New `ColorModeSwitcher.nuxt.test.ts`: `renders the switch title in nl and de` (wait for `ClientOnly` to render, then read the button `title`) | component |
+| 6 | Any extra raw string the sweep finds gets one row in the matching test file (list it in Implementation notes) | component |
+| 7 | Same tests in 6 assert the value equals the locale file's value and differs from the English value (see "Locale tests"). Sync: `pnpm i18n-extract` then `git diff --exit-code src/app/locales` is empty; the three JSON files parse and have identical key sets (also covered by the extractor failing on empty translations) | component + scripted |
+| 8 | Covered by the 6 tests (they are the AC 8 assertions): attribute values rendered under `nl` and `de`, plus one `en` control per component so a default-locale regression is also caught | component |
+| 9 | If wired: `pnpm lint:fix` clean (the rule is the test). If skipped: decision noted in Implementation notes and `specs/enforcement.md`, which a reviewer checks by reading both | static / manual |
+| 10 | Manual diff review of `specs/components.md` (checklist below); no automated test | manual |
+| 11 | `pnpm lint:fix`, `pnpm ci:typecheck`, `pnpm ci:test` (coverage compared to `main`), `pnpm playwright:docker` all green | gate |
+
+### Locale tests (AC 6 to 8)
+- No existing component test renders a real non-default locale; the setups in `BlogPost`/`LikeButton` tests use a `$t` key pass-through mock, which cannot prove translations. These tests run in the `nuxt` project with the real i18n plugin.
+- Approach to try first (spike it before writing all tests, flag A2 if it fails): `mountSuspended`, then `await useNuxtApp().$i18n.setLocale('nl')` (and `'de'`), then assert; reset to `'en'` in `afterEach` so tests in the file stay order independent. If `setLocale` navigates or does not load messages in the test env, fall back to `loadLocaleMessages` + setting `locale.value`, or to a `createI18n` instance built from the real `nl.json`/`de.json` passed through `global.plugins`.
+- Expected values come from importing the locale JSON (`expect(attr).toBe(nl['Close menu'])`) so copy edits do not break tests, plus `expect(nl[key]).not.toBe(en[key])` so a missing translation (which falls back to English visibly) fails. If a key is legitimately identical in a locale, exempt that key explicitly in the test, not silently.
+- Selectors: no `data-testid` exists yet (ST-09 adds them). Query by accessible attribute (`nav[aria-label]`, button by its accessible text, `[title]`), keep each selector in one helper per test file so ST-09 changes one line.
+
+### FE-08 sweep (do first, record the result in Implementation notes)
+Re-run these searches over `src/app/components`, `contexts`, `pages`, `layouts`, `app.vue`, `error.vue` (excluding `*.stories.ts`, `examples/`, and Storybook mocks, which the standard exempts):
+- `(aria-label|title|placeholder|alt|ariaLabel)="[A-Za-z]` (static attribute with raw English)
+- `sr-only">[^<{]*[A-Za-z]` (raw screen-reader text)
+- text nodes between tags that are not `{{ }}` and not whitespace (a multiline grep or the vue-i18n lint rule in dry-run mode)
+Today's hits that are in scope: `AppHeader.vue` `aria-label="Global"`, `Open main menu`, `Close menu`; `ColorModeSwitcher.vue` `title="Switch color mode"`. `AlertBar.vue` and `NotificationMessage.vue` `Close` must be gone (ST-06) and `MessageBar`'s close label must use `$t` (ST-05); if either is not true, stop and report it instead of fixing it here. Hits that are bindings of dynamic data (`:alt="post.title"`, `:title="title"`) are not raw strings. Candidates the sweep must classify, not assume: `error.vue` title binding, `AppLink` `title ?? ariaLabel` fallbacks.
+
+### Fixtures and utilities
+- Existing: `mountSuspended` (`@nuxt/test-utils/runtime`), `mockNuxtImport`, the `PassThroughStub`/`NuxtLinkStub` and `mountModal` helper in `SearchModal.nuxt.test.ts`, the pagefind mock (`src/app/tests/mocks/pagefind.ts`, controlled through `globalThis.__pagefindMock`), `stubUserAgent` in `SearchButton.nuxt.test.ts`, the page-test stubs in `idSlugPage.nuxt.test.ts`, the five builders (moved to `src/app/tests/builders/`, same exports `buildAuthor`, `buildBlog`, `buildCompany`, `buildPage`, `buildPost`).
+- New: a deferred-promise helper for the "loading while pending" test (local to `useSearchContext.nuxt.test.ts`, no shared file needed); a small `withLocale(locale)` helper local to each locale test file (or one shared `src/app/tests/` helper if more than two files need it, decided by the developer); a view-model builder only if more than one test needs a read view model.
+
+### UI states to assert (feature states policy, this slice)
+- `SearchModal`, one assertion each: idle with empty query, idle with query and no results (no-results message), loading, unavailable, results present for each of the three statuses (results win, no status message), status omitted (defaults to idle), validation state n/a.
+- `BlogPost` reads: count above zero shown with translated title, zero hidden, absent view model hidden (also the loading state, `post` undefined, still renders nothing and does not throw).
+- Header labels: each of `en` (control), `nl`, `de`; the mobile menu open and closed.
+- Empty/error states for the search backend failure are the `unavailable` status above; there is no other error surface in this slice.
+
+### Stack-specific regression classes
+- **Event fallthrough (the main hazard).** `SearchButton`'s root is `AppButton`, which itself emits `click`. After renaming the emit to `open`, a leftover `@click="openSearch"` in `AppHeaderContext` still works through attribute fallthrough, so nothing fails visibly while the code stays wrong. The tests that catch it: `declares open as its only event`, and `opens the search modal when the search button emits open` which emits the named event rather than clicking the DOM. Also grep `SearchButton` consumers (`AppHeaderContext.vue`, `AppHeader.vue` default slot) for `@click`.
+- **Reactivity.** `status` in `useSearchContext` must derive from or replace the two refs without a computed that reads stale state; the `finally` of the debounced search must not overwrite `unavailable` with `idle`. Covered by `stays unavailable after the failed search settles`. `SearchModal` destructures props with defaults (`const { results = [], ... } = defineProps`), so a `status` default is read reactively by the compiler; the status-omitted test covers it.
+- **Async.** The search is debounced (200 ms) and can overlap; use `vi.waitFor` and the existing 250 ms wait pattern, not fixed extra sleeps, and never assert on call counts for the debounce itself.
+- **Teleported dialog.** The mobile menu `Dialog` renders into `document.body`; query `document.body` and clean up (`enableAutoUnmount`, or unmount in `afterEach`) so leftover dialogs do not leak between tests.
+- **ClientOnly.** The color-mode button renders only after mount; wait with `flushPromises` or `vi.waitFor` before reading `title`.
+- No state-migration or async-cancellation surface is touched.
+
+### Coverage
+- Gate: do not decrease vs. `main` (Codecov), thresholds in `vitest.config.ts` (`autoUpdate: true`: keep only increases; a run that lowers the file is a failure to investigate, not to commit).
+- Known effect to measure: the builders currently sit under `src/app/components/**`, which is in the coverage `include`, and are fully executed. Moving them to `src/app/tests/` removes covered lines from the denominator, which can lower the percentage slightly. Run `pnpm ci:test` on `main` and on the branch and compare the totals. The new tests (read-count display, `ColorModeSwitcher`, status transitions, locale rendering) add covered lines and are expected to offset it. If the net is negative, add the optional `ColorModeSwitcher` toggle-cycle test (`cycles system, dark, light, system`) before accepting.
+- Knowingly uncovered: none planned. The optional lint rule (AC 9) has no unit test.
+
+### Environment quirks
+- `TZ=Europe/Amsterdam` is baked into `pnpm test` and `pnpm ci:test`; use it for any single-file run too.
+- Nuxt tests use the 30 s timeouts already set; do not add per-test overrides.
+- Visual baselines: only compared, never regenerated. `pnpm playwright:docker` (needs Docker/colima) must show no diff. A diff is a real regression to fix in code. Agents without Docker rely on the PR pipeline instead.
+- Storybook only registers `en` messages, so stories render the English strings the old literals had; no story needs locale changes.
+
+### Regression risk
+- Touched and guarded: `BlogPost` (`BlogPost.nuxt.test.ts`, `idSlugPage.nuxt.test.ts`, `blogpost--default` baseline), `SearchModal` and `useSearchContext` (their test files, extended above), `SearchButton` and `AppHeaderContext` (new named-event test), `AppHeader` (its existing external-link tests find the toggle by the English text "Open main menu"; they keep passing under `en`, and must keep doing so), `ColorModeSwitcher` (no test today; new), the builders' importers (`useMetadata.nuxt.test.ts`, `BlogPost.stories.ts`, and the builders' own cross-imports).
+- Other stories: ST-05/ST-06 change `AppHeader.vue`, `AppHeaderContext.vue` and `components.md`; ST-07 renames files and may rename `usePageReadsContext`-adjacent utils (the `~/utils/...` imports in `BlogPost.vue`, `useSearchContext.ts`); ST-09 will add `data-testid` to the same components; ST-11 writes stories against the final `SearchModal`/`SearchButton`/`BlogPost` interfaces, so those must be settled here and the `components.md` entries accurate.
+- Edge cases from the story: JSON validity and key parity across the three locales (scripted check above); builders not collected as tests and still type-checked (AC 5 rows); no new fetch for the `BlogPost` view model (page test asserts `usePageReadsContext` is still called once and no new context is called).
+
+### Static checks (run once, results to Implementation notes)
+- `rg "PageReads" src/app/components` returns nothing, and `rg "services/backend" src/app/components/BlogPost.vue` returns nothing.
+- `rg "loading|unavailable" src/app/components/SearchModal.vue src/app/contexts/useSearchContext.ts src/app/contexts/AppHeaderContext.vue` shows no remaining boolean props.
+- `rg "components/__tests__" src specs` returns nothing except historical spec text.
+- `rg '@click' src/app/contexts/AppHeaderContext.vue src/app/components/AppHeader.vue` shows none on `SearchButton`.
+
+### Manual verification checklist
+- [ ] Storybook (`pnpm storybook`): `Components/BlogPost` Default and Liked show "11" reads with the eye icon in light and dark; `Components/Header` Default unchanged.
+- [ ] `pnpm dev`, switch to `/nl` and `/de`: mobile viewport, the menu toggle's accessible name, the close button inside the open menu, the nav landmark label (browser accessibility pane), and the color-mode button tooltip are all localized.
+- [ ] Search: open via the header button and via Ctrl+K / Cmd+K, type a query; in dev the "not available" message shows (pagefind is built only in the static build), on `pnpm preview` real results show, loading text flashes briefly.
+- [ ] Blog post page on the Cloudflare PR preview (`https://pr-<PR-number>.bach.software`): read count visible as before in a post, in all three languages.
+- [ ] `specs/components.md`: `BlogPost` lists the view-model prop (not `PageReads`), new `SearchButton` entry lists the `open` emit, new `SearchModal` entry lists `open`, `query`, `results`, `status` (`idle | loading | unavailable`) and the `update:query`/`close` emits; the entries ST-05 and ST-06 already changed (`AppHeader` without `notifications`, `MessageBar*`) are preserved, not overwritten.
+- [ ] Run `pnpm dev` once (or `pnpm i18n-extract`) and confirm `git status` shows no further locale changes.
+
+### Findings and flags for the reviewer
+- **A. Sticky `unavailable` is an undecided behaviour.** Today `unavailable` is set once and never reset, even if a later search succeeds, while `loading` still toggles (so both can be true, and the template picks `unavailable`). A single `status` forces a choice: keep sticky (matches "existing states, no behaviour change") or recover to `idle` on the next successful search. The plan assumes sticky and pins it with a test; if the developer picks recover, the test and Implementation notes must say so. No acceptance criterion states this.
+- **A2. Locale switching in the Nuxt test environment is unproven.** No current test does it. The first task is a spike; if `setLocale` cannot work in the test env, use the `createI18n` fallback above and record why.
+- **B. `Global` has no useful translation.** The flat-key rule makes the English text the key, and "Global" is the same word in German. The translation test's "differs from English" guard would fail for `de`. Either choose a descriptive English wording, or translate it (for example nl "Hoofdnavigatie", de "Hauptnavigation") and say so, or exempt the key explicitly. Left to the developer/maintainer; not invented here.
+- **C. Pack versus project conventions.** The vue pack's FE-08 prefers camelCase keys and `.tests.ts` names; the project CLAUDE.md (flat English keys, `.test.ts`/`.nuxt.test.ts`) binds and this plan follows it. The pack's FE-06 prefers `data-testid` selectors, which arrive in ST-09; this story's new tests use accessible attributes until then.
+- **D. AC 4 "visual baselines are unchanged" needs the Docker run.** It cannot be verified locally without Docker/colima; if unavailable, the PR pipeline's `20-build-deploy-playwright.yml` is the check, and baselines must not be regenerated for this story.
+- **E. AC 9 is not automatable as written.** "Wired and clean" is checked by lint; "skipped" is a documentation check. Both are acceptable, as the criterion is explicitly optional.
+- **F. AC 1's "displayed read statistics are unchanged" had no test.** Added above as pin-first tests; the existing page test also used a non-existent field (`reads`), which hid the mismatch.
+
+## Adversarial review
+Lite, story level. Blockers only. Each planner flag verified against the current `main` code and the FE-02/FE-04/FE-08 intent. No blockers found.
+
+1. (settled, not a finding) Sticky `unavailable` is real in the code. `useSearchContext.ts` sets `unavailable.value = true` in `getPagefind`'s catch and never resets it, while `loading` toggles in the `runSearch` `finally`; the template orders `unavailable` before `loading`, so once unavailable the modal stays unavailable even after a later success. The single `status` prop (AC 2) forces the sticky-vs-recover choice flag A already names. Flag A picks sticky (matching "existing states, no behaviour change") and pins it with a test, and permits the developer to choose recover if they document it. AC 2 mandates only the union and the impossible-state removal, not the choice, so this is within implementation latitude, not a blocker.
+
+2. (settled, not a finding) The `@click` fallthrough hazard is real and the sole live consumer is confirmed: `AppHeaderContext.vue` line 69 renders `<SearchButton @click="openSearch" />`. The two `<SearchButton />` in `AppHeader.vue` (lines 75, 88) carry no listener, so they are safe. After renaming the emit to `open`, a leftover `@click` would still fire through `AppButton`'s own `click`, so it fails silently. The QA plan guards it three ways: `declares open as its only event` (`SearchButton.emits === ['open']`), `opens the search modal when the search button emits open` (emits the named event, not a DOM click, so a leftover `@click` wiring fails the assertion), and the static grep of both files. Adequately mapped.
+
+3. (settled, not a finding) No current test renders a real non-default locale. Flag A2 already makes a `setLocale` spike the first task with two concrete fallbacks (`loadLocaleMessages` + `locale.value`, or a `createI18n` instance from the real `nl.json`/`de.json`). AC 8 stays testable under any of the three paths, so this is a documented spike, not an unresolved hole.
+
+4. (settled, not a finding) Moving the builders out of `components/**` lowering coverage is real: the five builders at `src/app/components/__tests__/{author,page,post,blog,company}Builder.ts` sit inside the coverage `include` and are fully executed (importers `useMetadata.nuxt.test.ts` and `BlogPost.stories.ts` confirmed). The Coverage section already measures `main`-vs-branch and names a concrete offset (the new read-count, `ColorModeSwitcher`, status-transition and locale tests) plus a fallback toggle-cycle test. Adequate.
+
+Also checked: flag B ("Global" has no distinct German translation, so the "differs from English" guard would fail for `de`) has a documented resolution in the Locale tests ("exempt that key explicitly, not silently"), plus reword/translate alternatives, so it is a decision point with a safe default, not a should-fix. FE-08 sweep targets verified present at the stated lines (`AppHeader.vue` 54/95/140, `ColorModeSwitcher.vue` 36). AC-to-test mapping is complete and testable (AC 9 optional, AC 10/11 manual/gate per flags D/E). The `status` union `idle | loading | unavailable` and the `~/types/` view-model placement match the feature architecture (area 9); dependencies on ST-05/ST-06/ST-07 are explicit and the `~/utils/*` import renames from ST-07 are acknowledged in the regression-risk note.
+
+## Implementation notes
+Deviations and decisions:
+- **View model.** `BlogPost` takes `reads?: PostReads` (`types/PostReads.ts`, `{ readCount?: number }`); the page maps with `toPostReads` (`utils/postReadsUtil.ts`, unit-tested) from the existing `usePageReadsContext` result, no new fetch. The prop is renamed from `pageReads` to `reads`.
+- **Search status.** `SearchStatus` lives in `types/SearchStatus.ts`. Flag A resolved as sticky: once `unavailable`, `useSearchContext` never goes back to `idle` or `loading` (pinned by a test). `SearchModal`'s no-results branch simplified to `v-else-if="query"` (equivalent, since `loading` is handled earlier).
+- **SearchButton** emits `open`; `AppHeaderContext` listens with `@open`. No `@click` is left on `SearchButton` consumers.
+- **Locale tests (flag A2).** `setLocale` alone does not change what `mountSuspended` renders, because mounting navigates to its route and resets the locale. Mounting at `/nl` / `/de` works, so `tests/helpers/localeRoute.ts` returns the route and restores English afterwards. Importing locale JSON in the nuxt environment yields precompiled messages, so `tests/helpers/localeCatalogs.ts` reads the raw files from disk for expected values.
+- **Flag B.** "Global" renamed to the descriptive key `Main navigation` (nl `Hoofdnavigatie`, de `Hauptnavigation`); the accessible name of the nav landmark therefore changes from "Global" to "Main navigation" in English. Other keys: `Open main menu`, `Close menu`, `Switch color mode`, all with real nl/de translations; `pnpm i18n-extract` leaves the locale files in sync.
+- **FE-08 sweep.** Remaining hits were exactly the four strings above. `AlertBar`/`NotificationMessage` are gone and `MessageBar` uses `$t('messageBar.close')`. Classified as not raw: `error.vue` status code title, `App404` `"404"`, `AppLink` `title ?? ariaLabel`, all `:alt`/`:title` data bindings.
+- **Playwright helper (unplanned).** `pages.spec.ts` and `apiErrors.spec.ts` waited for `getByTitle('Switch color mode')`, which times out on the nl/de pages now that the title is translated. Added `waitForHeaderHydration` to `playwright-fixtures.ts` (matches the title in all three locales, read from the locale files). No baselines changed or regenerated.
+- **AC 9** skipped: `@intlify/eslint-plugin-vue-i18n` is not installed; recorded in `specs/enforcement.md`.
+- Builders moved to `src/app/tests/builders/` (importers: `useMetadata.nuxt.test.ts`, `BlogPost.stories.ts`). A deliberate type error in a moved builder failed `ci:typecheck` (reverted), so they are still type-checked; vitest does not collect them.
+- The characterization ("pin first") tests were written directly against the new interface after reading the code, not run against the old one.
+- Extra tests beyond the plan: `ColorModeSwitcher` toggle cycle, `idSlugPage` undefined-reads and single-fetch cases, `BlogPost` loading state.
+
+Check results:
+- `pnpm lint:fix` clean. `pnpm ci:typecheck` clean.
+- `pnpm ci:test:coverage`: 51 files, 501 tests pass (baseline 49 files, 456 tests). Coverage 84.52/79.68/82.75/84.62 (statements/branches/functions/lines) before, 84.83/80.63/82.82/84.91 after; `vitest.config.ts` thresholds auto-updated to the new values. The baseline was measured on the working tree, not on `main`.
+- `pnpm playwright:docker` (colima): first run failed 2 tests (the helper above), second run `ci:playwright:docker` 110 passed, 80 skipped, 0 failed; storybook build succeeded; no snapshot files touched.
+- Static greps: no `PageReads`/`services/backend` in `components`, no `components/__tests__` in `src`, no `@click` on `SearchButton`.
+- Not done: manual verification checklist items (Storybook, dev `/nl` `/de`, PR preview).
+
+## Verification report
+
+**Verdict: pass-with-notes.**
+
+### Checks run
+- `pnpm lint:fix`: clean, no files changed. `pnpm ci:typecheck`: clean.
+- `pnpm ci:test:coverage`: 51 files, 501 tests pass. Coverage 84.83/80.63/82.82/84.91 (statements/branches/functions/lines), at or above the developer's pre-change working-tree figures (84.52/79.68/82.75/84.62); `vitest.config.ts` unchanged by the run. The baseline is the working tree, not `main` (see notes).
+- `pnpm i18n-extract`: locale files byte-identical afterwards; en, nl and de have identical key sets and parse as JSON.
+- `pnpm playwright:docker` (build + run) then `pnpm ci:playwright:docker` again: both 110 passed, 80 skipped, 0 failed. No flake across two runs. No snapshot file touched or regenerated.
+- Static: no `PageReads` or `services/backend` in `src/app/components`; no `components/__tests__` in `src` (only historical spec text); no `@click` on `SearchButton` consumers; no `:style`/`style=` in components, contexts or pages; no spec, story or AC references in code comments or test names; Vue names are camelCase.
+
+### Acceptance criteria
+| AC | Result | Evidence |
+|---|---|---|
+| 1 | pass | `BlogPost.vue` takes `reads?: PostReads` (`types/PostReads.ts`), no backend import. Page maps with `toPostReads` (`utils/postReadsUtil.ts`, unit-tested: threeQuarterRead wins over read, null/undefined handled) from the existing `usePageReadsContext` result. `idSlugPage.nuxt.test.ts` asserts `reads` equals `{ readCount: 10 }`, no `threeQuarterRead` leaks, and the reads context is called once with no new fetch. `BlogPost.nuxt.test.ts` pins shown/zero/empty/absent/loading. Displayed read still comes from `threeQuarterRead`. |
+| 2 | pass | `SearchModal` has a single `status?: SearchStatus` (`idle | loading | unavailable`, default `idle`); order in the template is results, unavailable, loading, no-results. `useSearchContext` exposes `status`; `AppHeaderContext` passes it. Sticky `unavailable`: `loading` is only entered from `idle` and the `finally` only resets from `loading`; pinned by `stays unavailable after the failed search settles and on a later search`. Loading-while-pending, blank-query and idle tests present. |
+| 3 | pass | `SearchButton` declares only `open`; `AppHeaderContext` uses `@open`. Tests `emits open when pressed`, `declares open as its only event`, and `opens the search modal when the search button emits open` (emits the named event). The two `SearchButton` in `AppHeader` have no listener. |
+| 4 | pass | All four component/context test files ported and green; `BlogPost.stories.ts` updated; Docker visual run shows no diff. |
+| 5 | pass | Five builders in `src/app/tests/builders/`; `components/__tests__` is gone; importers updated; none match a vitest `include` glob (file count 51 consistent); typecheck clean (developer's deliberate-error check not repeated by me). |
+| 6 | pass | Fresh sweep over components, contexts, pages, layouts, `app.vue`, `error.vue` (stories and examples excluded): the only raw static attribute left is `title="404"` in `App404` (a status code, not translatable), plus data bindings and `AppLink`'s `title ?? ariaLabel` fallback. No raw `sr-only` text. `AppHeader` uses `$t` for nav label, open menu and close menu; `ColorModeSwitcher` uses `$t` for its title. `AlertBar` and `NotificationMessage` are gone; `MessageBar` uses `$t('messageBar.close')`. |
+| 7 | pass | Flat English keys `Main navigation`, `Open main menu`, `Close menu`, `Switch color mode` in all three files; sync verified above. |
+| 8 | pass | `AppHeader.nuxt.test.ts` and `ColorModeSwitcher.nuxt.test.ts` mount at `/en`, `/nl` and `/de` through the real i18n plugin (`tests/helpers/localeRoute.ts`), compare against the raw locale files (`tests/helpers/localeCatalogs.ts`), and guard that nl and de differ from en. Close-menu test queries the teleported dialog in `document.body`. |
+| 9 | pass (skipped, documented) | Skip recorded in Implementation notes and in `specs/enforcement.md` (FE-08 row and "Not wired this run"). |
+| 10 | pass | `specs/components.md`: `BlogPost` lists `reads?: PostReads` and the mapper; new `SearchButton` (emits `open`) and `SearchModal` (`open`, `query`, `results`, `status`, emits `update:query`, `close`) entries; `useSearchContext` entry updated; ST-05/ST-06 changes preserved (`AppHeader` has no `notifications`). |
+| 11 | pass | Lint, typecheck, tests with coverage, and Docker Playwright (twice) all green. |
+
+### Judgment of deviations
+- **"Global" to "Main navigation":** sensible. Descriptive English key, real nl "Hoofdnavigatie" and de "Hauptnavigation", and it is the landmark's accessible name. This is a change to the English accessible name only (the nav is not otherwise visible), so there is no visual change, and it resolves flag B as the plan allowed.
+- **Playwright helper `waitForHeaderHydration`:** it waits for the same `ClientOnly` button, attached not visible, matching the title in en, nl and de (read from the locale files), so it does not weaken the check. The 2 first-run failures are explained by the old English-only `getByTitle` timing out on the translated nl/de pages; I could not reproduce them because the helper is already in place, and two further full runs were clean.
+- **AC 9 skip:** note exists in both places.
+
+### Notes (non-blocking)
+- Coverage baseline was the working tree, not `main`, as the developer states. The branch figures are higher than that baseline and the PR's Codecov check is the authoritative comparison.
+- The manual checklist (Storybook, `pnpm dev` in `/nl` and `/de`, PR preview) was not done by the developer or by me; the PR preview and pipeline remain to be checked by the maintainer. The locale tests and the Docker run cover the automatable parts.
+- Pin-first tests were written against the new interface, not the old one; the resulting tests are behaviour-level and adequate.
+- The retired `alert` and `notificationmessage` baselines are deleted in the working tree (ST-06 scope, not this story).
+- Remind the maintainer to link the PR in the frontmatter.

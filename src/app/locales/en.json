@@ -7,6 +7,10 @@
   "Linkedin": "Linkedin",
   "Share": "Share",
   "On this page": "On this page",
+  "Main navigation": "Main navigation",
+  "Open main menu": "Open main menu",
+  "Close menu": "Close menu",
+  "Switch color mode": "Switch color mode",
   "Bach": {
     "Software": "Bach.Software"
   },
@@ -28,10 +32,15 @@
       "exclude": "Exclude"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "An unknown error occurred"
-    }
+  "errors": {
+    "unexpected": "Something went wrong. Please try again later.",
+    "unavailable": "This information is temporarily unavailable. Please try again later.",
+    "validation": "Some of the input is not valid.",
+    "urlRequired": "A URL is required.",
+    "urlInvalid": "The URL is not valid."
+  },
+  "messageBar": {
+    "close": "Close"
   },
   "pageReadProgress": {
     "openButton": "Show me my stats",

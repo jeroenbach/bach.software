@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import { buildPost } from './__tests__/postBuilder';
+import { buildPost } from '~/tests/builders/postBuilder';
 import BlogPost from './BlogPost.vue';
 
 const meta = {
@@ -15,8 +15,8 @@ export const Default: Story = {
   args: {
     post: buildPost(),
     baseUrl: 'https://bach.software',
-    pageReads: {
-      threeQuarterRead: 11,
+    reads: {
+      readCount: 11,
     },
     likes: 5,
     hasLiked: false,

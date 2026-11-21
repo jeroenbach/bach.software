@@ -16,6 +16,7 @@ export interface PageReadsRequestBuilder extends BaseRequestBuilder<PageReadsReq
      * @returns {Promise<PageReads>}
      * @throws {ValidationProblemDetails} error when the service returns a 400 status code
      * @throws {ProblemDetails} error when the service returns a 500 status code
+     * @throws {ProblemDetails} error when the service returns a 502 status code
      */
      get(requestConfiguration?: RequestConfiguration<PageReadsRequestBuilderGetQueryParameters> | undefined) : Promise<PageReads | undefined>;
     /**
@@ -48,6 +49,7 @@ export const PageReadsRequestBuilderRequestsMetadata: RequestsMetadata = {
         errorMappings: {
             400: createValidationProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,
             500: createProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,
+            502: createProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,
         },
         adapterMethodName: "send",
         responseBodyFactory:  createPageReadsFromDiscriminatorValue,

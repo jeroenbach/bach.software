@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { pagesPaths, postsPaths } from '~/locales.config';
+import { toPostReads } from '~/utils/postReadsUtil';
 
 const { path, params } = useRoute();
 const config = useRuntimeConfig();
@@ -16,6 +17,7 @@ const alternateUrls = await useAlternateUrls(pageType, Number(id));
 const { data: page } = isPage ? await usePagesContext(Number(id)) : { data: undefined };
 const { data: post } = isPost ? await useBlogPostsContext({ id: Number(id) }) : { data: undefined };
 const { pageReads } = isPost ? await usePageReadsContext() : { pageReads: undefined };
+const postReads = computed(() => toPostReads(pageReads?.value));
 const { likes, hasLiked, like } = isPost
   ? usePageLikesContext(() => ({
       author: post?.value?.authorName ?? '',
@@ -63,7 +65,7 @@ const { activeId } = useScrollspy(() => flattenTocLinkIds(tocLinks.value));
         <BlogPost
           :post="post"
           :baseUrl="config.public.baseUrl"
-          :pageReads="pageReads"
+          :reads="postReads"
           :likes="likes"
           :hasLiked="hasLiked"
           @like="like?.()"

@@ -1,12 +1,11 @@
-import { useAsyncState } from '@vueuse/core';
-
+import { useApiState } from '~/composables/useApiState';
 import { useApiClient } from '~/services/backend';
 
 /**
  * Composable to the read analytics for the current page.
  */
 export function usePageReadsContext() {
-  const { state: pageReads, isLoading: isLoadingPageReads } = useAsyncState(
+  const { mappedState: pageReads, isLoading: isLoadingPageReads } = useApiState(
     async () => {
       if (!import.meta.client)
         return undefined;
@@ -34,7 +33,8 @@ export function usePageReadsContext() {
     undefined,
     {
       immediate: true,
-      throwError: true, // show in the console, but not to the user
+      // A failed request resolves to null; the page treats that as "no data".
+      mapData: data => data ?? undefined,
     },
   );
 

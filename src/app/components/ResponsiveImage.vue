@@ -32,31 +32,48 @@ export interface Props {
   sizes?: string
   class?: ClassValue
 }
-const props = defineProps<Props>();
+const {
+  aspectRatio,
+  aspectRatioExtraSmall,
+  aspectRatioSmall,
+  aspectRatioMedium,
+  aspectRatioLarge,
+  aspectRatioExtraLarge,
+  aspectRatio2ExtraLarge,
+  class: className,
+  sizes,
+  partOfScreen,
+  partOfScreenExtraSmall,
+  partOfScreenSmall,
+  partOfScreenMedium,
+  partOfScreenLarge,
+  partOfScreenExtraLarge,
+  partOfScreen2ExtraLarge,
+} = defineProps<Props>();
 
 const id = useId();
 const loadingBackground = 'bg-slate-50 dark:bg-slate-900';
 const imgClass = computed(() => {
   const ratios = [
-    isNullOrUndefined(props.aspectRatio) ? null : `aspect-[${props.aspectRatio}]`,
-    isNullOrUndefined(props.aspectRatioExtraSmall)
+    isNullOrUndefined(aspectRatio) ? null : `aspect-[${aspectRatio}]`,
+    isNullOrUndefined(aspectRatioExtraSmall)
       ? null
-      : `xs:aspect-[${props.aspectRatioExtraSmall}]`,
-    isNullOrUndefined(props.aspectRatioSmall)
+      : `xs:aspect-[${aspectRatioExtraSmall}]`,
+    isNullOrUndefined(aspectRatioSmall)
       ? null
-      : `sm:aspect-[${props.aspectRatioSmall}]`,
-    isNullOrUndefined(props.aspectRatioMedium)
+      : `sm:aspect-[${aspectRatioSmall}]`,
+    isNullOrUndefined(aspectRatioMedium)
       ? null
-      : `md:aspect-[${props.aspectRatioMedium}]`,
-    isNullOrUndefined(props.aspectRatioLarge)
+      : `md:aspect-[${aspectRatioMedium}]`,
+    isNullOrUndefined(aspectRatioLarge)
       ? null
-      : `lg:aspect-[${props.aspectRatioLarge}]`,
-    isNullOrUndefined(props.aspectRatioExtraLarge)
+      : `lg:aspect-[${aspectRatioLarge}]`,
+    isNullOrUndefined(aspectRatioExtraLarge)
       ? null
-      : `xl:aspect-[${props.aspectRatioExtraLarge}]`,
-    isNullOrUndefined(props.aspectRatio2ExtraLarge)
+      : `xl:aspect-[${aspectRatioExtraLarge}]`,
+    isNullOrUndefined(aspectRatio2ExtraLarge)
       ? null
-      : `2xl:aspect-[${props.aspectRatio2ExtraLarge}]`,
+      : `2xl:aspect-[${aspectRatio2ExtraLarge}]`,
   ].filter(isNotNullOrUndefined);
 
   // Add a default aspect ratio if none is provided
@@ -64,34 +81,34 @@ const imgClass = computed(() => {
     ratios.push('aspect-square');
   }
 
-  return [props.class, ratios.join(' '), loadingBackground, 'object-cover']
+  return [className, ratios.join(' '), loadingBackground, 'object-cover']
     .filter(isNotNullOrUndefinedOrEmpty)
     .join(' ');
 });
 
 const imgSizes = computed(() => {
-  if (isNotNullOrUndefined(props.sizes))
-    return props.sizes;
+  if (isNotNullOrUndefined(sizes))
+    return sizes;
 
   const _sizes: { [key in ScreenSize]: number | undefined } = {
-    'xs': !isNumber(props.partOfScreenExtraSmall)
-      ? props.partOfScreen
-      : props.partOfScreenExtraSmall,
-    'sm': !isNumber(props.partOfScreenSmall)
-      ? props.partOfScreen
-      : props.partOfScreenSmall,
-    'md': !isNumber(props.partOfScreenMedium)
-      ? props.partOfScreen
-      : props.partOfScreenMedium,
-    'lg': !isNumber(props.partOfScreenLarge)
-      ? props.partOfScreen
-      : props.partOfScreenLarge,
-    'xl': !isNumber(props.partOfScreenExtraLarge)
-      ? props.partOfScreen
-      : props.partOfScreenExtraLarge,
-    '2xl': !isNumber(props.partOfScreen2ExtraLarge)
-      ? props.partOfScreen
-      : props.partOfScreen2ExtraLarge,
+    'xs': !isNumber(partOfScreenExtraSmall)
+      ? partOfScreen
+      : partOfScreenExtraSmall,
+    'sm': !isNumber(partOfScreenSmall)
+      ? partOfScreen
+      : partOfScreenSmall,
+    'md': !isNumber(partOfScreenMedium)
+      ? partOfScreen
+      : partOfScreenMedium,
+    'lg': !isNumber(partOfScreenLarge)
+      ? partOfScreen
+      : partOfScreenLarge,
+    'xl': !isNumber(partOfScreenExtraLarge)
+      ? partOfScreen
+      : partOfScreenExtraLarge,
+    '2xl': !isNumber(partOfScreen2ExtraLarge)
+      ? partOfScreen
+      : partOfScreen2ExtraLarge,
   };
 
   return Object.entries(_sizes)
@@ -125,7 +142,7 @@ function removeLoadingBackground(e: Event) {
     itemscope
     itemtype="https://schema.org/ImageObject"
     itemprop="image"
-    :class="props.class /** Make sure we can still add additional classes */"
+    :class="className /** Make sure we can still add additional classes */"
   >
     <NuxtPicture
       :src="src"

@@ -1,11 +1,11 @@
 import type { I18nHeadMetaInfo } from '@nuxtjs/i18n';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildAuthor } from '~/components/__tests__/authorBuilder';
-import { buildBlog } from '~/components/__tests__/blogBuilder';
-import { buildCompany } from '~/components/__tests__/companyBuilder';
-import { buildPage } from '~/components/__tests__/pageBuilder';
-import { buildPost } from '~/components/__tests__/postBuilder';
+import { buildAuthor } from '~/tests/builders/authorBuilder';
+import { buildBlog } from '~/tests/builders/blogBuilder';
+import { buildCompany } from '~/tests/builders/companyBuilder';
+import { buildPage } from '~/tests/builders/pageBuilder';
+import { buildPost } from '~/tests/builders/postBuilder';
 
 const mock = vi.hoisted(() => ({
   useSeoMeta: vi.fn(),

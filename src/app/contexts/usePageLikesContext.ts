@@ -1,6 +1,7 @@
-import { useAsyncState, useLocalStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 
 import { useTrackEvent } from '#imports';
+import { useApiState } from '~/composables/useApiState';
 import { useApiClient } from '~/services/backend';
 
 /**
@@ -27,7 +28,7 @@ export function usePageLikesContext(extraTrackingProps?: MaybeRefOrGetter<Record
   // Optimistically count the visitor's own like, as Plausible only reports it on the next query
   const optimisticLikes = ref(0);
 
-  const { state: fetchedLikes, isLoading: isLoadingLikes } = useAsyncState(
+  const { state: fetchedLikes, isLoading: isLoadingLikes } = useApiState(
     async () => {
       if (!import.meta.client)
         return undefined;
@@ -55,7 +56,6 @@ export function usePageLikesContext(extraTrackingProps?: MaybeRefOrGetter<Record
     undefined,
     {
       immediate: true,
-      throwError: true, // show in the console, but not to the user
     },
   );
 

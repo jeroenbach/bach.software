@@ -8,8 +8,8 @@ interface Props {
   border?: boolean
 }
 
-const { border } = defineProps<Props>();
-const { notifications, add } = useNotificationStore();
+defineProps<Props>();
+const { addInfo } = useMessageStore();
 const { locale, setLocale, t } = useI18n();
 
 const { data: contentNavigation, refresh: refreshNavigation } = await useContentNavigationContext();
@@ -32,8 +32,7 @@ const {
   close: closeSearch,
   query: searchQuery,
   results: searchResults,
-  loading: searchLoading,
-  unavailable: searchUnavailable,
+  status: searchStatus,
   setQuery: setSearchQuery,
 } = useSearchContext();
 
@@ -46,11 +45,11 @@ const colorMode = useColorMode();
 function updateColorMode(value: ColorMode) {
   colorMode.preference = value;
 }
-async function setLocaleAndShowNotification(locale: LocaleStructure['code']) {
+async function setLocaleAndShowMessage(locale: LocaleStructure['code']) {
   await setLocale(locale);
 
   if (locale !== defaultLocale) {
-    add('info', t('notifications.info.languageAiTranslated'), undefined, { closeIn: 4000 });
+    addInfo(t('notifications.info.languageAiTranslated'), { closeIn: 4000 });
   }
 }
 </script>
@@ -58,23 +57,21 @@ async function setLocaleAndShowNotification(locale: LocaleStructure['code']) {
 <template>
   <AppHeader
     :navigation="navigation"
-    :notifications="notifications"
     :border="border"
     :colorMode="colorMode.preference as ColorMode"
     :language="locale"
     @update:colorMode="updateColorMode"
-    @update:language="setLocaleAndShowNotification"
+    @update:language="setLocaleAndShowMessage"
   >
     <template #searchButton>
-      <SearchButton @click="openSearch" />
+      <SearchButton @open="openSearch" />
     </template>
     <template #searchModal>
       <SearchModal
         :open="searchOpen"
         :query="searchQuery"
         :results="searchResults"
-        :loading="searchLoading"
-        :unavailable="searchUnavailable"
+        :status="searchStatus"
         @update:query="setSearchQuery"
         @close="closeSearch"
       />

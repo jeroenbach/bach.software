@@ -22,12 +22,13 @@ export type { Props };
 
 <template>
   <AppFooter
-    v-bind="$props"
     :title="footer?.title"
+    :short="short"
     :linkedInUrl="author?.linkedIn"
     :githubUrl="author?.github"
     :imgSrc="author?.imageUrl"
     :imgAlt="author?.fullName"
+    :backgroundColor="backgroundColor"
   >
     <template #about>
       <ContentRenderer v-if="footerAbout" :value="footerAbout" />

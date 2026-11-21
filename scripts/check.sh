@@ -4,18 +4,11 @@
 set -u
 
 do_build=1
-do_update_snapshots=0
 if [ -t 0 ]; then
   printf "Run a fresh 'pnpm build' before Playwright? [Y/n] "
   read -r answer
   case "$answer" in
     [nN]*) do_build=0 ;;
-  esac
-
-  printf "Update the Playwright snapshots instead of a normal run? [y/N] "
-  read -r answer
-  case "$answer" in
-    [yY]*) do_update_snapshots=1 ;;
   esac
 fi
 
@@ -52,8 +45,4 @@ if [ -n "$build_pid" ]; then
   echo "✔ build finished"
 fi
 
-if [ "$do_update_snapshots" -eq 1 ]; then
-  pnpm ci:playwright:docker:update
-else
-  pnpm ci:playwright:docker
-fi
+pnpm ci:playwright:docker

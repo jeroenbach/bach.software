@@ -1,0 +1,8 @@
+root = true
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+
+# Held at warning (they default to suggestion, which TreatWarningsAsErrors does not promote).
+dotnet_diagnostic.CA2016.severity = warning
+dotnet_diagnostic.CA1068.severity = warning

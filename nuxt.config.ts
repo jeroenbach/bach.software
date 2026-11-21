@@ -5,7 +5,7 @@ import process from 'node:process';
 import tailwindcss from '@tailwindcss/vite';
 import { defaultLocale, locales } from './locales.config';
 import { routeRules } from './route-rules';
-import { screens } from './src/app/utils/screen';
+import { screens } from './src/app/utils/screenUtil';
 
 export default defineNuxtConfig({
   $development: {

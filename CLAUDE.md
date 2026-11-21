@@ -8,12 +8,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Install dependencies
 pnpm install
 
-# Setup local environment variables (interactive — creates .env.local and local.settings.json)
+# Setup local environment variables (interactive; creates .env.local)
 pnpm dev-setup
 
 # Development
 pnpm dev           # Frontend (also runs i18n-extract automatically)
-pnpm dev:api       # Backend .NET Azure Functions (cd src/api/Bach.Software.API && dotnet watch start)
+pnpm dev:api       # Backend .NET API (dotnet watch run --project src/api/Bach.Software.Web on http://localhost:8080)
 
 # Testing
 pnpm test          # Vitest unit tests — watch mode
@@ -36,13 +36,11 @@ pnpm preview       # Preview generated site locally
 # Storybook
 pnpm storybook     # Start Storybook dev server on port 6006
 
-# Screenshot / visual regression tests (requires Docker/colima on macOS)
-pnpm playwright:docker             # Build the site, then run Playwright in Docker (matches CI environment)
-pnpm playwright:docker:update      # Build the site, then update snapshots in Docker
-pnpm ci:playwright:docker          # Run Playwright in Docker without building first (assumes an existing build)
-pnpm ci:playwright:docker:update   # Update snapshots in Docker without building first
-pnpm update-snapshots              # Update snapshots via CI (no local Docker needed);
-                                   # or comment /update-snapshots on the PR
+# Screenshot / visual regression tests (capture needs Docker/colima on macOS)
+pnpm playwright:docker             # Build the site, then capture screenshots + run Playwright in the pinned container (matches CI)
+pnpm ci:playwright:docker          # Same without building first (assumes an existing build)
+pnpm vrt:compare                   # Download the baseline from R2 and write the diff report to .reg/index.html (read-only credentials)
+pnpm vrt:ci                        # reg-suit run, only meant for CI
 ```
 
 > **Important**: `pnpm dev` and `pnpm generate` both auto-run `i18n-extract` first. If translations are out of sync you'll see TypeScript errors — run `pnpm dev` once to re-sync.
@@ -59,7 +57,10 @@ pnpm update-snapshots              # Update snapshots via CI (no local Docker ne
 ## Code Conventions
 
 - **Vue: always use camelCase, never kebab-case** (component names, props, event names, ...). This is also enforced by ESLint (see the ESLint section below).
+- **Never use `:style` bindings or inline `style` attributes without Jeroen's explicit approval.** Styling belongs in CSS classes in the stylesheet. When a value must vary per instance, drive it with a class chosen from a prop, not an inline style. If a case truly seems to need `:style`, stop and ask first.
+- **`data-testid` naming follows the convention in `specs/PROJECT.md` ("data-testid convention").** Lowercase kebab-case `<context>-<purpose>-<elementtype>`, a `baseDataTestid` prop (defaulting to the component's kebab-case name) on reusable components, and `getByTestId` in tests instead of class, text or position selectors. Lint rejects ids that do not follow the shape.
 - **Every user-runnable script gets a `package.json` script.** Whenever you add a script meant to be run by the user (e.g. anything under `scripts/`), add a matching entry to the `scripts` section of `package.json` so it can be run via `pnpm <name>` instead of a long raw command. Name it clearly (e.g. `upload-images` for `scripts/upload-product-images.mjs`).
+- **Shared file naming (enforced by ESLint):** files in `src/app/utils/` end in `Util` (`dateUtil.ts`) and files in `src/app/composables/` start with `use` (`useStopWatch.ts`). Use singular, camelCase names; tests mirror the base name with `.test.ts` (or `.nuxt.test.ts`). Other folders are unaffected.
 
 ## Git
 
@@ -81,7 +82,7 @@ When completing any code change (feature, fix, refactor):
    pnpm lint:fix       # must be clean (auto-fixes what it can)
    pnpm ci:typecheck   # must be clean
    pnpm ci:test        # must pass; coverage must not decrease vs. main
-   pnpm playwright:docker   # builds the site, then runs E2E + visual regression tests in Docker (requires Docker/colima)
+   pnpm playwright:docker   # builds the site, then captures screenshots + runs E2E in Docker (requires Docker/colima)
    dotnet test src/api/Bach.Software.sln   # if backend files changed
    ```
    When a step fails, fix the error and re-run **only that step** — don't restart the whole list from the top (the earlier steps already passed). If the failing tool supports scoping, narrow the re-run to just the affected area first (e.g. `npx eslint --fix <file>`, `TZ=Europe/Amsterdam npx vitest run <test-file>`, `pnpm ci:playwright -- <spec>` inside Docker, or `dotnet test --filter <TestName>`), then run the full step once more to confirm it's clean before moving on.
@@ -109,16 +110,16 @@ Whenever the user says "remember this" (or similar) about an instruction or pref
 
 ## Spec-Driven Development
 
-Larger work runs through the spec workflow in `docs/specs/` (see `docs/specs/README.md` for the full lifecycle): epics, features, and stories with approval gates that only Jeroen may pass. The `/spec:*` commands in `.claude/commands/spec/` drive it, the agents live in `.claude/agents/`, and `docs/components.md` is the living inventory of shared components (keep it up to date on every shared component change). Bug fixes and trivial changes can use `/spec:quick`.
+Larger work runs through the spec workflow in `specs/` (see `specs/README.md` and the `spec` plugin's `docs/WORKFLOW.md` for the full lifecycle): epics, features, and stories with approval gates that only Jeroen may pass. He passes the gates in person (`/spec:approve`), or delegates them for one low-risk spec by typing `/spec:auto <id>`, which runs the whole process end to end and approves on his behalf; no agent ever approves outside that typed delegation. The `/spec:*` commands and their agents come from the `spec` plugin (installed via `.claude/settings.json`), and `specs/components.md` is the living inventory of shared components (keep it up to date on every shared component change). Bug fixes and trivial changes can use `/spec:quick`.
 
 ## Architecture
 
 This is a hybrid static site with two independent layers:
 
 - **Frontend** (`src/app/`) — Nuxt 4 + Vue 3 + TypeScript, statically generated and deployed to Cloudflare Pages.
-- **Backend** (`src/api/`) — .NET 9 Azure Functions, deployed separately as a serverless API.
+- **Backend** (`src/api/`) — .NET 9 ASP.NET Core minimal API, deployed separately as a container on AKS.
 
-The frontend communicates with the backend via `NUXT_PUBLIC_API_BASE` (defaults to `http://localhost:7071` in dev). The backend client in `src/app/services/backend/` is generated by [Kiota](https://learn.microsoft.com/en-us/openapi/kiota) from the OpenAPI spec — regenerate it with `kiota generate` when the API changes (see `src/app/services/backend/README.md`).
+The frontend communicates with the backend via `NUXT_PUBLIC_API_BASE` (`http://localhost:8080` in dev, set in `.env.local` by `pnpm dev-setup`). The backend client in `src/app/services/backend/` is generated by [Kiota](https://learn.microsoft.com/en-us/openapi/kiota) from the committed OpenAPI document `openapi/v1.json`, which the backend build writes. When the API changes, build the backend (`dotnet build src/api/Bach.Software.sln`), run `pnpm generate:api`, and commit both `openapi/` and the client; CI fails on a stale `openapi/` (see `src/app/services/backend/README.md`).
 
 ### Routing
 
@@ -196,27 +197,24 @@ Two Vitest project configurations in `vitest.config.ts`:
 
 Always use `TZ=Europe/Amsterdam` when running tests (dates are timezone-sensitive). This is baked into the `pnpm test` and `pnpm ci:test` scripts.
 
-**No HTML snapshot tests.** Never assert component markup with `expect(wrapper.html()).toMatchSnapshot()` (or inline/file HTML snapshots) in component tests. Instead, for every component: add it to Storybook (`ComponentName.stories.ts`) and register its story id in `src/app/tests/playwright/components.spec.ts`, which takes an actual screenshot of the story and compares it visually (run via `pnpm ci:playwright:docker`, update baselines with `pnpm ci:playwright:docker:update`). Unit/component tests should only assert behaviour (props, emits, rendered text/attributes) — never full markup.
+**No HTML snapshot tests.** Never assert component markup with `expect(wrapper.html()).toMatchSnapshot()` (or inline/file HTML snapshots) in component tests. Instead, for every component: add it to Storybook (`ComponentName.stories.ts`) and register its story id in `src/app/tests/playwright/components.spec.ts`, which captures a screenshot of the story that reg-suit compares against the baseline of the branch's merge-base (capture via `pnpm ci:playwright:docker`, compare via `pnpm vrt:compare`). Unit/component tests should only assert behaviour (props, emits, rendered text/attributes) — never full markup.
 
-Playwright E2E tests are in `src/app/tests/playwright/`. Visual snapshot tests use Docker for reproducibility across OS environments (see `pnpm ci:playwright:docker`).
+Playwright E2E tests are in `src/app/tests/playwright/`. Visual regression captures run in Docker for reproducibility across OS environments (see `pnpm ci:playwright:docker`).
 
-#### Visual baselines: only ever regenerate them in the jammy container
+#### Visual regression: baselines live in Cloudflare R2, never in git
 
-The baselines in `src/app/tests/playwright/*-snapshots/` are defined by `mcr.microsoft.com/playwright:v1.60.0-jammy`, the container `20-build-deploy-playwright.yml` verifies them in. The specs also set `testInfo.snapshotSuffix = ''`, so there is a **single OS-agnostic baseline set with no per-platform fallback**. Regenerating them in any other environment (a macOS host, an agent sandbox, a plain `ubuntu-latest` runner) replaces them with images that only match that environment's font stack, and the pipeline then fails permanently for reasons that are hard to trace.
+Baseline images are **not committed**. The Playwright specs (`components.spec.ts`, `pages.spec.ts`) only **capture** screenshots with `page.screenshot` into `visual-regression/actual/` (git-ignored); they never compare, and `toHaveScreenshot` must not come back. [reg-suit](https://github.com/reg-viz/reg-suit) does the comparing, configured in `regconfig.json`.
 
-There are exactly two supported ways to update them:
-
-- **Locally, with Docker:** `pnpm playwright:docker:update`.
-- **Via CI, no Docker needed:** `pnpm update-snapshots` on your branch, or comment `/update-snapshots` on the PR. This runs `30-update-snapshots.yml`, which rebuilds and regenerates the baselines inside the same jammy container and commits them back to the branch.
-
-Agents without Docker must use the CI path. Never run `pnpm ci:playwright --update-snapshots` directly, and never resolve a visual diff by hand-editing or deleting snapshot files. If a diff is not an intended result of your change, it is a real regression: fix the code, not the baseline.
-
-Note that snapshot commits are pushed with `GITHUB_TOKEN`, which does not re-trigger workflows, so re-run `20-build-deploy-playwright.yml` (or push another commit) to verify the new baselines.
+- **One environment.** Captures that count are made inside `mcr.microsoft.com/playwright:v1.60.0-jammy` (`pnpm ci:playwright:docker` locally, the `20-build-deploy-playwright.yml` job container in CI). Fonts and anti-aliasing differ per OS, so a capture made on a bare macOS host or in an agent sandbox is not trustworthy and must never be published.
+- **Only CI publishes.** On every PR and every push to `main`, `pnpm vrt:ci` (`reg-suit run`) compares the capture against the screenshots published for the commit the branch forked from, publishes the branch's screenshots and an HTML report to the R2 bucket `bach-software-visual-regression`, and posts the status and report link on the PR. The `main` runs publish the baseline future branches compare against.
+- **Approving the PR is approving the visual change.** An intended UI change needs no re-record step and no baseline commit: merging publishes the new screenshots as the baseline. A red visual check without an intended UI change is a real regression: fix the code, open the report before approving anything, and never hand-edit or delete captured images to silence it.
+- **Local loop.** `pnpm ci:playwright:docker` captures, `pnpm vrt:compare` downloads the baseline and writes `.reg/index.html`. It needs read-only R2 credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`) and `CLOUDFLARE_ACCOUNT_ID` in the environment; never use write credentials locally.
+- **Data must be deterministic.** Pages render fixture data (the analytics endpoints are stubbed with constants), animations are disabled, fonts and images are awaited instead of sleeping, and legitimately dynamic elements are masked. Do not loosen `thresholdRate` to hide flakiness.
 
 ### Backend (.NET)
 
 Clean architecture:
-- `Bach.Software.API` — Azure Functions entry points + DI setup.
+- `Bach.Software.Web` — ASP.NET Core minimal-API endpoints (`Endpoints/`) + DI setup.
 - `Bach.Software.Application` — interfaces, models, validation (no infrastructure dependencies).
 - `Bach.Software.Infrastructure` — Plausible Analytics integration.
 - `Bach.Software.Core` — shared utilities.
@@ -249,5 +247,5 @@ Defenses in this repo:
 1. Add or widen wildcard rules in `nuxt.config.ts` for directories that contain no page routes (check the script output for which routes fell off; only use trailing-splat patterns like `/dir/*`).
 2. Free up rule slots by reducing loose files in the build output root (each individual file costs one rule).
 3. Structural fix when wildcards run out: migrate from Cloudflare Pages to a Cloudflare Worker with static assets (Nitro preset `cloudflare_module` with `assets` in `wrangler.toml`). Workers check the uploaded asset manifest first on every request and only invoke the Worker script when no asset matches, which is exactly the "prerendered first, Worker as fallback" model this site assumes; `_routes.json` and its 100-rule limit do not exist there. Caveat before migrating: the PR preview mechanism (`pr-<N>.bach.software` via `wrangler pages deploy --branch=pr-<N>`) is a Pages feature; Workers branch aliases were still "coming soon" as of mid-2026, so the preview workflow in `20-build-deploy-playwright.yml` needs rethinking as part of that migration.
-- Backend: Azure Functions, configured via `local.settings.json` (generated by `pnpm dev-setup`).
-- CI/CD: GitHub Actions — `10-quality-assurance.yml` (lint, typecheck, unit tests, backend tests, Trivy scan), `20-build-deploy-playwright.yml` (build + Playwright E2E).
+- Backend: Docker image built and deployed to AKS via `40-build-deploy-aks.yml`; local configuration comes from `.env.local` (generated by `pnpm dev-setup`) and `appsettings.json`.
+- CI/CD: GitHub Actions — `10-quality-assurance.yml` (lint, typecheck, unit tests, backend tests, danger, SonarQube, Trivy scan), `20-build-deploy-playwright.yml` (build + Playwright E2E), `40-build-deploy-aks.yml` (backend image build + AKS deploy).

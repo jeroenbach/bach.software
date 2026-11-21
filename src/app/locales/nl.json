@@ -7,6 +7,10 @@
   "Linkedin": "Linkedin",
   "Share": "Delen",
   "On this page": "Op deze pagina",
+  "Main navigation": "Hoofdnavigatie",
+  "Open main menu": "Hoofdmenu openen",
+  "Close menu": "Menu sluiten",
+  "Switch color mode": "Kleurmodus wisselen",
   "Bach": {
     "Software": "Bach.Software"
   },
@@ -28,10 +32,15 @@
       "exclude": "Uitsluiten"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "Er is een onbekende fout opgetreden"
-    }
+  "errors": {
+    "unexpected": "Er is iets misgegaan. Probeer het later opnieuw.",
+    "unavailable": "Deze informatie is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    "validation": "Een deel van de invoer is ongeldig.",
+    "urlRequired": "Een URL is verplicht.",
+    "urlInvalid": "De URL is ongeldig."
+  },
+  "messageBar": {
+    "close": "Sluiten"
   },
   "pageReadProgress": {
     "openButton": "Toon mijn statistieken",

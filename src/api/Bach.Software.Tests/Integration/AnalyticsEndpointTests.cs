@@ -1,11 +1,18 @@
 using System.Net;
 using System.Text.Json;
+using Bach.Software.Tests.TestHelpers;
+using Microsoft.Extensions.Logging;
 using RichardSzalay.MockHttp;
 
 namespace Bach.Software.Tests.Integration;
 
 public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
 {
+    private static readonly int[] _openedMetrics = [42];
+    private static readonly string[] _openedDimensions = ["opened"];
+    private static readonly int[] _likeMetrics = [7];
+    private static readonly string[] _likeDimensions = ["like"];
+
     private readonly CustomWebApplicationFactory _factory;
     private readonly HttpClient _client;
 
@@ -28,7 +35,7 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
             {
                 results = new[]
                 {
-                    new { metrics = new[] { 42 }, dimensions = new[] { "opened" } },
+                    new { metrics = _openedMetrics, dimensions = _openedDimensions },
                 },
             }));
 
@@ -65,7 +72,7 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
             {
                 results = new[]
                 {
-                    new { metrics = new[] { 7 }, dimensions = new[] { "like" } },
+                    new { metrics = _likeMetrics, dimensions = _likeDimensions },
                 },
             }));
 
@@ -92,7 +99,7 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task GetPageLikes_WhenPlausibleRequestFails_ReturnsInternalServerError()
+    public async Task GetPageLikes_WhenPlausibleRequestFails_ReturnsBadGateway()
     {
         // Arrange
         // Use a dedicated factory: the shared MockHttpHandler keeps its responders for the
@@ -107,11 +114,11 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
         var response = await client.GetAsync($"/api/analytics/pageLikes?url={Uri.EscapeDataString("https://bach.software/test")}");
 
         // Assert
-        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
     }
 
     [Fact]
-    public async Task GetPageLikes_WhenPlausibleResponseCannotBeDeserialized_ReturnsInternalServerError()
+    public async Task GetPageLikes_WhenPlausibleResponseCannotBeDeserialized_ReturnsBadGateway()
     {
         // Arrange
         // Use a dedicated factory: the shared MockHttpHandler keeps its responders for the
@@ -126,6 +133,83 @@ public class AnalyticsEndpointTests : IClassFixture<CustomWebApplicationFactory>
         var response = await client.GetAsync($"/api/analytics/pageLikes?url={Uri.EscapeDataString("https://bach.software/test")}");
 
         // Assert
-        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("pageReads")]
+    [InlineData("pageLikes")]
+    public async Task GetAnalytics_WhenPlausibleReturnsHttpError_Returns502DetailFreeProblem(string route)
+    {
+        // Arrange
+        using var factory = new CustomWebApplicationFactory();
+        factory.MockHttpHandler.When("*").Respond(HttpStatusCode.InternalServerError);
+        var client = factory.CreateClient();
+
+        // Act
+        var response = await AnalyticsRequests.GetAsync(client, route);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.Equal(ProblemBody.ContentType, response.Content.Headers.ContentType?.MediaType);
+        var body = await ProblemBody.ReadAsync(response);
+        body.AssertDetailFree();
+        Assert.DoesNotContain("Response status code", body.Raw, StringComparison.Ordinal);
+        Assert.DoesNotContain("test-token", body.Raw, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("pageReads")]
+    [InlineData("pageLikes")]
+    public async Task GetAnalytics_WhenPlausibleConnectionFails_Returns502(string route)
+    {
+        // Arrange
+        using var factory = new CustomWebApplicationFactory();
+        factory.MockHttpHandler.When("*").Throw(new HttpRequestException("connection refused"));
+        var client = factory.CreateClient();
+
+        // Act
+        var response = await AnalyticsRequests.GetAsync(client, route);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        var body = await ProblemBody.ReadAsync(response);
+        body.AssertDetailFree();
+        Assert.DoesNotContain("connection refused", body.Raw, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("pageReads")]
+    [InlineData("pageLikes")]
+    public Task GetAnalytics_WhenPlausibleResponseCannotBeDeserialized_Returns502(string route) =>
+        AssertUnusableResponseReturns502(route, "null");
+
+    [Theory]
+    [InlineData("pageReads")]
+    [InlineData("pageLikes")]
+    public Task GetAnalytics_WhenPlausibleResponseIsMalformedJson_Returns502(string route) =>
+        AssertUnusableResponseReturns502(route, "not json");
+
+    [Theory]
+    [InlineData("pageReads")]
+    [InlineData("pageLikes")]
+    public Task GetAnalytics_WhenPlausibleResponseLacksRequiredMembers_Returns502(string route) =>
+        AssertUnusableResponseReturns502(route, "{}");
+
+    private static async Task AssertUnusableResponseReturns502(string route, string plausibleBody)
+    {
+        // Arrange
+        using var factory = new CustomWebApplicationFactory();
+        factory.MockHttpHandler.When("*").Respond("application/json", plausibleBody);
+        var client = factory.CreateClient();
+
+        // Act
+        var response = await AnalyticsRequests.GetAsync(client, route);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        var body = await ProblemBody.ReadAsync(response);
+        body.AssertDetailFree();
+        Assert.Single(factory.Logs.Entries, entry => entry.Level == LogLevel.Error);
     }
 }

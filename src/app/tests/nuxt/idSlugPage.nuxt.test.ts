@@ -26,11 +26,11 @@ mockNuxtImport('useReadProgressTracking', () => mock.useReadProgressTracking);
 mockNuxtImport('navigateTo', () => mock.navigateTo);
 
 const BlogPostStub = {
-  props: ['post', 'baseUrl', 'pageReads', 'likes', 'hasLiked'],
+  props: ['post', 'baseUrl', 'reads', 'likes', 'hasLiked'],
   emits: ['like'],
   template: `
-    <div data-testid="blog-post">
-      <button data-testid="like-button" @click="$emit('like')" />
+    <div data-testid="blog-post-card">
+      <button data-testid="blog-post-like-button" @click="$emit('like')" />
       <slot name="tableOfContents" />
     </div>`,
 };
@@ -72,7 +72,7 @@ describe('[id]-[[slug]] page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mock.useAlternateUrls.mockResolvedValue([]);
-    mock.usePageReadsContext.mockReturnValue({ pageReads: ref({ reads: 10 }) });
+    mock.usePageReadsContext.mockReturnValue({ pageReads: ref({ threeQuarterRead: 10 }) });
     mock.usePageLikesContext.mockReturnValue({
       likes: ref(42),
       isLoadingLikes: ref(false),
@@ -90,9 +90,39 @@ describe('[id]-[[slug]] page', () => {
     const blogPost = w.findComponent(BlogPostStub);
     expect(blogPost.exists()).toBe(true);
     expect(blogPost.props('post')).toMatchObject({ title: 'First post' });
-    expect(blogPost.props('pageReads')).toEqual({ reads: 10 });
+    expect(blogPost.props('reads')).toEqual({ readCount: 10 });
     expect(blogPost.props('likes')).toBe(42);
     expect(blogPost.props('hasLiked')).toBe(false);
+  });
+
+  it('should not pass the API reads object to the blog post', async () => {
+    arrangeRoute('/posts/1-first-post', { segment1: 'posts', id: '1', slug: 'first-post' });
+    arrangePost(post);
+
+    const w = await mountPage();
+
+    const blogPostProps = w.findComponent(BlogPostStub).props();
+    expect(blogPostProps).not.toHaveProperty('pageReads');
+    expect(JSON.stringify(blogPostProps.reads)).not.toContain('threeQuarterRead');
+  });
+
+  it('should pass no reads to the blog post when the reads are not available', async () => {
+    mock.usePageReadsContext.mockReturnValue({ pageReads: ref(undefined) });
+    arrangeRoute('/posts/1-first-post', { segment1: 'posts', id: '1', slug: 'first-post' });
+    arrangePost(post);
+
+    const w = await mountPage();
+
+    expect(w.findComponent(BlogPostStub).props('reads')).toBeUndefined();
+  });
+
+  it('should fetch the reads once, without any additional context', async () => {
+    arrangeRoute('/posts/1-first-post', { segment1: 'posts', id: '1', slug: 'first-post' });
+    arrangePost(post);
+
+    await mountPage();
+
+    expect(mock.usePageReadsContext).toHaveBeenCalledTimes(1);
   });
 
   it('should pass the post author and category as like tracking props', async () => {
@@ -120,7 +150,7 @@ describe('[id]-[[slug]] page', () => {
     arrangePost(post);
 
     const w = await mountPage();
-    await w.find('[data-testid="like-button"]').trigger('click');
+    await w.find('[data-testid="blog-post-like-button"]').trigger('click');
 
     expect(mock.like).toHaveBeenCalledTimes(1);
   });
@@ -144,7 +174,7 @@ describe('[id]-[[slug]] page', () => {
 
     const w = await mountPage();
 
-    expect(w.find('[data-testid="blog-post"]').exists()).toBe(false);
+    expect(w.find('[data-testid="blog-post-card"]').exists()).toBe(false);
     expect(mock.usePageLikesContext).not.toHaveBeenCalled();
     expect(mock.usePageReadsContext).not.toHaveBeenCalled();
     expect(mock.useReadProgressTracking).not.toHaveBeenCalled();

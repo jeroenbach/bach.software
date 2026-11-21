@@ -138,7 +138,6 @@ defineProps<Props>();
 <!-- ✅ Good: AppHeaderContext.vue -->
 <script setup lang="ts">
 // Context handles external dependencies
-const { notifications } = useNotificationStore();
 const { data: navigation } = await useContentNavigationContext();
 const colorMode = useColorMode();
 </script>
@@ -146,7 +145,6 @@ const colorMode = useColorMode();
 <template>
   <AppHeader
     :navigation="navigation"
-    :notifications="notifications"
     :color-mode="colorMode.preference"
     @update:color-mode="colorMode.preference = $event"
   />
@@ -158,22 +156,22 @@ const colorMode = useColorMode();
 We use Vue 3 composables for reusable business logic:
 
 ```typescript
-// useNotificationStore.ts - Component-scoped notifications
-export const useNotificationStore = () => {
-  const notifications = ref<Notification[]>([]);
+// useMessageStore.ts - Instance-scoped messages, rendered once at the app root
+export function useMessageStore() {
+  const { messages, addMessage, newInstanceId, clearInstance } = useSharedMessageStore();
+  const instanceId = newInstanceId();
 
-  const add = (
-    severity: "info" | "warning" | "error" | "success",
-    title: string,
-  ) => {
-    notifications.value.push({ severity, title });
+  // Auto-cleanup when the component that added the messages unmounts
+  tryOnUnmounted(() => clearInstance(instanceId));
+
+  return {
+    messages,
+    addSuccess: (description: string, options?: MessageOptions) =>
+      addMessage(instanceId, description, undefined, "success", options),
+    addInfo: (description: string, options?: MessageOptions) =>
+      addMessage(instanceId, description, undefined, "info", options),
   };
-
-  // Auto-cleanup when component unmounts
-  tryOnUnmounted(() => (notifications.value = []));
-
-  return { notifications: readonly(notifications), add };
-};
+}
 ```
 
 ### 3. Content Management with Nuxt Content
@@ -228,13 +226,13 @@ export interface BlogPostSummary extends Metadata {
 
 ### Spec-driven Workflow
 
-Larger changes are planned as specs under [`docs/specs/`](docs/specs/README.md) before any code is written: an optional **epic** groups **features**, a feature is split into **stories**, and a **quick** lane handles trivial fixes. Each spec carries a `status` in its frontmatter that moves through its lifecycle:
+Larger changes are planned as specs under [`specs/`](specs/README.md) before any code is written: an optional **epic** groups **features**, a feature is split into **stories**, and a **quick** lane handles trivial fixes. Each spec carries a `status` in its frontmatter that moves through its lifecycle:
 
 - **Feature**: `draft → design → architecture → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → in-progress → done`
 - **Story**: `draft → qa → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → implementing → verifying → done`
 - **`awaiting-discussion`** (conditional) means something is genuinely open and needs a decision from Jeroen (`/spec:discuss`); **`awaiting-approval`** means nothing is open and only his stamp is needed (`/spec:approve`). These are the only approval gates. **`deferred`** is a terminal parking state for specs decided against (rationale recorded in the spec), separate from `done`.
 
-Run `/spec:status` for the full pipeline, or `/spec:continue FEAT-XXX` to run every phase up to the next approval gate in one go. See [`docs/specs/README.md`](docs/specs/README.md) for the complete workflow and the `/spec:*` commands.
+Run `/spec:status` for the full pipeline, or `/spec:continue FEAT-XXX` to run every phase up to the next approval gate in one go. See [`specs/README.md`](specs/README.md) for the complete workflow and the `/spec:*` commands, driven by the `spec` Claude Code plugin.
 
 ## 🧪 Testing Strategy
 
@@ -276,7 +274,9 @@ pnpm playwright        # Run E2E tests
 - Cross-browser compatibility
 - Real user interactions
 
-We also do screenshot testing for visual regressions. Since the CI pipeline runs Ubuntu, we provide a `ci:playwright:docker` command that runs tests inside a Docker container matching the CI environment — this prevents font and layout discrepancies between your local machine and CI.
+We also do screenshot testing for visual regressions. The Playwright specs capture screenshots of the pages and Storybook components, and [reg-suit](https://github.com/reg-viz/reg-suit) compares them against the baseline of the commit your branch forked from. The baselines are not stored in git: CI publishes them to a Cloudflare R2 bucket for every push to `main`, and posts the visual report on each pull request. Approving the PR is approving the visual change.
+
+Since the CI pipeline runs Ubuntu, we provide a `ci:playwright:docker` command that captures inside a Docker container matching the CI environment. This prevents font and layout discrepancies between your local machine and CI.
 
 To run Docker locally on macOS, install colima:
 
@@ -285,16 +285,16 @@ brew install colima docker docker-compose
 colima start
 ```
 
-Then run the Playwright tests in Docker:
+Then capture the screenshots (and run the other Playwright tests) in Docker:
 
 ```bash
 pnpm ci:playwright:docker
 ```
 
-Or update the snapshots:
+To see how your change differs from the baseline, download it and open the report. This needs read-only R2 credentials in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, and the Cloudflare account id in `CLOUDFLARE_ACCOUNT_ID`:
 
 ```bash
-pnpm ci:playwright:docker:update
+pnpm vrt:compare       # writes .reg/index.html
 ```
 
 ### Component Documentation (Storybook)

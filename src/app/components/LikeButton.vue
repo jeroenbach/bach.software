@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { HandThumbUpIcon } from '@heroicons/vue/24/outline';
 import { HandThumbUpIcon as HandThumbUpIconSolid } from '@heroicons/vue/24/solid';
-import { isNotNullOrUndefined } from '~/utils/checks';
+import { isNotNullOrUndefined } from '~/utils/checksUtil';
 
 interface Props {
   /**

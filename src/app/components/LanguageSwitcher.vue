@@ -7,9 +7,10 @@ import { defaultLocale, locales } from '~/locales.config';
  */
 interface Props {
   language?: LocalesCode
+  baseDataTestid?: string
 }
 
-const { language = defaultLocale } = defineProps<Props>();
+const { language = defaultLocale, baseDataTestid = 'language-switcher' } = defineProps<Props>();
 const emits = defineEmits<{
   (e: 'update:language', value: LocalesCode): void
 }>();
@@ -26,6 +27,7 @@ function toggleLanguage() {
     <ClientOnly>
       <AppButton
         :title="$t('Switch language')"
+        :data-testid="`${baseDataTestid}-toggle-button`"
         class="absolute cursor-pointer"
         @click="toggleLanguage"
       >

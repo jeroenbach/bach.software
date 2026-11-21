@@ -5,7 +5,7 @@ namespace Bach.Software.Web.Extensions;
 
 public static class WebApplicationExtensions
 {
-    public static WebApplication MapBachSoftwareEndpoints(this WebApplication app)
+    public static IEndpointRouteBuilder MapBachSoftwareEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapHealthEndpoints();
         app.MapAnalyticsEndpoints();

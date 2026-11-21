@@ -16,7 +16,7 @@ import type { BlogPostSummary } from '~/types/BlogPostSummary';
 import type { Company } from '~/types/Company';
 import type { Metadata } from '~/types/Metadata';
 import type { Page } from '~/types/Page';
-import { createAbsoluteUrl } from '~/utils/url';
+import { createAbsoluteUrl } from '~/utils/urlUtil';
 
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 

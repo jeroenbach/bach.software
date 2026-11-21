@@ -8,11 +8,27 @@ interface Props {
   class?: string
   loading?: 'lazy' | 'eager'
 }
-const props = defineProps<Props>();
+const {
+  src,
+  alt,
+  width,
+  height,
+  sizes,
+  class: className,
+  loading,
+} = defineProps<Props>();
 </script>
 
 <template>
-  <NuxtImg v-bind="props">
+  <NuxtImg
+    :src="src"
+    :alt="alt"
+    :width="width"
+    :height="height"
+    :sizes="sizes"
+    :class="className"
+    :loading="loading"
+  >
     <slot />
   </NuxtImg>
 </template>

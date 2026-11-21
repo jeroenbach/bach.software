@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Bach.Software.Infrastructure.PlausibleAnalytics.Services;
 
-public class PlausibleService : IAnalyticsService
+public partial class PlausibleService : IAnalyticsService
 {
     private const string _defaultPlausibleUrl = "https://plausible.io";
     private const string _queryUrl = "/api/v2/query";
+    private static readonly string[] _readGoals = ["read", "three-quarter-read", "half-read", "quarter-read", "peeked", "opened"];
+    private static readonly string[] _likeGoals = ["like"];
     private readonly HttpClient _httpClient;
     private readonly string _apiUrl;
     private readonly string _apiToken;
@@ -19,12 +21,18 @@ public class PlausibleService : IAnalyticsService
     public PlausibleService(HttpClient httpClient, IConfiguration configuration, ILogger<PlausibleService> logger)
     {
         _httpClient = httpClient;
-        _apiToken = configuration["PLAUSIBLE_API_TOKEN"] ?? throw new ArgumentNullException(nameof(_apiToken), "API token cannot be null");
+        _apiToken = configuration["PLAUSIBLE_API_TOKEN"] ?? throw new InvalidOperationException("PLAUSIBLE_API_TOKEN configuration value is required.");
         _apiUrl = configuration["PLAUSIBLE_API_URL"] ?? _defaultPlausibleUrl;
         _logger = logger;
     }
 
-    public async Task<PageReads> GetPageReads(string url)
+    [LoggerMessage(Level = LogLevel.Information, Message = "Payload: {JsonPayload}")]
+    private partial void LogPayload(string jsonPayload);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Response: {ResponseContent}")]
+    private partial void LogResponse(string responseContent);
+
+    public async Task<PageReads> GetPageReads(string url, CancellationToken cancellationToken)
     {
         using var scope = _logger.BeginScope(new Dictionary<string, object> { { "url", url } });
 
@@ -39,23 +47,19 @@ public class PlausibleService : IAnalyticsService
             date_range = "all",
             filters = new[]{
                 new List<object> { "contains", "event:page", new[] { relativeUrl } },
-                new List<object> { "is", "event:goal", new[] {"read", "three-quarter-read", "half-read", "quarter-read", "peeked", "opened"} },
+                new List<object> { "is", "event:goal", _readGoals },
             },
             dimensions = new[] { "event:goal" },
         };
 
         var jsonPayload = JsonSerializer.Serialize(payload);
-        _logger.LogInformation("Payload: {jsonPayload}", jsonPayload);
+        LogPayload(jsonPayload);
 
-        var response = await SendRequest(jsonPayload);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation("Response: {responseContent}", responseContent);
+        var response = await SendRequest(jsonPayload, cancellationToken);
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        LogResponse(responseContent);
 
-        var queryResult = JsonSerializer.Deserialize<QueryResult>(responseContent);
-        if (queryResult == null)
-        {
-            throw new InvalidOperationException("Failed to deserialize the response content.");
-        }
+        var queryResult = ParseQueryResult(responseContent);
 
         var resultsDict = queryResult.Results.ToDictionary(x => x.Dimensions.First(), x => x.Metrics.First());
 
@@ -70,7 +74,7 @@ public class PlausibleService : IAnalyticsService
         };
     }
 
-    public async Task<PageLikes> GetPageLikes(string url)
+    public async Task<PageLikes> GetPageLikes(string url, CancellationToken cancellationToken)
     {
         using var scope = _logger.BeginScope(new Dictionary<string, object> { { "url", url } });
 
@@ -85,23 +89,19 @@ public class PlausibleService : IAnalyticsService
             date_range = "all",
             filters = new[]{
                 new List<object> { "contains", "event:page", new[] { relativeUrl } },
-                new List<object> { "is", "event:goal", new[] { "like" } },
+                new List<object> { "is", "event:goal", _likeGoals },
             },
             dimensions = new[] { "event:goal" },
         };
 
         var jsonPayload = JsonSerializer.Serialize(payload);
-        _logger.LogInformation("Payload: {jsonPayload}", jsonPayload);
+        LogPayload(jsonPayload);
 
-        var response = await SendRequest(jsonPayload);
-        var responseContent = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation("Response: {responseContent}", responseContent);
+        var response = await SendRequest(jsonPayload, cancellationToken);
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        LogResponse(responseContent);
 
-        var queryResult = JsonSerializer.Deserialize<QueryResult>(responseContent);
-        if (queryResult == null)
-        {
-            throw new InvalidOperationException("Failed to deserialize the response content.");
-        }
+        var queryResult = ParseQueryResult(responseContent);
 
         var resultsDict = queryResult.Results.ToDictionary(x => x.Dimensions.First(), x => x.Metrics.First());
 
@@ -111,7 +111,20 @@ public class PlausibleService : IAnalyticsService
         };
     }
 
-    private async Task<HttpResponseMessage> SendRequest(string jsonPayload)
+    private static QueryResult ParseQueryResult(string responseContent)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<QueryResult>(responseContent)
+                ?? throw new PlausibleResponseException("The Plausible response deserialized to null.");
+        }
+        catch (JsonException ex)
+        {
+            throw new PlausibleResponseException("The Plausible response could not be parsed.", ex);
+        }
+    }
+
+    private async Task<HttpResponseMessage> SendRequest(string jsonPayload, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(jsonPayload);
 
@@ -119,7 +132,7 @@ public class PlausibleService : IAnalyticsService
         request.Headers.Add("Authorization", $"Bearer {_apiToken}");
         request.Content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return response;

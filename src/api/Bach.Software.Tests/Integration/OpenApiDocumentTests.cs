@@ -37,16 +37,41 @@ public class OpenApiDocumentTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
-    public async Task PageReads_DeclaresTypedResponses()
+    public Task PageReads_DeclaresTypedResponses() => AssertDeclaresTypedResponses("pageReads", "PageReads");
+
+    [Fact]
+    public Task PageLikes_DeclaresTypedResponses() => AssertDeclaresTypedResponses("pageLikes", "PageLikes");
+
+    [Fact]
+    public Task PageReads_DoesNotDocumentCancellationToken() => AssertOnlyUrlParameterDocumented("pageReads");
+
+    [Fact]
+    public Task PageLikes_DoesNotDocumentCancellationToken() => AssertOnlyUrlParameterDocumented("pageLikes");
+
+    private async Task AssertOnlyUrlParameterDocumented(string operationId)
+    {
+        using var document = await GetDocumentAsync();
+
+        var parameters = document.RootElement
+            .GetProperty("paths")
+            .GetProperty($"/analytics/{operationId}")
+            .GetProperty("get")
+            .GetProperty("parameters");
+
+        Assert.Equal(1, parameters.GetArrayLength());
+        Assert.Equal("url", parameters[0].GetProperty("name").GetString());
+    }
+
+    private async Task AssertDeclaresTypedResponses(string operationId, string schema)
     {
         using var document = await GetDocumentAsync();
 
         var operation = document.RootElement
             .GetProperty("paths")
-            .GetProperty("/analytics/pageReads")
+            .GetProperty($"/analytics/{operationId}")
             .GetProperty("get");
 
-        Assert.Equal("pageReads", operation.GetProperty("operationId").GetString());
+        Assert.Equal(operationId, operation.GetProperty("operationId").GetString());
 
         var urlParameter = operation.GetProperty("parameters")[0];
         Assert.Equal("url", urlParameter.GetProperty("name").GetString());
@@ -54,7 +79,7 @@ public class OpenApiDocumentTests : IClassFixture<CustomWebApplicationFactory>
 
         var responses = operation.GetProperty("responses");
         Assert.Equal(
-            "#/components/schemas/PageReads",
+            $"#/components/schemas/{schema}",
             responses.GetProperty("200").GetProperty("content").GetProperty("application/json").GetProperty("schema").GetProperty("$ref").GetString());
         Assert.Equal(
             "#/components/schemas/ValidationProblemDetails",
@@ -62,6 +87,9 @@ public class OpenApiDocumentTests : IClassFixture<CustomWebApplicationFactory>
         Assert.Equal(
             "#/components/schemas/ProblemDetails",
             responses.GetProperty("500").GetProperty("content").GetProperty("application/problem+json").GetProperty("schema").GetProperty("$ref").GetString());
+        Assert.Equal(
+            "#/components/schemas/ProblemDetails",
+            responses.GetProperty("502").GetProperty("content").GetProperty("application/problem+json").GetProperty("schema").GetProperty("$ref").GetString());
     }
 
     [Fact]

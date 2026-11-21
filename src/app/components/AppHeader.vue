@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { ColorMode } from '~/components/ColorModeSwitcher.vue';
-import type { Notification } from '~/composables/useNotificationStore';
 import type { LocalesCode } from '~/locales.config';
 import type { NavigationItem } from '~/types/NavigationItem';
 
@@ -17,7 +16,6 @@ import { computed, ref } from 'vue';
 interface Props {
   border?: boolean
   navigation?: NavigationItem[] | null
-  notifications?: Notification[]
   colorMode?: ColorMode
   language?: LocalesCode
 }
@@ -25,7 +23,6 @@ interface Props {
 const {
   border,
   navigation = [],
-  notifications = [],
   colorMode = undefined,
 } = defineProps<Props>();
 const emits = defineEmits<{
@@ -51,7 +48,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
   >
     <nav
       class="mx-auto flex h-full w-full max-w-7xl items-center"
-      aria-label="Global"
+      :aria-label="$t('Main navigation')"
     >
       <div class="ml-auto flex pl-6 dark:text-gray-300 lg:ml-0 lg:pl-0">
         <AppLink tabindex="-1" :to="navigation?.[0]?.to" class="-m-1.5 p-1.5 text-lg">
@@ -75,10 +72,12 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
           <SearchButton />
         </slot>
         <LanguageSwitcher
+          baseDataTestid="desktop-menu-language-switcher"
           :language
           @update:language="emits('update:language', $event)"
         />
         <ColorModeSwitcher
+          baseDataTestid="desktop-menu-color-mode-switcher"
           :colorMode="colorMode"
           @update:colorMode="emits('update:colorMode', $event)"
         />
@@ -90,9 +89,10 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         <AppButton
           type="button"
           class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
+          data-testid="header-open-menu-button"
           @click="open"
         >
-          <span class="sr-only">Open main menu</span>
+          <span class="sr-only">{{ $t("Open main menu") }}</span>
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </AppButton>
       </div>
@@ -137,7 +137,7 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                 class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-400"
                 @click="close"
               >
-                <span class="sr-only">Close menu</span>
+                <span class="sr-only">{{ $t("Close menu") }}</span>
                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
               </AppButton>
             </div>
@@ -158,10 +158,12 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
                 </div>
                 <div class="space-y-2 py-6 flex gap-3">
                   <LanguageSwitcher
+                    baseDataTestid="mobile-menu-language-switcher"
                     :language
                     @update:language="emits('update:language', $event)"
                   />
                   <ColorModeSwitcher
+                    baseDataTestid="mobile-menu-color-mode-switcher"
                     :colorMode="colorMode"
                     @update:colorMode="emits('update:colorMode', $event)"
                   />
@@ -172,12 +174,6 @@ const scrollHeader = computed(() => Math.min(y.value / 64, 1));
         </TransitionChild>
       </Dialog>
     </TransitionRoot>
-    <NotificationContainer class="pt-[var(--reduceHeaderHeight)]" />
-    <NotificationMessage
-      v-for="notification in notifications"
-      :key="notification.notificationId"
-      v-bind="notification"
-    />
     <slot name="searchModal">
       <SearchModal :open="false" query="" />
     </slot>

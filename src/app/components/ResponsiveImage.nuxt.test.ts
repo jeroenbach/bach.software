@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mountStory as _mountStory, find } from '~/utils/test';
+import { mountStory as _mountStory, find } from '~/utils/testUtil';
 import * as stories from './ResponsiveImage.stories';
 
 import ResponsiveImage from './ResponsiveImage.vue';

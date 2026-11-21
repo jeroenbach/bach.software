@@ -9,9 +9,10 @@ export type ColorMode = 'light' | 'dark' | 'system';
 
 interface Props {
   colorMode?: ColorMode
+  baseDataTestid?: string
 }
 
-const { colorMode = 'system' } = defineProps<Props>();
+const { colorMode = 'system', baseDataTestid = 'color-mode-switcher' } = defineProps<Props>();
 const emits = defineEmits<{
   (e: 'update:colorMode', value: ColorMode): void
 }>();
@@ -33,7 +34,8 @@ function toggleColorMode() {
   <div class="flex size-6 flex-col overflow-hidden">
     <ClientOnly>
       <AppButton
-        title="Switch color mode"
+        :title="$t('Switch color mode')"
+        :data-testid="`${baseDataTestid}-toggle-button`"
         class="absolute cursor-pointer"
         @click="toggleColorMode"
       >

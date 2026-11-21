@@ -19,7 +19,11 @@ export default defineConfig({
         /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
         /\.md$/, // .md
       ],
-      imports: ['vue'],
+      imports: [
+        'vue',
+        { 'vue-i18n': ['useI18n'] },
+        { [fileURLToPath(new URL('./mocks/useSeoMeta.ts', import.meta.url))]: ['useSeoMeta'] },
+      ],
       dirs: ['./utils', './composables'],
       dts: false,
     }),

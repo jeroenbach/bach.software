@@ -41,3 +41,17 @@ export const Gray: Story = {
     color: 'gray',
   },
 };
+
+export const Plain: Story = {
+  args: {
+    text: 'Plain AppLink',
+  },
+};
+
+export const NewTab: Story = {
+  args: {
+    ...Default.args,
+    text: 'New tab AppLink',
+    target: '_blank',
+  },
+};

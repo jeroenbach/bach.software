@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineProps<{
+const { src, alt, caption, cssClass } = defineProps<{
   src: string
   alt?: string
   caption?: string

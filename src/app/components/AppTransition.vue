@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineProps<{
+const { name } = defineProps<{
   name: 'slide-up'
 }>();
 </script>

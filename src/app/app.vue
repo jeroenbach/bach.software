@@ -34,22 +34,36 @@ const backgroundFooter = computed<'gray' | 'white'>(() => {
   return 'gray';
 });
 const shortFooter = computed(() => appConfig.showShortFooter?.includes(Number(route.params.id)));
+
+const { messages, close } = useMessageStore();
 </script>
 
 <template>
-  <AppBackground :background="background" class="flex min-h-screen flex-col">
-    <NuxtLoadingIndicator />
-    <AppHeaderContext :border="background === 'gray'" />
-    <NuxtLayout :name="pageLayout">
-      <slot>
-        <NuxtPage />
-      </slot>
-    </NuxtLayout>
-    <AppFooterContext
-      :short="shortFooter"
-      :backgroundColor="backgroundFooter"
-    />
-  </AppBackground>
+  <MessageBarContext>
+    <AppBackground :background="background" class="flex min-h-screen flex-col">
+      <NuxtLoadingIndicator />
+      <AppHeaderContext :border="background === 'gray'" />
+      <MessageBarOutlet />
+      <!-- Store-driven bars: whatever is reported through the message store renders
+           here and teleports to the active outlet by itself. -->
+      <MessageBar
+        v-for="{ messageId, ...message } in messages"
+        :key="messageId"
+        v-bind="message"
+        :baseDataTestid="`message-bar-${messageId}`"
+        @close="close(messageId)"
+      />
+      <NuxtLayout :name="pageLayout">
+        <slot>
+          <NuxtPage />
+        </slot>
+      </NuxtLayout>
+      <AppFooterContext
+        :short="shortFooter"
+        :backgroundColor="backgroundFooter"
+      />
+    </AppBackground>
+  </MessageBarContext>
 </template>
 
 <style lang="scss" scoped>

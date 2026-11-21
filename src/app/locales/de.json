@@ -7,6 +7,10 @@
   "Linkedin": "Linkedin",
   "Share": "Teilen",
   "On this page": "Auf dieser Seite",
+  "Main navigation": "Hauptnavigation",
+  "Open main menu": "Hauptmenü öffnen",
+  "Close menu": "Menü schließen",
+  "Switch color mode": "Farbmodus wechseln",
   "Bach": {
     "Software": "Bach.Software"
   },
@@ -28,10 +32,15 @@
       "exclude": "Ausschließen"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "Ein unbekannter Fehler ist aufgetreten"
-    }
+  "errors": {
+    "unexpected": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal.",
+    "unavailable": "Diese Informationen sind vorübergehend nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
+    "validation": "Ein Teil der Eingabe ist ungültig.",
+    "urlRequired": "Eine URL ist erforderlich.",
+    "urlInvalid": "Die URL ist ungültig."
+  },
+  "messageBar": {
+    "close": "Schließen"
   },
   "pageReadProgress": {
     "openButton": "Meine Statistiken anzeigen",

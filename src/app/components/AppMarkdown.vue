@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { readMarkdown } from '~/utils/markdown';
+import { readMarkdown } from '~/utils/markdownUtil';
 
 interface Props {
   text?: string

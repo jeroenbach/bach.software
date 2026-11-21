@@ -1,10 +1,22 @@
+using Bach.Software.Web.ErrorHandling;
 using Bach.Software.Web.Extensions;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddBachSoftwareServices(builder.Configuration);
 builder.Services.AddBachSoftwareOpenApi();
+
+// Exactly one handler; AddProblemDetails supplies the RFC 9457 body writer.
+builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+// The handler logs every failure itself, so drop the middleware's own error-level log. The
+// SuppressDiagnosticsCallback option only exists from .NET 10 on, hence the category filter.
+builder.Logging.AddFilter(
+    typeof(ExceptionHandlerMiddleware).FullName!,
+    level => level < LogLevel.Error);
 
 var app = builder.Build();
 
@@ -15,11 +27,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseExceptionHandler();
 app.UseCors();
 app.UseHttpsRedirection();
 
-// Map all endpoints
-app.MapBachSoftwareEndpoints();
+// Failure classes every endpoint can produce are declared once, on the root group:
+// 500 (an unclassified exception, a bug) and 502 (an external dependency failed).
+var api = app.MapGroup("/")
+    .ProducesProblem(StatusCodes.Status500InternalServerError)
+    .ProducesProblem(StatusCodes.Status502BadGateway);
+
+api.MapBachSoftwareEndpoints();
 
 app.Run();
 

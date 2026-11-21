@@ -1,17 +1,18 @@
 <script lang="ts" setup>
-defineProps<{
+const { fullName, role, imageUrl, homePage, linkedIn, baseDataTestid = 'author-information' } = defineProps<{
   fullName?: string
   role?: string
   imageUrl?: string
   homePage?: string
   linkedIn?: string
+  baseDataTestid?: string
 }>();
 </script>
 
 <template>
   <div
     class="relative flex items-center gap-x-4"
-    data-testid="author-information"
+    :data-testid="`${baseDataTestid}-card`"
   >
     <ResponsiveImage
       v-if="imageUrl"
@@ -24,7 +25,7 @@ defineProps<{
     <div class="text-sm leading-6">
       <p class="font-semibold text-gray-800 dark:text-gray-300">
         <slot name="topLine">
-          <AppLink v-if="fullName" :to="homePage" data-testid="author-name">
+          <AppLink v-if="fullName" :to="homePage" :data-testid="`${baseDataTestid}-name-link`">
             {{
               fullName
             }}
@@ -34,7 +35,7 @@ defineProps<{
             v-if="linkedIn"
             :to="linkedIn"
             color="blue"
-            data-testid="author-url"
+            :data-testid="`${baseDataTestid}-linkedin-link`"
           >
             {{ $t("Linkedin") }}
           </AppLink>
@@ -42,7 +43,7 @@ defineProps<{
       </p>
       <p class="text-gray-500 dark:text-gray-400">
         <slot name="bottomLine">
-          <span data-testid="author-role">{{ role }}</span>
+          <span :data-testid="`${baseDataTestid}-role-value`">{{ role }}</span>
         </slot>
       </p>
     </div>

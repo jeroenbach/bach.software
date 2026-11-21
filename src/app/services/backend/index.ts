@@ -1,4 +1,7 @@
-import { FetchRequestAdapter } from "@microsoft/kiota-http-fetchlibrary";
+import {
+  FetchRequestAdapter,
+  KiotaClientFactory,
+} from "@microsoft/kiota-http-fetchlibrary";
 import {
   AnonymousAuthenticationProvider,
   ParseNodeFactoryRegistry,
@@ -9,6 +12,7 @@ import {
   JsonSerializationWriterFactory,
 } from "@microsoft/kiota-serialization-json";
 
+import { fetchWithGatewayErrorsNormalized } from "../../utils/gatewayErrorUtil";
 import { createBackendApiClient } from "./backendApiClient";
 
 export const useApiClient = () => {
@@ -29,10 +33,12 @@ export const useApiClient = () => {
   // authentication provider
   const authProvider = new AnonymousAuthenticationProvider();
   // Create request adapter using the fetch-based implementation
+  // The default middlewares stay; only the fetch underneath them is wrapped.
   const adapter = new FetchRequestAdapter(
     authProvider,
     parseRegistry,
     writerRegistry,
+    KiotaClientFactory.create(fetchWithGatewayErrorsNormalized),
   );
   adapter.baseUrl = '/api';
 
