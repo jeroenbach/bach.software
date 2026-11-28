@@ -1,6 +1,6 @@
 import type { Collections } from '@nuxt/content';
 import { createBlogPostUrl } from '~/locales.config';
-import { toMap } from '~/utils/toMap';
+import { toMap } from '~/utils/toMapUtil';
 
 /**
  * Fetches blog posts data based on the provided options.

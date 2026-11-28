@@ -9,12 +9,7 @@ export interface Props {
   backgroundColor?: 'white' | 'gray'
 }
 const {
-  title = undefined,
   short = false,
-  linkedInUrl = undefined,
-  githubUrl = undefined,
-  imgSrc = undefined,
-  imgAlt = undefined,
   backgroundColor = 'gray',
 } = defineProps<Props>();
 </script>

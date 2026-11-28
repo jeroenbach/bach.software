@@ -5,7 +5,7 @@ import process from 'node:process';
 import tailwindcss from '@tailwindcss/vite';
 import { defaultLocale, locales } from './locales.config';
 import { routeRules } from './route-rules';
-import { screens } from './src/app/utils/screen';
+import { screens } from './src/app/utils/screenUtil';
 
 export default defineNuxtConfig({
   $development: {
@@ -99,8 +99,12 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/ico/180.png' },
       ],
     },
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'page', mode: 'out-in' },
+    // No out-in page transition: out-in removes the current page as soon as a
+    // navigation starts and shows nothing until the next page's data has loaded
+    // (very visible when switching language). Without it, the current content
+    // stays on screen until the new page is ready.
+    pageTransition: false,
+    layoutTransition: false,
   },
   content: {
     preview: {
@@ -193,7 +197,7 @@ export default defineNuxtConfig({
     prerender: {
       autoSubfolderIndex: false,
       crawlLinks: true, // auto-discovers all routes by following links from prerendered pages, so unknown URLs fall through to the Worker with a real 404 status
-      routes: ['/', '/sitemap.xml', '/api/content-urls'],
+      routes: ['/', '/sitemap.xml'],
     },
   },
   routeRules,

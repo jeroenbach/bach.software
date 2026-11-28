@@ -46,12 +46,12 @@ describe('likeButton', () => {
 
   it('should tell in the tooltip that the article was already liked', async () => {
     const w = mountStory(stories.Liked);
-    expect(w.find('button').attributes('title')).toBe('You liked this article');
+    expect(w.find('button').attributes('title')).toBe('likeButton.liked');
   });
 
   it('should show the like count in the tooltip when not liked yet', async () => {
     const w = mountStory(stories.Default);
-    expect(w.find('button').attributes('title')).toBe('likes');
+    expect(w.find('button').attributes('title')).toBe('likeButton.likeCount');
   });
 
   it('should not look clickable anymore once liked', async () => {

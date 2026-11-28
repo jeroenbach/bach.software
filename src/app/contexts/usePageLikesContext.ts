@@ -1,6 +1,8 @@
-import { useAsyncState, useLocalStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 
 import { useTrackEvent } from '#imports';
+import { useApiState } from '~/composables/useApiState';
 import { useApiClient } from '~/services/backend';
 
 /**
@@ -24,10 +26,11 @@ export function usePageLikesContext(extraTrackingProps?: MaybeRefOrGetter<Record
   // client render "liked" while the server-rendered HTML says "not liked", and
   // Vue never patches that hydration mismatch — the thumb would stay inactive.
   const hasLiked = useLocalStorage(`liked:${path}`, false, { initOnMounted: true });
+  const { t } = useI18n();
   // Optimistically count the visitor's own like, as Plausible only reports it on the next query
   const optimisticLikes = ref(0);
 
-  const { state: fetchedLikes, isLoading: isLoadingLikes } = useAsyncState(
+  const { state: fetchedLikes, isLoading: isLoadingLikes } = useApiState(
     async () => {
       if (!import.meta.client)
         return undefined;
@@ -55,7 +58,10 @@ export function usePageLikesContext(extraTrackingProps?: MaybeRefOrGetter<Record
     undefined,
     {
       immediate: true,
-      throwError: true, // show in the console, but not to the user
+      // Analytics are a nice-to-have: when the call fails, the page simply
+      // shows no likes instead of alarming the visitor with an error bar.
+      reportErrors: false,
+      friendlyName: t('pageLikes.loading'),
     },
   );
 

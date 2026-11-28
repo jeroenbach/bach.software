@@ -1,3 +1,4 @@
+using Bach.Software.Application.Errors;
 using Bach.Software.Application.Models;
 using FluentValidation;
 
@@ -8,9 +9,9 @@ public class UrlInputValidator : AbstractValidator<UrlInput>
     public UrlInputValidator()
     {
         RuleFor(x => x.Url)
-            .NotEmpty().WithMessage("URL is required.")
+            .NotEmpty().WithErrorCode(ErrorCodes.Url.Required().Code)
             .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out var result) &&
                          (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps))
-            .WithMessage("URL must be a valid http or https URL.");
+            .WithErrorCode(ErrorCodes.Url.Invalid().Code);
     }
 }

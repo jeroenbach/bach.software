@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-withDefaults(defineProps<{
+const { color = 'gray' } = defineProps<{
   color?: 'gray' | 'blue'
-}>(), {
-  color: 'gray',
-});
+}>();
 </script>
 
 <template>

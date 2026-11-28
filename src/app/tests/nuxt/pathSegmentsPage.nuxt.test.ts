@@ -22,7 +22,7 @@ const stubs = {
   PageContent: { template: '<div><slot /></div>' },
   AppProse: { template: '<div><slot /></div>' },
   ContentRenderer: true,
-  BlogPosts: { template: '<div data-testid="blog-posts"><slot /></div>' },
+  BlogPosts: { template: '<div data-testid="blog-posts-panel"><slot /></div>' },
   BlogPostSummary: true,
 };
 
@@ -55,7 +55,7 @@ describe('[...pathSegments] page', () => {
 
     expect(mock.usePagesContext).toHaveBeenCalledWith(10);
     expect(mock.useBlogPostsContext).toHaveBeenCalledWith({ summary: true });
-    expect(w.find('[data-testid="blog-posts"]').exists()).toBe(true);
+    expect(w.find('[data-testid="blog-posts-panel"]').exists()).toBe(true);
   });
 
   it('should treat an empty pathSegments array as the blog root page', async () => {
@@ -75,7 +75,7 @@ describe('[...pathSegments] page', () => {
 
     expect(mock.usePagesContext).toHaveBeenCalledWith(10);
     expect(mock.navigateTo).not.toHaveBeenCalled();
-    expect(w.find('[data-testid="blog-posts"]').exists()).toBe(true);
+    expect(w.find('[data-testid="blog-posts-panel"]').exists()).toBe(true);
   });
 
   it('should show the blog root page on a localized posts path', async () => {

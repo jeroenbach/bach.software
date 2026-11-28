@@ -15,6 +15,7 @@ export interface HealthRequestBuilder extends BaseRequestBuilder<HealthRequestBu
      * @param requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
      * @returns {Promise<string>}
      * @throws {ProblemDetails} error when the service returns a 500 status code
+     * @throws {ProblemDetails} error when the service returns a 502 status code
      */
      get(requestConfiguration?: RequestConfiguration<object> | undefined) : Promise<string | undefined>;
     /**
@@ -37,6 +38,7 @@ export const HealthRequestBuilderRequestsMetadata: RequestsMetadata = {
         responseBodyContentType: "application/json",
         errorMappings: {
             500: createProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,
+            502: createProblemDetailsFromDiscriminatorValue as ParsableFactory<Parsable>,
         },
         adapterMethodName: "sendPrimitive",
         responseBodyFactory:  "string",

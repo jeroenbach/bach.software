@@ -1,11 +1,11 @@
 import type { I18nHeadMetaInfo } from '@nuxtjs/i18n';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildAuthor } from '~/components/__tests__/authorBuilder';
-import { buildBlog } from '~/components/__tests__/blogBuilder';
-import { buildCompany } from '~/components/__tests__/companyBuilder';
-import { buildPage } from '~/components/__tests__/pageBuilder';
-import { buildPost } from '~/components/__tests__/postBuilder';
+import { buildAuthor } from '~/tests/builders/authorBuilder';
+import { buildBlog } from '~/tests/builders/blogBuilder';
+import { buildCompany } from '~/tests/builders/companyBuilder';
+import { buildPage } from '~/tests/builders/pageBuilder';
+import { buildPost } from '~/tests/builders/postBuilder';
 
 const mock = vi.hoisted(() => ({
   useSeoMeta: vi.fn(),
@@ -292,8 +292,9 @@ describe('useMetadata', () => {
     expect(seoArgs.ogTitle).toBe('Title');
     expect(seoArgs.description).toBe('Description');
     expect(seoArgs.ogDescription).toBe('Description');
+    // og:url is the canonical URL of the object, so an explicit canonicalUrl wins over url.
     expect(seoArgs.ogUrl).toBe(
-      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties-original',
     );
     expect(seoArgs.ogImage).toBe(
       'https://bach.software/_ipx/w_768&f_jpeg&q_80/posts/1/cover.jpeg',
@@ -336,8 +337,8 @@ describe('useMetadata', () => {
       x.datePublished = '2024-11-05T08:00:00.000Z';
       x.dateModified = '2024-11-05T08:00:00.000Z';
     }), [
-      { href: 'https://bach.software/nl/posts/1-nl', hreflang: 'nl', rel: 'alternate' },
-      { href: 'https://bach.software/nl/posts/1-de', hreflang: 'de', rel: 'alternate' },
+      { href: 'https://bach.software/nl/posts/1-nl', hreflang: 'nl' },
+      { href: 'https://bach.software/nl/posts/1-de', hreflang: 'de' },
     ]);
 
     const headArgs = mock.useHead.mock.calls[0]![0];
@@ -364,7 +365,7 @@ describe('useMetadata', () => {
     });
   });
 
-  it('should use i18n url if canonical url is empty', async () => {
+  it('should use the item url as self-referencing canonical when no canonical url is set', async () => {
     mock.useLocaleHead.mockReturnValue({
       value: {
         link: [
@@ -386,9 +387,79 @@ describe('useMetadata', () => {
     const headArgs = mock.useHead.mock.calls[0]![0];
     expect(headArgs.link[0]).toEqual({
       rel: 'canonical',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    });
+  });
+
+  it('should fall back to the i18n canonical when neither canonical url nor url is set', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        link: [
+          { href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n', id: 'i18n-can', rel: 'canonical' },
+        ],
+        htmlAttrs: {},
+        meta: [],
+      },
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.description = 'Description';
+      x.imageUrl = '/posts/1/cover.jpeg';
+      x.imageAlt = 'Image alt';
+      x.url = '';
+      x.datePublished = '2024-11-05T08:00:00.000Z';
+      x.dateModified = '2024-11-05T08:00:00.000Z';
+    }), []);
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.link[0]).toEqual({
+      rel: 'canonical',
       id: 'i18n-can',
       href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-from-i18n',
     });
+  });
+
+  it('should drop the i18n og:url meta but keep the locale meta', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: {
+        link: [],
+        htmlAttrs: {},
+        meta: [
+          { id: 'i18n-og-url', property: 'og:url', content: 'https://bach.software/route-derived' },
+          { id: 'i18n-og', property: 'og:locale', content: 'en' },
+          { id: 'i18n-og-alt-nl', property: 'og:locale:alternate', content: 'nl' },
+        ],
+      },
+    });
+    useMetadata('page', buildPage((x) => {
+      x.title = 'Title';
+      x.url = '/posts';
+    }), []);
+
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    expect(headArgs.meta).toEqual([
+      { id: 'i18n-og', property: 'og:locale', content: 'en' },
+      { id: 'i18n-og-alt-nl', property: 'og:locale:alternate', content: 'nl' },
+    ]);
+  });
+
+  it('should give a blog post a self-referencing canonical and a matching og:url', async () => {
+    mock.useLocaleHead.mockReturnValue({
+      value: { link: [], htmlAttrs: {}, meta: [] },
+    });
+    useMetadata('blogPost', buildPost((p) => {
+      p.url = '/posts/1-vue-3_3-generics-and-conditional-properties';
+    }), []);
+
+    const headArgs = mock.useHead.mock.calls[0]![0];
+    const canonical = headArgs.link.find((l: { rel: string }) => l.rel === 'canonical');
+    expect(canonical).toEqual({
+      rel: 'canonical',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    });
+    const seoArgs = mock.useSeoMeta.mock.calls[0]![0];
+    expect(seoArgs.ogUrl).toBe(
+      'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    );
   });
 
   it('should not throw an error when data is not set', async () => {
@@ -406,8 +477,11 @@ describe('useMetadata', () => {
       x.dateModified = '2024-11-05T08:00:00.000Z';
     }), []);
     const headArgs = mock.useHead.mock.calls[0]![0];
-    expect(headArgs.link).toEqual([]);
-    expect(headArgs.link).toHaveLength(0);
+    // Without i18n head data the only link left is the item's own canonical.
+    expect(headArgs.link).toEqual([{
+      rel: 'canonical',
+      href: 'https://bach.software/posts/1-vue-3_3-generics-and-conditional-properties',
+    }]);
   });
 
   it('should use page structured data when type is blog', async () => {

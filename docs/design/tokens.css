@@ -41,7 +41,7 @@
   --color-accent-light: #0ea5e9; /* sky-500 (gradient end, e.g. ShareOn, AppLink color="blue") */
   --color-accent-hover: #0369a1; /* sky-700 */
 
-  /* Alert / notification severities (AlertBar, NotificationMessage):
+  /* Alert / notification severities (MessageBar):
      light bg + default text in light mode */
   --color-alert-success-bg: #f0fdf4; /* green-50 */
   --color-alert-error-bg: #fef2f2; /* red-50 */

@@ -6,9 +6,15 @@ import {
   ClipboardDocumentIcon,
 } from '@heroicons/vue/24/outline';
 import { useClipboard } from '@vueuse/core';
+import { useId } from 'vue';
+
+const { baseDataTestid = 'code-group' } = defineProps<{ baseDataTestid?: string }>();
+
+// A post can hold several groups; the row id names the instance, the controls inside keep their plain ids.
+const instanceKey = useId();
 
 const { t } = useI18n();
-const { add: addNotification } = useNotificationStore();
+const { addSuccess } = useMessageStore();
 const slots = useSlots();
 const { copy: copyInternal, isSupported, copied } = useClipboard();
 
@@ -17,9 +23,7 @@ function copy(code: string) {
     return;
 
   copyInternal(code);
-  addNotification('success', t('Copied to clipboard!'), undefined, {
-    closeIn: 3000,
-  });
+  addSuccess(t('codeGroup.copiedToClipboard'), { closeIn: 3000 });
 }
 
 const tabs = computed(() => {
@@ -64,6 +68,7 @@ function maximizeClick() {
 
 <template>
   <div
+    :data-testid="`${baseDataTestid}-row-${instanceKey}`"
     class="transition-all duration-300 ease-in-out w-full left-1/2 -translate-x-1/2 relative"
     :class="{ 'w-screen px-3 lg:px-6': fullScreen }"
   >
@@ -99,6 +104,7 @@ function maximizeClick() {
             class="p-2"
             :title="t('codeGroup.copyToClipboard')"
             :aria-label="t('codeGroup.copyToClipboard')"
+            :data-testid="`${baseDataTestid}-copy-button`"
             tabindex="-1"
             @click="copy(activeTab?.code)"
           >

@@ -1,0 +1,16 @@
+root = true
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+
+# Held at warning (they default to suggestion, which TreatWarningsAsErrors does not promote).
+dotnet_diagnostic.CA2016.severity = warning
+dotnet_diagnostic.CA1068.severity = warning
+
+# Held at warning (disabled by default; latest-recommended does not enable it).
+dotnet_diagnostic.CA1031.severity = warning
+
+# Mapperly: a member that matches nothing is a build error, not a warning. Inert until a
+# Riok.Mapperly reference exists; pre-wired so the first mapper lands strict.
+dotnet_diagnostic.RMG012.severity = error
+dotnet_diagnostic.RMG020.severity = error

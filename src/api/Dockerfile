@@ -15,6 +15,7 @@ COPY . .
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
     dotnet publish Bach.Software.Web/Bach.Software.Web.csproj \
     -c Release \
+    -p:OpenApiGenerateDocuments=false \
     -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime

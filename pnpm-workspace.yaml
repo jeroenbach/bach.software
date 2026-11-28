@@ -12,10 +12,17 @@ trustPolicyExclude:
   - tinyclip
   - tinyexec
   - ast-v8-to-istanbul
+  - '@octokit/endpoint'
 
 allowBuilds:
   '@parcel/watcher': true
   better-sqlite3: true
+  core-js: false
   esbuild: true
   sharp: true
   workerd: true
+
+overrides:
+  '@vue/compiler-sfc': 3.5.46
+  source-map-js: ^1.2.2
+  vue: 3.5.46

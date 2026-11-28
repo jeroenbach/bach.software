@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import type { PageReads } from '~/services/backend/models';
-
 import type { BlogPost } from '~/types/BlogPost';
+import type { PostReads } from '~/types/PostReads';
 import { EyeIcon } from '@heroicons/vue/24/outline';
-import { isNotNullOrUndefined } from '~/utils/checks';
-import { formatDate } from '~/utils/date';
+import { isNotNullOrUndefined } from '~/utils/checksUtil';
+import { formatDate } from '~/utils/dateUtil';
 
 interface Props {
   /**
@@ -12,7 +11,7 @@ interface Props {
    */
   post?: BlogPost
   baseUrl: string
-  pageReads?: PageReads
+  reads?: PostReads
   /**
    * The number of likes to display for the post
    */
@@ -23,16 +22,12 @@ interface Props {
   hasLiked?: boolean
 }
 
-const { pageReads } = defineProps<Props>();
+const { reads } = defineProps<Props>();
 
 defineEmits<{
   like: []
 }>();
-/**
- * We've seen that the threeQuarterRead property gives a much higher count than the read property.
- * Probably this is the actual time most users take to read the article.
- */
-const readCount = computed(() => pageReads?.threeQuarterRead);
+const readCount = computed(() => reads?.readCount);
 </script>
 
 <template>
@@ -54,7 +49,7 @@ const readCount = computed(() => pageReads?.threeQuarterRead);
         >
           <div
             v-if="isNotNullOrUndefined(readCount) && readCount > 0"
-            :title="$t('read', { n: readCount })"
+            :title="$t('blog.readCount', { n: readCount })"
             class="me-4 flex h-8 items-center gap-1"
           >
             <EyeIcon class="inline-block size-4" />
@@ -62,7 +57,7 @@ const readCount = computed(() => pageReads?.threeQuarterRead);
           </div>
           <LikeButton :count="likes" :liked="hasLiked" @like="$emit('like')" />
           <aside class="ms-auto flex h-8 items-center gap-2">
-            <span>{{ $t("Share") }}:</span>
+            <span>{{ $t("blog.share") }}:</span>
             <ShareOn :url="`${baseUrl}${post?.url}`" :text="post.title ?? ''" />
           </aside>
         </div>

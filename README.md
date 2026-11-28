@@ -52,17 +52,17 @@ pnpm preview          # Preview the generated site locally
 
 ### Technology Stack
 
-| What                   | Technology               | Why We Chose It                                            |
-| ---------------------- | ------------------------ | ---------------------------------------------------------- |
-| **Frontend Framework** | Nuxt 4 + Vue 3           | Excellent DX, SSG capabilities, Vue ecosystem              |
-| **Language**           | TypeScript               | Type safety, better IDE support, fewer runtime errors      |
-| **Styling**            | TailwindCSS              | Utility-first, consistent design system, great performance |
-| **UI Components**      | Element Plus + Custom    | Minimal usage, mostly custom implementations               |
-| **Content**            | Nuxt Content             | Git-based CMS, markdown with Vue components                |
-| **State Management**   | Pinia                    | Vue-native, TypeScript-first, great devtools               |
-| **Testing**            | Vitest + Playwright      | Fast unit tests, reliable E2E testing                      |
-| **Backend**            | .NET 9 + ASP.NET Core    | Familiar stack, containerised, runs on Kubernetes (AKS)    |
-| **Infrastructure**     | Kubernetes + Helm        | Portable deployments, rolling updates, easy rollbacks      |
+| What                   | Technology            | Why We Chose It                                            |
+| ---------------------- | --------------------- | ---------------------------------------------------------- |
+| **Frontend Framework** | Nuxt 4 + Vue 3        | Excellent DX, SSG capabilities, Vue ecosystem              |
+| **Language**           | TypeScript            | Type safety, better IDE support, fewer runtime errors      |
+| **Styling**            | TailwindCSS           | Utility-first, consistent design system, great performance |
+| **UI Components**      | Element Plus + Custom | Minimal usage, mostly custom implementations               |
+| **Content**            | Nuxt Content          | Git-based CMS, markdown with Vue components                |
+| **State Management**   | Pinia                 | Vue-native, TypeScript-first, great devtools               |
+| **Testing**            | Vitest + Playwright   | Fast unit tests, reliable E2E testing                      |
+| **Backend**            | .NET 9 + ASP.NET Core | Familiar stack, containerised, runs on Kubernetes (AKS)    |
+| **Infrastructure**     | Kubernetes + Helm     | Portable deployments, rolling updates, easy rollbacks      |
 
 ## 📁 Project Structure
 
@@ -138,7 +138,6 @@ defineProps<Props>();
 <!-- ✅ Good: AppHeaderContext.vue -->
 <script setup lang="ts">
 // Context handles external dependencies
-const { notifications } = useNotificationStore();
 const { data: navigation } = await useContentNavigationContext();
 const colorMode = useColorMode();
 </script>
@@ -146,7 +145,6 @@ const colorMode = useColorMode();
 <template>
   <AppHeader
     :navigation="navigation"
-    :notifications="notifications"
     :color-mode="colorMode.preference"
     @update:color-mode="colorMode.preference = $event"
   />
@@ -158,22 +156,22 @@ const colorMode = useColorMode();
 We use Vue 3 composables for reusable business logic:
 
 ```typescript
-// useNotificationStore.ts - Component-scoped notifications
-export const useNotificationStore = () => {
-  const notifications = ref<Notification[]>([]);
+// useMessageStore.ts - Instance-scoped messages, rendered once at the app root
+export function useMessageStore() {
+  const { messages, addMessage, newInstanceId, clearInstance } = useSharedMessageStore();
+  const instanceId = newInstanceId();
 
-  const add = (
-    severity: "info" | "warning" | "error" | "success",
-    title: string,
-  ) => {
-    notifications.value.push({ severity, title });
+  // Auto-cleanup when the component that added the messages unmounts
+  tryOnUnmounted(() => clearInstance(instanceId));
+
+  return {
+    messages,
+    addSuccess: (description: string, options?: MessageOptions) =>
+      addMessage(instanceId, description, undefined, "success", options),
+    addInfo: (description: string, options?: MessageOptions) =>
+      addMessage(instanceId, description, undefined, "info", options),
   };
-
-  // Auto-cleanup when component unmounts
-  tryOnUnmounted(() => (notifications.value = []));
-
-  return { notifications: readonly(notifications), add };
-};
+}
 ```
 
 ### 3. Content Management with Nuxt Content
@@ -228,13 +226,13 @@ export interface BlogPostSummary extends Metadata {
 
 ### Spec-driven Workflow
 
-Larger changes are planned as specs under [`docs/specs/`](docs/specs/README.md) before any code is written: an optional **epic** groups **features**, a feature is split into **stories**, and a **quick** lane handles trivial fixes. Each spec carries a `status` in its frontmatter that moves through its lifecycle:
+Larger changes are planned as specs under [`specs/`](specs/README.md) before any code is written: an optional **epic** groups **features**, a feature is split into **stories**, and a **quick** lane handles trivial fixes. Each spec carries a `status` in its frontmatter that moves through its lifecycle:
 
 - **Feature**: `draft → design → architecture → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → in-progress → done`
 - **Story**: `draft → qa → adversarial-review → [awaiting-discussion] → awaiting-approval → approved → implementing → verifying → done`
 - **`awaiting-discussion`** (conditional) means something is genuinely open and needs a decision from Jeroen (`/spec:discuss`); **`awaiting-approval`** means nothing is open and only his stamp is needed (`/spec:approve`). These are the only approval gates. **`deferred`** is a terminal parking state for specs decided against (rationale recorded in the spec), separate from `done`.
 
-Run `/spec:status` for the full pipeline, or `/spec:continue FEAT-XXX` to run every phase up to the next approval gate in one go. See [`docs/specs/README.md`](docs/specs/README.md) for the complete workflow and the `/spec:*` commands.
+Run `/spec:status` for the full pipeline, or `/spec:continue FEAT-XXX` to run every phase up to the next approval gate in one go. See [`specs/README.md`](specs/README.md) for the complete workflow and the `/spec:*` commands, driven by the `spec` Claude Code plugin.
 
 ## 🧪 Testing Strategy
 
@@ -276,7 +274,9 @@ pnpm playwright        # Run E2E tests
 - Cross-browser compatibility
 - Real user interactions
 
-We also do screenshot testing for visual regressions. Since the CI pipeline runs Ubuntu, we provide a `ci:playwright:docker` command that runs tests inside a Docker container matching the CI environment — this prevents font and layout discrepancies between your local machine and CI.
+We also do screenshot testing for visual regressions. The Playwright specs capture screenshots of the pages and Storybook components, and [reg-suit](https://github.com/reg-viz/reg-suit) compares them against the baseline of the commit your branch forked from. The baselines are not stored in git: CI publishes them to a Cloudflare R2 bucket for every push to `main`, and posts the visual report on each pull request. Approving the PR is approving the visual change.
+
+Since the CI pipeline runs Ubuntu, we provide a `ci:playwright:docker` command that captures inside a Docker container matching the CI environment. This prevents font and layout discrepancies between your local machine and CI.
 
 To run Docker locally on macOS, install colima:
 
@@ -285,16 +285,16 @@ brew install colima docker docker-compose
 colima start
 ```
 
-Then run the Playwright tests in Docker:
+Then capture the screenshots (and run the other Playwright tests) in Docker:
 
 ```bash
 pnpm ci:playwright:docker
 ```
 
-Or update the snapshots:
+To see how your change differs from the baseline, download it and open the report. This needs read-only R2 credentials in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, and the Cloudflare account id in `CLOUDFLARE_ACCOUNT_ID`:
 
 ```bash
-pnpm ci:playwright:docker:update
+pnpm vrt:compare       # writes .reg/index.html
 ```
 
 ### Component Documentation (Storybook)
@@ -340,12 +340,12 @@ The API is containerised and deployed to AKS via Helm. CI/CD runs automatically 
 
 The `package.json` scripts are the primary entry point; they delegate to `src/api/Makefile` under the hood.
 
-| Command | What it does |
-|---------|-------------|
-| `pnpm deploy:api` | Full pipeline: build image → push to ACR → deploy to AKS |
-| `pnpm deploy:api:push` | Push an already-built local image to ACR (skips Docker build) |
+| Command                    | What it does                                                         |
+| -------------------------- | -------------------------------------------------------------------- |
+| `pnpm deploy:api`          | Full pipeline: build image → push to ACR → deploy to AKS             |
+| `pnpm deploy:api:push`     | Push an already-built local image to ACR (skips Docker build)        |
 | `pnpm deploy:api:redeploy` | Re-deploy to AKS using the image already in ACR — no Docker required |
-| `pnpm deploy:api:rollback` | Roll back to a specific image tag — prompts for `TAG` |
+| `pnpm deploy:api:rollback` | Roll back to a specific image tag — prompts for `TAG`                |
 
 `deploy:api` and `docker:api:build/run` start Colima automatically if it isn't running.
 
@@ -360,30 +360,30 @@ make -C src/api rollback TAG=1.0.0-42
 
 You can also invoke the Makefile directly if you prefer.
 
-| Target | What it does |
-|--------|-------------|
-| `make build` | Builds the Docker image for `linux/amd64` and tags it with `<version>-<BUILD_NUMBER>` and `latest`. Uses layer cache from ACR to speed up builds. |
-| `make push-only` | Logs into ACR (`az acr login`) and pushes the locally-built image. Use this when the image is already built and you just want to publish it. |
-| `make push` | `build` + `push-only` — the most common full build-and-publish flow. |
-| `make deploy` | `push` + Helm deploy — builds, pushes, and deploys to AKS in one step. |
-| `make redeploy` | `push-only` + Helm deploy — skips the local Docker build; useful when you only rebuilt the image with `make build` separately. |
-| `make rollback TAG=<tag>` | Deploys an existing image tag already in ACR without building anything. Requires `TAG` (e.g. `1.0.0-42`). |
+| Target                    | What it does                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `make build`              | Builds the Docker image for `linux/amd64` and tags it with `<version>-<BUILD_NUMBER>` and `latest`. Uses layer cache from ACR to speed up builds. |
+| `make push-only`          | Logs into ACR (`az acr login`) and pushes the locally-built image. Use this when the image is already built and you just want to publish it.      |
+| `make push`               | `build` + `push-only` — the most common full build-and-publish flow.                                                                              |
+| `make deploy`             | `push` + Helm deploy — builds, pushes, and deploys to AKS in one step.                                                                            |
+| `make redeploy`           | `push-only` + Helm deploy — skips the local Docker build; useful when you only rebuilt the image with `make build` separately.                    |
+| `make rollback TAG=<tag>` | Deploys an existing image tag already in ACR without building anything. Requires `TAG` (e.g. `1.0.0-42`).                                         |
 
 The Makefile reads `version.txt` for the version and falls back to `BUILD_NUMBER=local` when run outside CI. It also auto-loads `.env` from the repo root (via `-include ../../.env`) so `PLAUSIBLE_API_TOKEN` and `PLAUSIBLE_API_URL` are picked up automatically.
 
 ## 📚 Additional Resources
 
-| Resource | URL |
-| -------- | --- |
-| Vue 3 | https://vuejs.org/ |
-| Nuxt 4 | https://nuxt.com/ |
-| TypeScript | https://www.typescriptlang.org/docs/ |
-| TailwindCSS | https://tailwindcss.com/docs |
-| Nuxt Content | https://content.nuxt.com/ |
-| Pinia | https://pinia.vuejs.org/ |
-| Vitest | https://vitest.dev/ |
-| Playwright | https://playwright.dev/ |
-| Azure Static Web Apps | https://learn.microsoft.com/en-us/azure/static-web-apps/ |
+| Resource                  | URL                                                                     |
+| ------------------------- | ----------------------------------------------------------------------- |
+| Vue 3                     | https://vuejs.org/                                                      |
+| Nuxt 4                    | https://nuxt.com/                                                       |
+| TypeScript                | https://www.typescriptlang.org/docs/                                    |
+| TailwindCSS               | https://tailwindcss.com/docs                                            |
+| Nuxt Content              | https://content.nuxt.com/                                               |
+| Pinia                     | https://pinia.vuejs.org/                                                |
+| Vitest                    | https://vitest.dev/                                                     |
+| Playwright                | https://playwright.dev/                                                 |
+| Azure Static Web Apps     | https://learn.microsoft.com/en-us/azure/static-web-apps/                |
 | ASP.NET Core Minimal APIs | https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis |
-| Azure Kubernetes Service | https://learn.microsoft.com/en-us/azure/aks/ |
-| Helm | https://helm.sh/docs/ |
+| Azure Kubernetes Service  | https://learn.microsoft.com/en-us/azure/aks/                            |
+| Helm                      | https://helm.sh/docs/                                                   |

@@ -9,13 +9,15 @@ public interface IAnalyticsService
     /// Interface for analytics service to get page reads.
     /// </summary>
     /// <param name="url">The url of the page we want to check</param>
+    /// <param name="cancellationToken">Cancels the underlying analytics request.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the number of page reads.</returns>
-    Task<PageReads> GetPageReads(string url);
+    Task<PageReads> GetPageReads(string url, CancellationToken cancellationToken);
 
     /// <summary>
     /// Interface for analytics service to get page likes.
     /// </summary>
     /// <param name="url">The url of the page we want to check</param>
+    /// <param name="cancellationToken">Cancels the underlying analytics request.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the number of page likes.</returns>
-    Task<PageLikes> GetPageLikes(string url);
+    Task<PageLikes> GetPageLikes(string url, CancellationToken cancellationToken);
 }

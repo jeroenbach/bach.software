@@ -23,12 +23,16 @@ describe('searchButton', () => {
     expect(wrapper.find('button').attributes('title')).toContain('⌘K');
   });
 
-  it('emits click when pressed', async () => {
+  it('emits open when pressed', async () => {
     stubUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
 
     const wrapper = await mountSuspended(SearchButton);
     await wrapper.find('button').trigger('click');
 
-    expect(wrapper.emitted('click')).toHaveLength(1);
+    expect(wrapper.emitted('open')).toHaveLength(1);
+  });
+
+  it('declares open as its only event', () => {
+    expect(SearchButton.emits).toEqual(['open']);
   });
 });

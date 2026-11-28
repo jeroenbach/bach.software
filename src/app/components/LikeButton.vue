@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { HandThumbUpIcon } from '@heroicons/vue/24/outline';
 import { HandThumbUpIcon as HandThumbUpIconSolid } from '@heroicons/vue/24/solid';
-import { isNotNullOrUndefined } from '~/utils/checks';
+import { isNotNullOrUndefined } from '~/utils/checksUtil';
 
 interface Props {
   /**
@@ -14,7 +14,7 @@ interface Props {
   liked?: boolean
 }
 
-const { count, liked = false } = defineProps<Props>();
+const { liked = false } = defineProps<Props>();
 
 const emit = defineEmits<{
   like: []
@@ -29,8 +29,8 @@ const emit = defineEmits<{
       ? 'cursor-default text-sky-600 dark:text-sky-400'
       : 'cursor-pointer hover:text-sky-600 dark:hover:text-sky-400'"
     :aria-pressed="liked"
-    :aria-label="$t('Like this article')"
-    :title="liked ? $t('You liked this article') : isNotNullOrUndefined(count) && count > 0 ? $t('likes', { n: count }) : $t('Like this article')"
+    :aria-label="$t('likeButton.like')"
+    :title="liked ? $t('likeButton.liked') : isNotNullOrUndefined(count) && count > 0 ? $t('likeButton.likeCount', { n: count }) : $t('likeButton.like')"
     @click="emit('like')"
   >
     <HandThumbUpIconSolid v-if="liked" class="inline-block size-4" />

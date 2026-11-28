@@ -25,6 +25,15 @@ export function createPageReadsFromDiscriminatorValue(parseNode: ParseNode | und
 /**
  * Creates a new instance of the appropriate class based on discriminator value
  * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ProblemDetails_placeholders}
+ */
+// @ts-ignore
+export function createProblemDetails_placeholdersFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoProblemDetails_placeholders;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
  * @returns {ProblemDetails}
  */
 // @ts-ignore
@@ -39,6 +48,15 @@ export function createProblemDetailsFromDiscriminatorValue(parseNode: ParseNode 
 // @ts-ignore
 export function createValidationProblemDetails_errorsFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
     return deserializeIntoValidationProblemDetails_errors;
+}
+/**
+ * Creates a new instance of the appropriate class based on discriminator value
+ * @param parseNode The parse node to use to read the discriminator value and create the object
+ * @returns {ValidationProblemDetails_placeholders}
+ */
+// @ts-ignore
+export function createValidationProblemDetails_placeholdersFromDiscriminatorValue(parseNode: ParseNode | undefined) : ((instance?: Parsable) => Record<string, (node: ParseNode) => void>) {
+    return deserializeIntoValidationProblemDetails_placeholders;
 }
 /**
  * Creates a new instance of the appropriate class based on discriminator value
@@ -84,11 +102,23 @@ export function deserializeIntoPageReads(pageReads: Partial<PageReads> | undefin
 // @ts-ignore
 export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
+        "code": n => { problemDetails.code = n.getEnumValue<ProblemDetails_code>(ProblemDetails_codeObject); },
         "detail": n => { problemDetails.detail = n.getStringValue(); },
         "instance": n => { problemDetails.instance = n.getStringValue(); },
+        "placeholders": n => { problemDetails.placeholders = n.getObjectValue<ProblemDetails_placeholders>(createProblemDetails_placeholdersFromDiscriminatorValue); },
         "status": n => { problemDetails.status = n.getNumberValue(); },
         "title": n => { problemDetails.title = n.getStringValue(); },
         "type": n => { problemDetails.type = n.getStringValue(); },
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param ProblemDetails_placeholders The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoProblemDetails_placeholders(problemDetails_placeholders: Partial<ProblemDetails_placeholders> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
     }
 }
 /**
@@ -99,9 +129,11 @@ export function deserializeIntoProblemDetails(problemDetails: Partial<ProblemDet
 // @ts-ignore
 export function deserializeIntoValidationProblemDetails(validationProblemDetails: Partial<ValidationProblemDetails> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
+        "code": n => { validationProblemDetails.code = n.getEnumValue<ValidationProblemDetails_code>(ValidationProblemDetails_codeObject); },
         "detail": n => { validationProblemDetails.detail = n.getStringValue(); },
         "errors": n => { validationProblemDetails.errors = n.getObjectValue<ValidationProblemDetails_errors>(createValidationProblemDetails_errorsFromDiscriminatorValue); },
         "instance": n => { validationProblemDetails.instance = n.getStringValue(); },
+        "placeholders": n => { validationProblemDetails.placeholders = n.getObjectValue<ValidationProblemDetails_placeholders>(createValidationProblemDetails_placeholdersFromDiscriminatorValue); },
         "status": n => { validationProblemDetails.status = n.getNumberValue(); },
         "title": n => { validationProblemDetails.title = n.getStringValue(); },
         "type": n => { validationProblemDetails.type = n.getStringValue(); },
@@ -114,6 +146,16 @@ export function deserializeIntoValidationProblemDetails(validationProblemDetails
  */
 // @ts-ignore
 export function deserializeIntoValidationProblemDetails_errors(validationProblemDetails_errors: Partial<ValidationProblemDetails_errors> | undefined = {}) : Record<string, (node: ParseNode) => void> {
+    return {
+    }
+}
+/**
+ * The deserialization information for the current model
+ * @param ValidationProblemDetails_placeholders The instance to deserialize into.
+ * @returns {Record<string, (node: ParseNode) => void>}
+ */
+// @ts-ignore
+export function deserializeIntoValidationProblemDetails_placeholders(validationProblemDetails_placeholders: Partial<ValidationProblemDetails_placeholders> | undefined = {}) : Record<string, (node: ParseNode) => void> {
     return {
     }
 }
@@ -151,6 +193,10 @@ export interface PageReads extends AdditionalDataHolder, Parsable {
 }
 export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
     /**
+     * The code property
+     */
+    code?: ProblemDetails_code | null;
+    /**
      * The detail property
      */
     detail?: string | null;
@@ -158,6 +204,10 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      * The instance property
      */
     instance?: string | null;
+    /**
+     * The placeholders property
+     */
+    placeholders?: ProblemDetails_placeholders | null;
     /**
      * The status property
      */
@@ -170,6 +220,9 @@ export interface ProblemDetails extends AdditionalDataHolder, ApiError, Parsable
      * The type property
      */
     type?: string | null;
+}
+export type ProblemDetails_code = (typeof ProblemDetails_codeObject)[keyof typeof ProblemDetails_codeObject];
+export interface ProblemDetails_placeholders extends AdditionalDataHolder, Parsable {
 }
 /**
  * Serializes information the current object
@@ -209,12 +262,25 @@ export function serializePageReads(writer: SerializationWriter, pageReads: Parti
 // @ts-ignore
 export function serializeProblemDetails(writer: SerializationWriter, problemDetails: Partial<ProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!problemDetails || isSerializingDerivedType) { return; }
+    writer.writeEnumValue<ProblemDetails_code>("code", problemDetails.code);
     writer.writeStringValue("detail", problemDetails.detail);
     writer.writeStringValue("instance", problemDetails.instance);
+    writer.writeObjectValue<ProblemDetails_placeholders>("placeholders", problemDetails.placeholders, serializeProblemDetails_placeholders);
     writer.writeNumberValue("status", problemDetails.status);
     writer.writeStringValue("title", problemDetails.title);
     writer.writeStringValue("type", problemDetails.type);
     writer.writeAdditionalData(problemDetails.additionalData);
+}
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ProblemDetails_placeholders The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeProblemDetails_placeholders(writer: SerializationWriter, problemDetails_placeholders: Partial<ProblemDetails_placeholders> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!problemDetails_placeholders || isSerializingDerivedType) { return; }
+    writer.writeAdditionalData(problemDetails_placeholders.additionalData);
 }
 /**
  * Serializes information the current object
@@ -225,9 +291,11 @@ export function serializeProblemDetails(writer: SerializationWriter, problemDeta
 // @ts-ignore
 export function serializeValidationProblemDetails(writer: SerializationWriter, validationProblemDetails: Partial<ValidationProblemDetails> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
     if (!validationProblemDetails || isSerializingDerivedType) { return; }
+    writer.writeEnumValue<ValidationProblemDetails_code>("code", validationProblemDetails.code);
     writer.writeStringValue("detail", validationProblemDetails.detail);
     writer.writeObjectValue<ValidationProblemDetails_errors>("errors", validationProblemDetails.errors, serializeValidationProblemDetails_errors);
     writer.writeStringValue("instance", validationProblemDetails.instance);
+    writer.writeObjectValue<ValidationProblemDetails_placeholders>("placeholders", validationProblemDetails.placeholders, serializeValidationProblemDetails_placeholders);
     writer.writeNumberValue("status", validationProblemDetails.status);
     writer.writeStringValue("title", validationProblemDetails.title);
     writer.writeStringValue("type", validationProblemDetails.type);
@@ -244,7 +312,22 @@ export function serializeValidationProblemDetails_errors(writer: SerializationWr
     if (!validationProblemDetails_errors || isSerializingDerivedType) { return; }
     writer.writeAdditionalData(validationProblemDetails_errors.additionalData);
 }
+/**
+ * Serializes information the current object
+ * @param isSerializingDerivedType A boolean indicating whether the serialization is for a derived type.
+ * @param ValidationProblemDetails_placeholders The instance to serialize from.
+ * @param writer Serialization writer to use to serialize this model
+ */
+// @ts-ignore
+export function serializeValidationProblemDetails_placeholders(writer: SerializationWriter, validationProblemDetails_placeholders: Partial<ValidationProblemDetails_placeholders> | undefined | null = {}, isSerializingDerivedType: boolean = false) : void {
+    if (!validationProblemDetails_placeholders || isSerializingDerivedType) { return; }
+    writer.writeAdditionalData(validationProblemDetails_placeholders.additionalData);
+}
 export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError, Parsable {
+    /**
+     * The code property
+     */
+    code?: ValidationProblemDetails_code | null;
     /**
      * The detail property
      */
@@ -258,6 +341,10 @@ export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError
      */
     instance?: string | null;
     /**
+     * The placeholders property
+     */
+    placeholders?: ValidationProblemDetails_placeholders | null;
+    /**
      * The status property
      */
     status?: number | null;
@@ -270,7 +357,18 @@ export interface ValidationProblemDetails extends AdditionalDataHolder, ApiError
      */
     type?: string | null;
 }
+export type ValidationProblemDetails_code = (typeof ValidationProblemDetails_codeObject)[keyof typeof ValidationProblemDetails_codeObject];
 export interface ValidationProblemDetails_errors extends AdditionalDataHolder, Parsable {
 }
+export interface ValidationProblemDetails_placeholders extends AdditionalDataHolder, Parsable {
+}
+export const ProblemDetails_codeObject = {
+    UrlInvalid: "urlInvalid",
+    UrlRequired: "urlRequired",
+} as const;
+export const ValidationProblemDetails_codeObject = {
+    UrlInvalid: "urlInvalid",
+    UrlRequired: "urlRequired",
+} as const;
 /* tslint:enable */
 /* eslint-enable */

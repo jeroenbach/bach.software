@@ -5,11 +5,18 @@ interface Props extends AppLinkProps {
   chipColor?: 'gray' | 'blue'
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
-  <AppLink v-bind="props">
+  <AppLink
+    :to="to"
+    :text="text"
+    :color="color"
+    :target="target"
+    :title="title"
+    :ariaLabel="ariaLabel"
+  >
     <AppChip :color="chipColor">
       <slot> {{ text }} </slot>
     </AppChip>

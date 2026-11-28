@@ -11,7 +11,9 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
-  cancel-in-progress: true
+  # A cancelled main run would never publish its screenshots, and future branches
+  # compare against exactly that commit, so main runs always finish.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build_job:
@@ -102,10 +104,25 @@ jobs:
       HOME: /root
     name: Perform Playwright Tests
     steps:
+      # The full history is needed to find the commit a branch forked from.
+      # Pull requests check out their own head instead of the synthetic merge
+      # commit, so the commit status lands on the PR and the screenshots are
+      # keyed by a commit the PR actually contains.
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      # The checkout is owned by another user than root (git refuses it
+      # otherwise), and reg-suit refuses a detached HEAD, so PRs get a branch.
+      - name: Prepare git for reg-suit
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git checkout -B "$GITHUB_HEAD_REF"
+          fi
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -139,8 +156,38 @@ jobs:
       - name: Unzip generated site
         run: unzip generated-site.zip
 
+      # Captures the screenshots into visual-regression/actual and runs the
+      # non-screenshot specs. The comparison happens in the reg-suit step below.
       - name: Run Playwright tests
         run: pnpm ci:playwright
+
+      # Forks and Dependabot runs get no repository secrets: they still capture
+      # and test, they just skip publishing and the visual report.
+      - name: Check visual regression credentials
+        id: reg
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          REG_NOTIFY_CLIENT_ID: ${{ secrets.REG_NOTIFY_CLIENT_ID }}
+        run: |
+          if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && [ -n "$REG_NOTIFY_CLIENT_ID" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::No access to the visual regression secrets, skipping the reg-suit report."
+          fi
+
+      # Compares against the baseline of the commit this branch forked from,
+      # publishes the screenshots and report, and posts the status on the PR.
+      # On main it publishes the baseline that future branches compare against.
+      - name: Publish visual regression report
+        if: ${{ steps.reg.outputs.enabled == 'true' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          REG_NOTIFY_CLIENT_ID: ${{ secrets.REG_NOTIFY_CLIENT_ID }}
+        run: pnpm vrt:ci
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4

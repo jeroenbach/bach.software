@@ -16,7 +16,7 @@ import type { BlogPostSummary } from '~/types/BlogPostSummary';
 import type { Company } from '~/types/Company';
 import type { Metadata } from '~/types/Metadata';
 import type { Page } from '~/types/Page';
-import { createAbsoluteUrl } from '~/utils/url';
+import { createAbsoluteUrl } from '~/utils/urlUtil';
 
 type WithNullableContext<T extends Thing> = WithContext<T> | undefined;
 
@@ -78,10 +78,15 @@ export function useMetadata(type: MetadataType, metadata: Metadata, alternateUrl
   // Use part of the i18n head links, but override canonical and alternate links
   const i18nLinks = i18nHead.value?.link?.filter(l => l.rel !== 'alternate') ?? []; // remove all the alternate links added by useLocaleHead
   const [canonicalUrls, otherI18nUrls] = divideArray(i18nLinks, x => x.rel === 'canonical');
-  const canonicalUrl = metadata.canonicalUrl
+  // One canonical target for both the link tag and og:url: an explicit canonicalUrl
+  // (e.g. the posts page doubling as homepage) or the item's own URL. useLocaleHead's
+  // canonical is only the fallback; it emits nothing on the dynamic post route.
+  const canonicalTarget = metadata.canonicalUrl ?? url;
+  const canonicalHref = canonicalTarget ? createAbsoluteUrl(canonicalTarget, baseUrl) : undefined;
+  const canonicalUrl = canonicalHref
     ? [{
         rel: 'canonical',
-        href: createAbsoluteUrl(metadata.canonicalUrl ?? url, baseUrl),
+        href: canonicalHref,
       }]
     : canonicalUrls;
 
@@ -91,13 +96,18 @@ export function useMetadata(type: MetadataType, metadata: Metadata, alternateUrl
     href: createAbsoluteUrl(href, baseUrl),
   })) ?? [];
 
+  // useLocaleHead also emits its own route-derived og:url, which would override the
+  // canonical-aligned one set below (the useHead call lands after useSeoMeta). Drop it;
+  // the locale meta (og:locale and its alternates) passes through.
+  const i18nMeta = i18nHead.value?.meta?.filter(m => m.property !== 'og:url');
+
   useSeoMeta(
     {
       title: metadata.title,
       ogTitle: metadata.title,
       description: metadata.description,
       ogDescription: metadata.description,
-      ogUrl: createAbsoluteUrl(url, baseUrl),
+      ogUrl: canonicalHref ?? createAbsoluteUrl(url, baseUrl),
       ogImage:
         metadata.imageUrl && getMetadataImageUrl(metadata.imageUrl, baseUrl),
       ogImageAlt: metadata.imageAlt,
@@ -117,7 +127,7 @@ export function useMetadata(type: MetadataType, metadata: Metadata, alternateUrl
       ...alternateLinks,
       ...canonicalUrl,
     ],
-    meta: i18nHead.value?.meta,
+    meta: i18nMeta,
   });
 }
 
