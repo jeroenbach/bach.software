@@ -1,184 +1,125 @@
-import type { ContentUrlMap } from '~/server/utils/contentUrls';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mock = vi.hoisted(() => ({
-  useRequestFetch: vi.fn(),
+  queryCollection: vi.fn(),
   useAsyncData: vi.fn(),
 }));
 
-mockNuxtImport('useRequestFetch', () => mock.useRequestFetch);
+mockNuxtImport('queryCollection', () => mock.queryCollection);
 mockNuxtImport('useAsyncData', () => mock.useAsyncData);
 
+type ContentItem = Record<string, unknown>;
+
+function arrangeCollections(itemsByCollection: Record<string, ContentItem>) {
+  mock.queryCollection.mockImplementation((collection: string) => {
+    const query = {
+      where: vi.fn(() => query),
+      orWhere: vi.fn(() => query),
+      select: vi.fn(() => query),
+      first: vi.fn(async () => itemsByCollection[collection] ?? null),
+    };
+    return query;
+  });
+}
+
 describe('useAlternateUrls', () => {
-  const mockUrlMap: ContentUrlMap = {
-    page: {
-      1: {
-        en: { url: '/about', locale: 'en', contentId: 1, type: 'page', title: 'About', dateModified: '', path: '/about' },
-        nl: { url: '/nl/over', locale: 'nl', contentId: 1, type: 'page', title: 'Over', dateModified: '', path: '/nl/over' },
-        de: { url: '/de/uber', locale: 'de', contentId: 1, type: 'page', title: 'Über', dateModified: '', path: '/de/uber' },
-      },
-      2: {
-        en: { url: '/portfolio', locale: 'en', contentId: 2, type: 'page', title: 'Portfolio', dateModified: '', path: '/portfolio' },
-        nl: { url: '/nl/portfolio', locale: 'nl', contentId: 2, type: 'page', title: 'Portfolio', dateModified: '', path: '/nl/portfolio' },
-      },
-    },
-    blogPost: {
-      10: {
-        en: { url: '/posts/10-my-post', locale: 'en', contentId: 10, type: 'blogPost', title: 'My Post', dateModified: '', path: '/posts/10-my-post' },
-        nl: { url: '/nl/posts/10-mijn-post', locale: 'nl', contentId: 10, type: 'blogPost', title: 'Mijn Post', dateModified: '', path: '/nl/posts/10-mijn-post' },
-      },
-    },
-    blog: {},
-  };
-
   beforeEach(() => {
-    mock.useRequestFetch.mockReset();
-    mock.useAsyncData.mockReset();
-  });
-
-  it('should return alternate URLs for a page with multiple locales', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
+    vi.clearAllMocks();
+    mock.useAsyncData.mockImplementation(async (_key: string, fetcher: () => Promise<unknown>) => {
       const data = await fetcher();
       return { data: ref(data) };
     });
-
-    const result = await useAlternateUrls('page', 1);
-
-    expect(result).toHaveLength(3);
-    expect(result).toEqual([
-      { href: '/about', hreflang: 'en' },
-      { href: '/nl/over', hreflang: 'nl' },
-      { href: '/de/uber', hreflang: 'de' },
-    ]);
-    expect(mockFetch).toHaveBeenCalledWith('/api/content-urls');
   });
 
-  it('should return alternate URLs for a blogPost', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
+  it('should return a generated URL and slug per locale for a blog post', async () => {
+    arrangeCollections({
+      posts_en: { contentId: 1, title: 'My Post' },
+      posts_nl: { contentId: 1, title: 'Mijn Post' },
+      posts_de: { contentId: 1, title: 'Mein Post' },
     });
 
-    const result = await useAlternateUrls('blogPost', 10);
+    const result = await useAlternateUrls('blogPost', 1);
 
-    expect(result).toHaveLength(2);
     expect(result).toEqual([
-      { href: '/posts/10-my-post', hreflang: 'en' },
-      { href: '/nl/posts/10-mijn-post', hreflang: 'nl' },
+      { hreflang: 'en', href: '/posts/1-my-post', slug: 'my-post' },
+      { hreflang: 'nl', href: '/nl/posts/1-mijn-post', slug: 'mijn-post' },
+      { hreflang: 'de', href: '/de/posts/1-mein-post', slug: 'mein-post' },
     ]);
   });
 
-  it('should return alternate URLs for a page with two locales', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
+  it('should prefer the frontmatter slug over one derived from the title', async () => {
+    arrangeCollections({
+      posts_en: { contentId: 3, title: 'A Very Long Title That Would Make A Long URL', slug: 'short-slug' },
     });
 
-    const result = await useAlternateUrls('page', 2);
+    const result = await useAlternateUrls('blogPost', 3);
 
-    expect(result).toHaveLength(2);
     expect(result).toEqual([
-      { href: '/portfolio', hreflang: 'en' },
-      { href: '/nl/portfolio', hreflang: 'nl' },
+      { hreflang: 'en', href: '/posts/3-short-slug', slug: 'short-slug' },
     ]);
   });
 
-  it('should return empty array when content ID does not exist', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
+  it('should query the pages collections for the page type', async () => {
+    arrangeCollections({
+      pages_en: { contentId: 5, title: 'About' },
+      pages_nl: { contentId: 5, title: 'Over' },
     });
+
+    const result = await useAlternateUrls('page', 5);
+
+    expect(result).toEqual([
+      { hreflang: 'en', href: '/content/5-about', slug: 'about' },
+      { hreflang: 'nl', href: '/nl/content/5-over', slug: 'over' },
+    ]);
+    expect(mock.queryCollection).toHaveBeenCalledWith('pages_en');
+    expect(mock.queryCollection).toHaveBeenCalledWith('pages_nl');
+    expect(mock.queryCollection).toHaveBeenCalledWith('pages_de');
+  });
+
+  it('should use the frontmatter URL with the locale prefix and omit the slug', async () => {
+    arrangeCollections({
+      pages_en: { contentId: 10, title: 'Blog', url: '/posts' },
+      pages_nl: { contentId: 10, title: 'Blog', url: '/posts' },
+    });
+
+    const result = await useAlternateUrls('page', 10);
+
+    expect(result).toEqual([
+      { hreflang: 'en', href: '/posts' },
+      { hreflang: 'nl', href: '/nl/posts' },
+    ]);
+  });
+
+  it('should skip locales where the content does not exist', async () => {
+    arrangeCollections({
+      posts_en: { contentId: 2, title: 'English Only' },
+    });
+
+    const result = await useAlternateUrls('blogPost', 2);
+
+    expect(result).toEqual([
+      { hreflang: 'en', href: '/posts/2-english-only', slug: 'english-only' },
+    ]);
+  });
+
+  it('should return an empty array when the content exists in no locale', async () => {
+    arrangeCollections({});
 
     const result = await useAlternateUrls('page', 999);
 
     expect(result).toEqual([]);
   });
 
-  it('should return empty array when type does not exist in url map', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
-    });
+  it('should cache per type and content id', async () => {
+    arrangeCollections({});
 
-    const result = await useAlternateUrls('blog', 1);
-
-    expect(result).toEqual([]);
-  });
-
-  it('should return empty array when url map is undefined', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(undefined);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
-    });
-
-    const result = await useAlternateUrls('page', 1);
-
-    expect(result).toEqual([]);
-  });
-
-  it('should return empty array when url map value is null', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async () => {
-      return { data: ref(null) };
-    });
-
-    const result = await useAlternateUrls('page', 1);
-
-    expect(result).toEqual([]);
-  });
-
-  it('should use useAsyncData with correct cache key', async () => {
-    const mockFetch = vi.fn().mockResolvedValue(mockUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
-    });
-
-    await useAlternateUrls('page', 1);
+    await useAlternateUrls('blogPost', 7);
 
     expect(mock.useAsyncData).toHaveBeenCalledWith(
-      'content-urls',
+      'alternateUrls-blogPost-7',
       expect.any(Function),
+      expect.anything(),
     );
-  });
-
-  it('should correctly map url and locale to href and hreflang', async () => {
-    const customUrlMap: ContentUrlMap = {
-      page: {
-        5: {
-          de: { url: '/de/seite', locale: 'de', contentId: 5, type: 'page', title: 'Seite', dateModified: '', path: '/de/seite' },
-        },
-      },
-      blogPost: {},
-      blog: {},
-    };
-
-    const mockFetch = vi.fn().mockResolvedValue(customUrlMap);
-    mock.useRequestFetch.mockReturnValue(mockFetch);
-    mock.useAsyncData.mockImplementation(async (_key, fetcher) => {
-      const data = await fetcher();
-      return { data: ref(data) };
-    });
-
-    const result = await useAlternateUrls('page', 5);
-
-    expect(result).toEqual([
-      { href: '/de/seite', hreflang: 'de' },
-    ]);
   });
 });

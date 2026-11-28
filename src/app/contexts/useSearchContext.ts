@@ -1,6 +1,7 @@
+import type { SearchStatus } from '~/types/SearchStatus';
 import { useDebounceFn } from '@vueuse/core';
 import { ref, watch } from 'vue';
-import { stripHtmlExtension } from '~/utils/url';
+import { stripHtmlExtension } from '~/utils/urlUtil';
 
 export interface SearchSubResult {
   url: string
@@ -38,8 +39,8 @@ export function useSearchContext() {
 
   const query = ref('');
   const results = ref<SearchResult[]>([]);
-  const loading = ref(false);
-  const unavailable = ref(false);
+  // Once unavailable, the status stays unavailable for the rest of the session.
+  const status = ref<SearchStatus>('idle');
 
   async function getPagefind(lang: string) {
     if (pfInstance && pfLang === lang) {
@@ -59,7 +60,7 @@ export function useSearchContext() {
       return pf;
     }
     catch {
-      unavailable.value = true;
+      status.value = 'unavailable';
       return null;
     }
   }
@@ -69,7 +70,9 @@ export function useSearchContext() {
       results.value = [];
       return;
     }
-    loading.value = true;
+    if (status.value === 'idle') {
+      status.value = 'loading';
+    }
     try {
       const pf = await getPagefind(locale.value);
       if (!pf) {
@@ -90,7 +93,9 @@ export function useSearchContext() {
       }));
     }
     finally {
-      loading.value = false;
+      if (status.value === 'loading') {
+        status.value = 'idle';
+      }
     }
   }, 200);
 
@@ -107,5 +112,5 @@ export function useSearchContext() {
     query.value = value;
   }
 
-  return { isOpen, open, close, query, results, loading, unavailable, setQuery };
+  return { isOpen, open, close, query, results, status, setQuery };
 }

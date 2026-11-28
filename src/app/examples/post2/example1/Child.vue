@@ -3,10 +3,10 @@ defineProps<{ test?: string }>();
 defineEmits(['update:test']);
 
 const message = defineModel<{ message?: string, length?: number }>('message', {
-  default: {
+  default: () => ({
     message: 'Hello world',
     length: 0,
-  },
+  }),
 });
 </script>
 

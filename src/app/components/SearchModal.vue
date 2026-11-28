@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import type { SearchStatus } from '~/types/SearchStatus';
 import {
   Dialog,
   DialogPanel,
@@ -25,11 +26,10 @@ interface Props {
   open: boolean
   query: string
   results?: SearchResult[]
-  loading?: boolean
-  unavailable?: boolean
+  status?: SearchStatus
 }
 
-const { results = [], loading = false, unavailable = false } = defineProps<Props>();
+const { results = [], status = 'idle' } = defineProps<Props>();
 const emits = defineEmits<{
   (e: 'update:query', value: string): void
   (e: 'close'): void
@@ -187,13 +187,13 @@ function onKeydown(event: KeyboardEvent) {
               </li>
             </ul>
 
-            <p v-else-if="unavailable" class="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
+            <p v-else-if="status === 'unavailable'" class="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
               {{ $t('search.unavailable') }}
             </p>
-            <p v-else-if="loading" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p v-else-if="status === 'loading'" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
               {{ $t('search.loading') }}
             </p>
-            <p v-else-if="query && !loading" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p v-else-if="query" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
               {{ $t('search.noResults') }}
             </p>
           </DialogPanel>

@@ -26,18 +26,20 @@ export default defineConfig({
         'src/app/contexts/**',
         'src/app/pages/**',
         'src/app/stores/**',
+        'src/app/types/**',
         'src/app/utils/**',
       ],
       exclude: [
         '**/*.{test,spec}.{ts,js}',
         '**/*.nuxt.{test,spec}.{ts,js}',
+        '**/*.stories.ts',
       ],
       thresholds: {
         autoUpdate: true,
-        statements: 69.11,
-        branches: 66.52,
-        functions: 64.87,
-        lines: 69.18,
+        statements: 88.26,
+        branches: 81.55,
+        functions: 87.92,
+        lines: 88.46,
       },
     },
     projects: [
@@ -57,6 +59,11 @@ export default defineConfig({
             'src/app/components/**/*.{test,spec}.{ts,js}',
             'src/app/composables/**/*.{test,spec}.{ts,js}',
             'src/app/contexts/**/*.{test,spec}.{ts,js}',
+            'src/app/errors/**/*.{test,spec}.{ts,js}',
+            'src/app/tests/config/**/*.{test,spec}.{ts,js}',
+            'src/app/tests/lint/**/*.{test,spec}.{ts,js}',
+            'src/app/tests/storybook/**/*.{test,spec}.{ts,js}',
+            'src/app/types/**/*.{test,spec}.{ts,js}',
             'src/app/utils/**/*.{test,spec}.{ts,js}',
           ],
           exclude: [
@@ -93,6 +100,24 @@ export default defineConfig({
           ],
           setupFiles: [nuxtSetupFile],
           environment: 'nuxt',
+          environmentOptions: {
+            nuxt: {
+              overrides: {
+                // The tests must not share build output or the content database
+                // with a running dev server: the test build rewrites .nuxt and
+                // recreates the content sqlite, which makes the dev server reload
+                // and answer content queries with errors or empty pages for a few
+                // seconds on every test run (e.g. the editor's test extension).
+                buildDir: fileURLToPath(new URL('./node_modules/.cache/vitest-nuxt/.nuxt', import.meta.url)),
+                content: {
+                  // _localDatabase is the parse-time database (the runtime `database`
+                  // option does not cover it) and defaults to .data/content/contents.sqlite.
+                  _localDatabase: { type: 'sqlite', filename: 'node_modules/.cache/vitest-nuxt/contents.sqlite' },
+                  database: { type: 'sqlite', filename: 'node_modules/.cache/vitest-nuxt/contents.sqlite' },
+                },
+              },
+            },
+          },
         },
       }),
     ],

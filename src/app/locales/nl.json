@@ -1,19 +1,86 @@
 {
-  "_metadata": {
+  "appHeader": {
+    "brand": "Bach.Software",
+    "mainNavigation": "Hoofdnavigatie",
+    "openMainMenu": "Hoofdmenu openen",
+    "closeMenu": "Menu sluiten",
+    "vueDynamicForm": "Vue Dynamic Form"
+  },
+  "authorInformation": {
+    "linkedin": "Linkedin"
+  },
+  "blog": {
+    "filter": {
+      "label": "Filter:",
+      "all": "Alle berichten",
+      "count": "{count} berichten",
+      "noResults": "Geen berichten gevonden voor dit filter."
+    },
+    "pagination": {
+      "label": "Paginering",
+      "previous": "← Vorige",
+      "next": "Volgende →"
+    },
+    "readCount": "{n} keer gelezen | {n} keer gelezen",
+    "share": "Delen"
+  },
+  "codeGroup": {
+    "copyToClipboard": "Kopieer code naar klembord",
+    "maximizeCodeBlock": "Vergroot codeblok",
+    "copiedToClipboard": "Gekopieerd naar klembord!"
+  },
+  "colorModeSwitcher": {
+    "label": "Kleurmodus wisselen"
+  },
+  "error": {
+    "pageNotFound": "Pagina niet gevonden",
+    "pageNotFoundDescription": "De pagina die je zoekt bestaat niet of is verplaatst.",
+    "goBackHome": "Terug naar home",
+    "errorOccurred": "Er is een fout opgetreden",
+    "somethingWentWrong": "Er is iets misgegaan."
+  },
+  "errors": {
+    "whileCalling": "Fout bij {name}: {message}",
+    "unexpected": "Er is iets misgegaan. Probeer het later opnieuw.",
+    "unavailable": "Deze informatie is tijdelijk niet beschikbaar. Probeer het later opnieuw.",
+    "validation": "Een deel van de invoer is ongeldig.",
+    "urlRequired": "Een URL is verplicht.",
+    "urlInvalid": "De URL is ongeldig."
+  },
+  "languageSwitcher": {
+    "label": "Taal wijzigen"
+  },
+  "likeButton": {
+    "like": "Vind dit artikel leuk",
+    "liked": "Je vindt dit artikel leuk",
+    "likeCount": "{n} vind-ik-leuk | {n} vind-ik-leuks"
+  },
+  "messageBar": {
+    "close": "Sluiten"
+  },
+  "metadata": {
     "titleTemplate": "{titleChunk} - Bach.Software",
-    "titleTemplate_empty": "Bach.Software"
+    "titleTemplateEmpty": "Bach.Software"
   },
-  "Copied to clipboard!": "Gekopieerd naar klembord!",
-  "Linkedin": "Linkedin",
-  "Share": "Delen",
-  "On this page": "Op deze pagina",
-  "Bach": {
-    "Software": "Bach.Software"
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Deze pagina is automatisch vertaald met AI. Mocht je fouten tegenkomen, laat het me dan weten!"
+    }
   },
-  "read": "{n} keer gelezen | {n} keer gelezen",
-  "likes": "{n} vind-ik-leuk | {n} vind-ik-leuks",
-  "Like this article": "Vind dit artikel leuk",
-  "You liked this article": "Je vindt dit artikel leuk",
+  "pageLikes": {
+    "loading": "het laden van de paginalikes"
+  },
+  "pageReads": {
+    "loading": "het laden van de leesstatistieken"
+  },
+  "pageReadProgress": {
+    "openButton": "Toon mijn statistieken",
+    "wordCount": "Aantal woorden: {wordCount}",
+    "readingTime": "We schatten dat je {readingTimeInMinutes} minuten nodig hebt om dit artikel te lezen",
+    "timeProgress": "Tijdsvoortgang: {timeSpentPercentage}%",
+    "scrollProgress": "Scrollvoortgang: {scrollPercentage}%",
+    "readingStage": "Leesfase: {totalProgress}"
+  },
   "plausible": {
     "current": {
       "text": "Je bezoeken worden momenteel {status}.",
@@ -28,29 +95,6 @@
       "exclude": "Uitsluiten"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "Er is een onbekende fout opgetreden"
-    }
-  },
-  "pageReadProgress": {
-    "openButton": "Toon mijn statistieken",
-    "wordCount": "Aantal woorden: {wordCount}",
-    "readingTime": "We schatten dat je {readingTimeInMinutes} minuten nodig hebt om dit artikel te lezen",
-    "timeProgress": "Tijdsvoortgang: {timeSpentPercentage}%",
-    "scrollProgress": "Scrollvoortgang: {scrollPercentage}%",
-    "readingStage": "Leesfase: {totalProgress}"
-  },
-  "codeGroup": {
-    "copyToClipboard": "Kopieer code naar klembord",
-    "maximizeCodeBlock": "Vergroot codeblok"
-  },
-  "Switch language": "Taal wijzigen",
-  "notifications": {
-    "info": {
-      "languageAiTranslated": "Deze pagina is automatisch vertaald met AI. Mocht je fouten tegenkomen, laat het me dan weten!"
-    }
-  },
   "search": {
     "open": "Zoeken openen",
     "close": "Zoeken sluiten",
@@ -59,27 +103,7 @@
     "noResults": "Geen resultaten gevonden",
     "unavailable": "Zoeken is niet beschikbaar in de ontwikkelmodus. Voer eerst de build uit."
   },
-  "error": {
-    "pageNotFound": "Pagina niet gevonden",
-    "pageNotFoundDescription": "De pagina die je zoekt bestaat niet of is verplaatst.",
-    "goBackHome": "Terug naar home",
-    "errorOccurred": "Er is een fout opgetreden",
-    "somethingWentWrong": "Er is iets misgegaan."
-  },
-  "blog": {
-    "filter": {
-      "label": "Filter:",
-      "all": "Alle berichten",
-      "count": "{count} berichten",
-      "noResults": "Geen berichten gevonden voor dit filter."
-    },
-    "pagination": {
-      "label": "Paginering",
-      "previous": "← Vorige",
-      "next": "Volgende →"
-    }
-  },
-  "OpenSource": {
-    "VueDynamicForm": "Vue Dynamic Form"
+  "tableOfContents": {
+    "title": "Op deze pagina"
   }
 }

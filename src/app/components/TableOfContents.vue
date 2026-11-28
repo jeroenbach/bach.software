@@ -34,7 +34,7 @@ function select(id: string) {
 </script>
 
 <template>
-  <nav :aria-label="$t('On this page')" class="text-sm">
+  <nav :aria-label="$t('tableOfContents.title')" class="text-sm">
     <details
       v-if="collapsible"
       :open="open"
@@ -48,7 +48,7 @@ function select(id: string) {
           class="size-4 transition-transform"
           :class="{ 'rotate-90': open }"
         />
-        {{ $t("On this page") }}
+        {{ $t("tableOfContents.title") }}
       </summary>
       <TableOfContentsList
         :links="links"
@@ -62,7 +62,7 @@ function select(id: string) {
         href="#top"
         class="mb-3 block font-medium text-gray-700 transition-colors hover:text-sky-600 dark:text-gray-300 dark:hover:text-sky-400"
       >
-        {{ $t("On this page") }}
+        {{ $t("tableOfContents.title") }}
       </a>
       <TableOfContentsList
         :links="links"

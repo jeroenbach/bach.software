@@ -10,6 +10,7 @@ import en from '../locales/en.json';
 import ContentRenderer from './mocks/ContentRenderer.vue';
 import NuxtImg from './mocks/NuxtImg.vue';
 import NuxtImgIntegrated from './mocks/NuxtImgIntegrated.vue';
+import NuxtLink from './mocks/NuxtLink.vue';
 import NuxtPicture from './mocks/NuxtPicture.vue';
 import NuxtPictureIntegrated from './mocks/NuxtPictureIntegrated.vue';
 import '../assets/css/tailwind.css';
@@ -50,15 +51,21 @@ const preview: Preview = {
     (story, context) => {
       const LOCAL_STORAGE_KEY = 'storybook-theme';
       const storedTheme = localStorage.getItem(LOCAL_STORAGE_KEY);
-      const currentTheme = context.globals.theme || storedTheme || 'both';
-      localStorage.setItem(LOCAL_STORAGE_KEY, currentTheme);
+      const selectedTheme = context.globals.theme || storedTheme || 'both';
+      // Stories that portal or teleport escape the per-theme wrapper, so they show one theme at a time.
+      const currentTheme = selectedTheme === 'both' && context.parameters.singleTheme ? 'light' : selectedTheme;
+      localStorage.setItem(LOCAL_STORAGE_KEY, selectedTheme);
+
+      // Portaled content (dialogs) renders outside the story wrapper, so a
+      // single dark story also marks the root element for the dark variant.
+      document.documentElement.classList.toggle('dark', currentTheme === 'dark');
 
       const decorator = (theme: string) => ({
         components: { story, AppBackground },
         setup() {
           return { theme };
         },
-        template: `<div class="flex flex-col gap-y-4" data-testid="component-story-wrapper">
+        template: `<div class="flex flex-col gap-y-4" data-testid="component-story-panel">
           <div v-if="theme !== 'dark'" class="flex flex-col flex-1">
             <AppBackground class="flex-1 p-4"><story /></AppBackground>
           </div>
@@ -87,10 +94,8 @@ setup((app) => {
   app.use(i18n);
 
   // Register some mocks for Nuxt components
-  app.component('NuxtLinkLocale', {
-    props: ['to'],
-    template: `<a :href='to'><slot /></a>`,
-  });
+  app.component('NuxtLink', NuxtLink);
+  app.component('NuxtLinkLocale', NuxtLink);
   app.component('ContentRenderer', ContentRenderer);
   app.component('ClientOnly', ComponentWithSlot);
   app.component('ContentQuery', ComponentWithSlot);

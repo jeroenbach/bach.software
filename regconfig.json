@@ -1,0 +1,24 @@
+{
+  "core": {
+    "workingDir": ".reg",
+    "actualDir": "visual-regression/actual",
+    "thresholdRate": 0,
+    "enableAntialias": true
+  },
+  "plugins": {
+    "reg-keygen-git-hash-plugin": true,
+    "reg-publish-s3-plugin": {
+      "bucketName": "bach-software-visual-regression",
+      "enableACL": false,
+      "customDomain": "pub-f40905f3c59f4f2bbc195e223d7f0de2.r2.dev",
+      "sdkOptions": {
+        "endpoint": "https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com",
+        "forcePathStyle": true,
+        "region": "auto"
+      }
+    },
+    "reg-notify-github-plugin": {
+      "clientId": "$REG_NOTIFY_CLIENT_ID"
+    }
+  }
+}

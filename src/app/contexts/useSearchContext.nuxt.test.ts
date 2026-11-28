@@ -24,7 +24,7 @@ describe('useSearchContext', () => {
     await nextTick();
     // wait out the 200ms debounce, then for the search itself to settle
     await new Promise(resolve => setTimeout(resolve, 250));
-    await vi.waitFor(() => expect(context.loading.value).toBe(false));
+    await vi.waitFor(() => expect(context.status.value).not.toBe('loading'));
   }
 
   it('clears the results without searching when the query is blank', async () => {
@@ -36,6 +36,35 @@ describe('useSearchContext', () => {
     expect(pagefind.search).not.toHaveBeenCalled();
   });
 
+  it('starts idle', () => {
+    const context = useSearchContext();
+
+    expect(context.status.value).toBe('idle');
+  });
+
+  it('stays idle for a blank query', async () => {
+    const context = useSearchContext();
+
+    await searchFor(context, '   ');
+
+    expect(context.status.value).toBe('idle');
+  });
+
+  it('is loading while a search is pending and idle when it settles', async () => {
+    locale.value = 'it';
+    let resolveSearch!: (value: { results: never[] }) => void;
+    pagefind.search.mockReturnValue(new Promise((resolve) => {
+      resolveSearch = resolve;
+    }));
+    const context = useSearchContext();
+
+    context.setQuery('slow');
+    await vi.waitFor(() => expect(context.status.value).toBe('loading'));
+
+    resolveSearch({ results: [] });
+    await vi.waitFor(() => expect(context.status.value).toBe('idle'));
+  });
+
   it('marks search as unavailable when pagefind fails to initialise', async () => {
     locale.value = 'de';
     pagefind.options.mockRejectedValue(new Error('index missing'));
@@ -43,8 +72,20 @@ describe('useSearchContext', () => {
 
     await searchFor(context, 'hello');
 
-    expect(context.unavailable.value).toBe(true);
+    expect(context.status.value).toBe('unavailable');
     expect(context.results.value).toEqual([]);
+  });
+
+  it('stays unavailable after the failed search settles and on a later search', async () => {
+    locale.value = 'es';
+    pagefind.options.mockRejectedValue(new Error('index missing'));
+    const context = useSearchContext();
+
+    await searchFor(context, 'hello');
+    expect(context.status.value).toBe('unavailable');
+
+    await searchFor(context, 'hello again');
+    expect(context.status.value).toBe('unavailable');
   });
 
   it('searches pagefind for the current locale and strips .html from result urls', async () => {

@@ -1,15 +1,20 @@
 <script lang="ts" setup>
 import type { BlogPostSummary } from '~/types/BlogPostSummary';
 
-const { post } = defineProps<{
+const { post, baseDataTestid = 'blog-post-summary' } = defineProps<{
   post: BlogPostSummary
+  baseDataTestid?: string
 }>();
 
 const formattedDatePublished = computed(() => formatDate(post?.datePublished));
 </script>
 
 <template>
-  <article v-if="post" class="flex flex-col items-start gap-8 lg:flex-row">
+  <article
+    v-if="post"
+    :data-testid="`${baseDataTestid}-row-${post.id}`"
+    class="flex flex-col items-start gap-8 lg:flex-row"
+  >
     <div class="w-full lg:w-72">
       <AppLink :to="post.url">
         <ResponsiveImage

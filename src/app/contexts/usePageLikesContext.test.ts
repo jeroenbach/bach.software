@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, ref, toValue } from 'vue';
 
+import { createPinia, setActivePinia } from '~/composables/useDestructiblePinia';
+import { useMessageStore } from '~/composables/useMessageStore';
+import { translate } from '~/tests/helpers/translate';
 import { usePageLikesContext } from './usePageLikesContext';
 
 const mock = vi.hoisted(() => ({
@@ -9,6 +12,8 @@ const mock = vi.hoisted(() => ({
 }));
 
 vi.mock('#imports', () => ({ useTrackEvent: mock.useTrackEvent }));
+
+vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: translate }) }));
 
 vi.mock('~/services/backend', () => ({
   useApiClient: () => ({
@@ -28,6 +33,7 @@ describe('usePageLikesContext (server-side)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    setActivePinia(createPinia());
   });
 
   it('should not query the likes during server-side rendering', async () => {
@@ -46,5 +52,14 @@ describe('usePageLikesContext (server-side)', () => {
     expect(hasLiked.value).toBe(false);
     expect(likes.value).toBe(0);
     expect(mock.useTrackEvent).not.toHaveBeenCalled();
+  });
+
+  it('should not report a message during server-side rendering', async () => {
+    const { isLoadingLikes } = usePageLikesContext();
+    const { messages } = useMessageStore();
+
+    await vi.waitFor(() => expect(isLoadingLikes.value).toBe(false));
+    expect(mock.getPageLikes).not.toHaveBeenCalled();
+    expect(messages.value).toHaveLength(0);
   });
 });

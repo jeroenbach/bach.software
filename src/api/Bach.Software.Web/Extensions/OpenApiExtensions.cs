@@ -1,3 +1,4 @@
+using Bach.Software.Web.ErrorHandling;
 using Microsoft.OpenApi.Models;
 
 namespace Bach.Software.Web.Extensions;
@@ -9,6 +10,11 @@ public static class OpenApiExtensions
     public static IServiceCollection AddBachSoftwareOpenApi(this IServiceCollection services)
     {
         services.AddOpenApi(options =>
+        {
+            // Publishes the ErrorCodes catalog into every problem-details schema (API-04):
+            // the code enum, the placeholders property, and x-error-placeholders.
+            options.AddSchemaTransformer<ErrorCodesDocumentTransformer>();
+
             options.AddDocumentTransformer((document, _, _) =>
             {
                 // All endpoints are hosted under /api. Expose that prefix as the server URL and
@@ -29,7 +35,8 @@ public static class OpenApiExtensions
                 document.Paths = paths;
 
                 return Task.CompletedTask;
-            }));
+            });
+        });
 
         return services;
     }

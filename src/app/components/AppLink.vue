@@ -11,12 +11,8 @@ export interface Props {
 }
 
 const {
-  to = undefined,
-  text = undefined,
   color = 'default',
   target = '_self',
-  title = undefined,
-  ariaLabel = undefined,
 } = defineProps<Props>();
 
 const noopener = computed(() => {

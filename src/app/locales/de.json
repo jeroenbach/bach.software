@@ -1,19 +1,86 @@
 {
-  "_metadata": {
+  "appHeader": {
+    "brand": "Bach.Software",
+    "mainNavigation": "Hauptnavigation",
+    "openMainMenu": "Hauptmenü öffnen",
+    "closeMenu": "Menü schließen",
+    "vueDynamicForm": "Vue Dynamic Form"
+  },
+  "authorInformation": {
+    "linkedin": "Linkedin"
+  },
+  "blog": {
+    "filter": {
+      "label": "Filter:",
+      "all": "Alle Beiträge",
+      "count": "{count} Beiträge",
+      "noResults": "Keine Beiträge für diesen Filter gefunden."
+    },
+    "pagination": {
+      "label": "Paginierung",
+      "previous": "← Zurück",
+      "next": "Weiter →"
+    },
+    "readCount": "{n} mal gelesen | {n} mal gelesen",
+    "share": "Teilen"
+  },
+  "codeGroup": {
+    "copyToClipboard": "Code in die Zwischenablage kopieren",
+    "maximizeCodeBlock": "Codeblock maximieren",
+    "copiedToClipboard": "In die Zwischenablage kopiert!"
+  },
+  "colorModeSwitcher": {
+    "label": "Farbmodus wechseln"
+  },
+  "error": {
+    "pageNotFound": "Seite nicht gefunden",
+    "pageNotFoundDescription": "Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.",
+    "goBackHome": "Zurück zur Startseite",
+    "errorOccurred": "Ein Fehler ist aufgetreten",
+    "somethingWentWrong": "Etwas ist schiefgelaufen."
+  },
+  "errors": {
+    "whileCalling": "Fehler bei {name}: {message}",
+    "unexpected": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal.",
+    "unavailable": "Diese Informationen sind vorübergehend nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
+    "validation": "Ein Teil der Eingabe ist ungültig.",
+    "urlRequired": "Eine URL ist erforderlich.",
+    "urlInvalid": "Die URL ist ungültig."
+  },
+  "languageSwitcher": {
+    "label": "Sprache wechseln"
+  },
+  "likeButton": {
+    "like": "Diesen Artikel liken",
+    "liked": "Ihnen gefällt dieser Artikel",
+    "likeCount": "{n} Like | {n} Likes"
+  },
+  "messageBar": {
+    "close": "Schließen"
+  },
+  "metadata": {
     "titleTemplate": "{titleChunk} - Bach.Software",
-    "titleTemplate_empty": "Bach.Software"
+    "titleTemplateEmpty": "Bach.Software"
   },
-  "Copied to clipboard!": "In die Zwischenablage kopiert!",
-  "Linkedin": "Linkedin",
-  "Share": "Teilen",
-  "On this page": "Auf dieser Seite",
-  "Bach": {
-    "Software": "Bach.Software"
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "Diese Seite wurde automatisch mit KI übersetzt. Wenn Sie Fehler feststellen, lassen Sie es mich bitte wissen!"
+    }
   },
-  "read": "{n} mal gelesen | {n} mal gelesen",
-  "likes": "{n} Like | {n} Likes",
-  "Like this article": "Diesen Artikel liken",
-  "You liked this article": "Ihnen gefällt dieser Artikel",
+  "pageLikes": {
+    "loading": "dem Laden der Seiten-Likes"
+  },
+  "pageReads": {
+    "loading": "dem Laden der Lesestatistiken"
+  },
+  "pageReadProgress": {
+    "openButton": "Meine Statistiken anzeigen",
+    "wordCount": "Wortanzahl: {wordCount}",
+    "readingTime": "Wir schätzen, dass Sie {readingTimeInMinutes} Minuten benötigen, um diesen Artikel zu lesen",
+    "timeProgress": "Zeitfortschritt: {timeSpentPercentage}%",
+    "scrollProgress": "Scroll-Fortschritt: {scrollPercentage}%",
+    "readingStage": "Lesephase: {totalProgress}"
+  },
   "plausible": {
     "current": {
       "text": "Ihre Besuche werden derzeit {status}.",
@@ -28,29 +95,6 @@
       "exclude": "Ausschließen"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "Ein unbekannter Fehler ist aufgetreten"
-    }
-  },
-  "pageReadProgress": {
-    "openButton": "Meine Statistiken anzeigen",
-    "wordCount": "Wortanzahl: {wordCount}",
-    "readingTime": "Wir schätzen, dass Sie {readingTimeInMinutes} Minuten benötigen, um diesen Artikel zu lesen",
-    "timeProgress": "Zeitfortschritt: {timeSpentPercentage}%",
-    "scrollProgress": "Scroll-Fortschritt: {scrollPercentage}%",
-    "readingStage": "Lesephase: {totalProgress}"
-  },
-  "codeGroup": {
-    "copyToClipboard": "Code in die Zwischenablage kopieren",
-    "maximizeCodeBlock": "Codeblock maximieren"
-  },
-  "Switch language": "Sprache wechseln",
-  "notifications": {
-    "info": {
-      "languageAiTranslated": "Diese Seite wurde automatisch mit KI übersetzt. Wenn Sie Fehler feststellen, lassen Sie es mich bitte wissen!"
-    }
-  },
   "search": {
     "open": "Suche öffnen",
     "close": "Suche schließen",
@@ -59,27 +103,7 @@
     "noResults": "Keine Ergebnisse gefunden",
     "unavailable": "Die Suche ist im Entwicklungsmodus nicht verfügbar. Führen Sie zuerst den Build aus."
   },
-  "error": {
-    "pageNotFound": "Seite nicht gefunden",
-    "pageNotFoundDescription": "Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.",
-    "goBackHome": "Zurück zur Startseite",
-    "errorOccurred": "Ein Fehler ist aufgetreten",
-    "somethingWentWrong": "Etwas ist schiefgelaufen."
-  },
-  "blog": {
-    "filter": {
-      "label": "Filter:",
-      "all": "Alle Beiträge",
-      "count": "{count} Beiträge",
-      "noResults": "Keine Beiträge für diesen Filter gefunden."
-    },
-    "pagination": {
-      "label": "Paginierung",
-      "previous": "← Zurück",
-      "next": "Weiter →"
-    }
-  },
-  "OpenSource": {
-    "VueDynamicForm": "Vue Dynamic Form"
+  "tableOfContents": {
+    "title": "Auf dieser Seite"
   }
 }

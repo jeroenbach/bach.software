@@ -67,23 +67,55 @@ describe('searchModal', () => {
     expect(wrapper.find('ul a span').text()).toBe('/post-a');
   });
 
-  it('shows the unavailable message when search is unavailable', () => {
-    const wrapper = mountModal({ open: true, query: 'test', unavailable: true });
+  describe('status', () => {
+    const statuses = ['idle', 'loading', 'unavailable'] as const;
 
-    expect(wrapper.text()).toContain('search.unavailable');
+    it('shows the unavailable message when search is unavailable', () => {
+      const wrapper = mountModal({ open: true, query: 'test', status: 'unavailable' });
+
+      expect(wrapper.text()).toContain('search.unavailable');
+    });
+
+    it('shows the unavailable message even when the query is empty', () => {
+      const wrapper = mountModal({ open: true, query: '', status: 'unavailable' });
+
+      expect(wrapper.text()).toContain('search.unavailable');
+    });
+
+    it('shows the loading message while searching', () => {
+      const wrapper = mountModal({ open: true, query: 'test', status: 'loading' });
+
+      expect(wrapper.text()).toContain('search.loading');
+      expect(wrapper.text()).not.toContain('search.noResults');
+    });
+
+    it('shows the no-results message for a query without results', () => {
+      const wrapper = mountModal({ open: true, query: 'test' });
+
+      expect(wrapper.text()).toContain('search.noResults');
+    });
+
+    it('shows the no-results message for an idle status with a query without results', () => {
+      const wrapper = mountModal({ open: true, query: 'test', status: 'idle' });
+
+      expect(wrapper.text()).toContain('search.noResults');
+    });
+
+    it('shows nothing for idle with an empty query', () => {
+      const wrapper = mountModal({ open: true, query: '', status: 'idle' });
+
+      expect(wrapper.find('p').exists()).toBe(false);
+      expect(wrapper.find('ul').exists()).toBe(false);
+    });
+
+    it.each(statuses)('shows results instead of any status message when results exist and the status is %s', (status) => {
+      const wrapper = mountModal({ open: true, query: 'test', results: [mainResult], status });
+
+      expect(wrapper.find('ul a span').text()).toBe('Post A');
+      expect(wrapper.find('p').exists()).toBe(false);
+    });
   });
 
-  it('shows the loading message while searching', () => {
-    const wrapper = mountModal({ open: true, query: 'test', loading: true });
-
-    expect(wrapper.text()).toContain('search.loading');
-  });
-
-  it('shows the no-results message for a query without results', () => {
-    const wrapper = mountModal({ open: true, query: 'test' });
-
-    expect(wrapper.text()).toContain('search.noResults');
-  });
   it('renders no sub-results list when a result has none', () => {
     const wrapper = mountModal({ open: true, query: 'test', results: [mainResult] });
 

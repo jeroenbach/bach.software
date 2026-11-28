@@ -23,7 +23,11 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
 }
 
-if (page.value.url && page.value.url !== path && path !== '/') { // temporary show the same on the home page as the blog page
+// Trailing slashes are stripped before comparing: the dev server answers /posts
+// with a redirect to /posts/ (the images/posts folder is mounted as a public
+// asset dir at the root), so redirecting /posts/ back would loop forever.
+const normalizedPath = path.length > 1 ? path.replace(/\/$/, '') : path;
+if (page.value.url && page.value.url !== normalizedPath && !isRoot) { // the locale roots (/, /nl, /de) serve this page in place as the homepage for now
   navigateTo(page.value.url, { redirectCode: 301 });
 }
 

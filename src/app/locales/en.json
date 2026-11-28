@@ -1,19 +1,86 @@
 {
-  "_metadata": {
+  "appHeader": {
+    "brand": "Bach.Software",
+    "mainNavigation": "Main navigation",
+    "openMainMenu": "Open main menu",
+    "closeMenu": "Close menu",
+    "vueDynamicForm": "Vue Dynamic Form"
+  },
+  "authorInformation": {
+    "linkedin": "Linkedin"
+  },
+  "blog": {
+    "filter": {
+      "label": "Filter:",
+      "all": "All posts",
+      "count": "{count} posts",
+      "noResults": "No posts found for this filter."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "← Prev",
+      "next": "Next →"
+    },
+    "readCount": "{n} read | {n} reads",
+    "share": "Share"
+  },
+  "codeGroup": {
+    "copyToClipboard": "Copy code to clipboard",
+    "maximizeCodeBlock": "Maximize code block",
+    "copiedToClipboard": "Copied to clipboard!"
+  },
+  "colorModeSwitcher": {
+    "label": "Switch color mode"
+  },
+  "error": {
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "The page you are looking for does not exist or has been moved.",
+    "goBackHome": "Go back home",
+    "errorOccurred": "An error occurred",
+    "somethingWentWrong": "Something went wrong."
+  },
+  "errors": {
+    "whileCalling": "Error while {name}: {message}",
+    "unexpected": "Something went wrong. Please try again later.",
+    "unavailable": "This information is temporarily unavailable. Please try again later.",
+    "validation": "Some of the input is not valid.",
+    "urlRequired": "A URL is required.",
+    "urlInvalid": "The URL is not valid."
+  },
+  "languageSwitcher": {
+    "label": "Switch language"
+  },
+  "likeButton": {
+    "like": "Like this article",
+    "liked": "You liked this article",
+    "likeCount": "{n} like | {n} likes"
+  },
+  "messageBar": {
+    "close": "Close"
+  },
+  "metadata": {
     "titleTemplate": "{titleChunk} - Bach.Software",
-    "titleTemplate_empty": "Bach.Software"
+    "titleTemplateEmpty": "Bach.Software"
   },
-  "Copied to clipboard!": "Copied to clipboard!",
-  "Linkedin": "Linkedin",
-  "Share": "Share",
-  "On this page": "On this page",
-  "Bach": {
-    "Software": "Bach.Software"
+  "notifications": {
+    "info": {
+      "languageAiTranslated": "This page has been automatically translated with AI. If you encounter any errors, please let me know!"
+    }
   },
-  "read": "{n} read | {n} reads",
-  "likes": "{n} like | {n} likes",
-  "Like this article": "Like this article",
-  "You liked this article": "You liked this article",
+  "pageLikes": {
+    "loading": "loading the page likes"
+  },
+  "pageReads": {
+    "loading": "loading the page reads"
+  },
+  "pageReadProgress": {
+    "openButton": "Show me my stats",
+    "wordCount": "Word count: {wordCount}",
+    "readingTime": "We estimate you need {readingTimeInMinutes} minutes to read this article",
+    "timeProgress": "Time progress: {timeSpentPercentage}%",
+    "scrollProgress": "Scroll progress: {scrollPercentage}%",
+    "readingStage": "Reading stage: {totalProgress}"
+  },
   "plausible": {
     "current": {
       "text": "We currently {status} including your visits.",
@@ -28,29 +95,6 @@
       "exclude": "Exclude"
     }
   },
-  "notification": {
-    "error": {
-      "unknown": "An unknown error occurred"
-    }
-  },
-  "pageReadProgress": {
-    "openButton": "Show me my stats",
-    "wordCount": "Word count: {wordCount}",
-    "readingTime": "We estimate you need {readingTimeInMinutes} minutes to read this article",
-    "timeProgress": "Time progress: {timeSpentPercentage}%",
-    "scrollProgress": "Scroll progress: {scrollPercentage}%",
-    "readingStage": "Reading stage: {totalProgress}"
-  },
-  "codeGroup": {
-    "copyToClipboard": "Copy code to clipboard",
-    "maximizeCodeBlock": "Maximize code block"
-  },
-  "Switch language": "Switch language",
-  "notifications": {
-    "info": {
-      "languageAiTranslated": "This page has been automatically translated with AI. If you encounter any errors, please let me know!"
-    }
-  },
   "search": {
     "open": "Open search",
     "close": "Close search",
@@ -59,27 +103,7 @@
     "noResults": "No results found",
     "unavailable": "Search is not available in development mode. Run the build first."
   },
-  "error": {
-    "pageNotFound": "Page not found",
-    "pageNotFoundDescription": "The page you are looking for does not exist or has been moved.",
-    "goBackHome": "Go back home",
-    "errorOccurred": "An error occurred",
-    "somethingWentWrong": "Something went wrong."
-  },
-  "blog": {
-    "filter": {
-      "label": "Filter:",
-      "all": "All posts",
-      "count": "{count} posts",
-      "noResults": "No posts found for this filter."
-    },
-    "pagination": {
-      "label": "Pagination",
-      "previous": "← Prev",
-      "next": "Next →"
-    }
-  },
-  "OpenSource": {
-    "VueDynamicForm": "Vue Dynamic Form"
+  "tableOfContents": {
+    "title": "On this page"
   }
 }

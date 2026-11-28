@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 
-import { readMarkdown } from '~/utils/markdown';
-import { readYaml } from '~/utils/yaml';
+import { readMarkdown } from '~/utils/markdownUtil';
+import { readYaml } from '~/utils/yamlUtil';
 import authorYaml from '../content/en/authors/jeroenbach.yaml?raw';
 
 import about from '../content/en/pages/_footer-about.md?raw';

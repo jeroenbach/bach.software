@@ -7,8 +7,8 @@ const { t } = useI18n();
 useSeoMeta({
   titleTemplate: (titleChunk) => {
     return titleChunk
-      ? t('_metadata.titleTemplate', { titleChunk })
-      : t('_metadata.titleTemplate_empty');
+      ? t('metadata.titleTemplate', { titleChunk })
+      : t('metadata.titleTemplateEmpty');
   },
 });
 useHead({
@@ -34,35 +34,37 @@ const backgroundFooter = computed<'gray' | 'white'>(() => {
   return 'gray';
 });
 const shortFooter = computed(() => appConfig.showShortFooter?.includes(Number(route.params.id)));
+
+const { messages, close } = useMessageStore();
 </script>
 
 <template>
-  <AppBackground :background="background" class="flex min-h-screen flex-col">
-    <NuxtLoadingIndicator />
-    <AppHeaderContext :border="background === 'gray'" />
-    <NuxtLayout :name="pageLayout">
-      <slot>
-        <NuxtPage />
-      </slot>
-    </NuxtLayout>
-    <AppFooterContext
-      :short="shortFooter"
-      :backgroundColor="backgroundFooter"
-    />
-  </AppBackground>
+  <MessageBarContext>
+    <AppBackground :background="background" class="flex min-h-screen flex-col">
+      <NuxtLoadingIndicator />
+      <AppHeaderContext :border="background === 'gray'" />
+      <MessageBarOutlet />
+      <!-- Store-driven bars: whatever is reported through the message store renders
+           here and teleports to the active outlet by itself. -->
+      <MessageBar
+        v-for="{ messageId, ...message } in messages"
+        :key="messageId"
+        v-bind="message"
+        :baseDataTestid="`message-bar-${messageId}`"
+        @close="close(messageId)"
+      />
+      <NuxtLayout :name="pageLayout">
+        <slot>
+          <NuxtPage />
+        </slot>
+      </NuxtLayout>
+      <AppFooterContext
+        :short="shortFooter"
+        :backgroundColor="backgroundFooter"
+      />
+    </AppBackground>
+  </MessageBarContext>
 </template>
-
-<style lang="scss" scoped>
-.page-enter-active,
-.page-leave-active {
-  transition: all 50ms;
-}
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  filter: blur(1rem);
-}
-</style>
 
 <style lang="scss" global>
 .dark {

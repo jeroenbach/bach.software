@@ -9,8 +9,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBachSoftwareServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient();
-        services.AddSingleton<IAnalyticsService, PlausibleService>();
+        // Typed client, not a singleton holding one HttpClient: a singleton would keep the same
+        // handler (and its connection pool) for the process lifetime, defeating the factory's
+        // handler rotation and causing stale-connection failures after idle periods.
+        services.AddHttpClient<IAnalyticsService, PlausibleService>();
 
         var allowedOrigins = configuration["CORS_ALLOWED_ORIGINS"]
             ?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)

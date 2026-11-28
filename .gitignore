@@ -39,3 +39,10 @@ storybook-static
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Local review screenshots (UI change checks, never committed)
+/.github/screenshots/
+
+# Visual regression (reg-suit): captured screenshots and the local comparison workspace
+/visual-regression/actual/
+/.reg/

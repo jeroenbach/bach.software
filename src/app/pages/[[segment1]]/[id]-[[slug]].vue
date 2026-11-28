@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { pagesPaths, postsPaths } from '~/locales.config';
+import { toPostReads } from '~/utils/postReadsUtil';
 
 const { path, params } = useRoute();
 const config = useRuntimeConfig();
@@ -13,9 +14,19 @@ const pageType: MetadataType = isPost ? 'blogPost' : 'page';
 
 const alternateUrls = await useAlternateUrls(pageType, Number(id));
 
+// Tell the language switcher each locale's translated slug, so it navigates
+// straight to the right URL. Without this it keeps the current slug, and the
+// slug-correcting 301 below then runs as a second navigation, which blanks
+// the page while the target loads.
+const setI18nParams = useSetI18nParams();
+setI18nParams(Object.fromEntries(
+  alternateUrls.flatMap(({ hreflang, slug }) => slug ? [[hreflang, { slug }]] : []),
+));
+
 const { data: page } = isPage ? await usePagesContext(Number(id)) : { data: undefined };
 const { data: post } = isPost ? await useBlogPostsContext({ id: Number(id) }) : { data: undefined };
 const { pageReads } = isPost ? await usePageReadsContext() : { pageReads: undefined };
+const postReads = computed(() => toPostReads(pageReads?.value));
 const { likes, hasLiked, like } = isPost
   ? usePageLikesContext(() => ({
       author: post?.value?.authorName ?? '',
@@ -63,7 +74,7 @@ const { activeId } = useScrollspy(() => flattenTocLinkIds(tocLinks.value));
         <BlogPost
           :post="post"
           :baseUrl="config.public.baseUrl"
-          :pageReads="pageReads"
+          :reads="postReads"
           :likes="likes"
           :hasLiked="hasLiked"
           @like="like?.()"

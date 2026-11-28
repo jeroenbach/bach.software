@@ -1,7 +1,7 @@
 import type { LocaleObject } from '@nuxtjs/i18n';
 import { joinURL } from 'ufo';
-import { toMap } from './src/app/utils/toMap';
-import { createSlug } from './src/app/utils/url';
+import { toMap } from './src/app/utils/toMapUtil';
+import { createSlug } from './src/app/utils/urlUtil';
 
 export interface LocaleStructure extends LocaleObject {
   pagesPath: string

@@ -35,3 +35,41 @@ export type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {} as Story['args'],
 };
+
+export const WithoutImage: Story = {
+  args: {
+    imgSrc: undefined,
+  },
+};
+
+export const WithoutText: Story = {
+  render: args => ({
+    components: { AppHero },
+    setup() {
+      return { args };
+    },
+    template: `<AppHero v-bind="args" />`,
+  }),
+};
+
+export const TitleOnly: Story = {
+  args: {
+    intro: undefined,
+    subTitle: undefined,
+    imgSrc: undefined,
+    imgAlt: undefined,
+  },
+  render: args => ({
+    components: { AppHero },
+    setup() {
+      return { args };
+    },
+    template: `<AppHero v-bind="args" />`,
+  }),
+};
+
+export const WithoutIntro: Story = {
+  args: {
+    intro: undefined,
+  },
+};
