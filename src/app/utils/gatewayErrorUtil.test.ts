@@ -29,6 +29,20 @@ describe('fetchWithGatewayErrorsNormalized', () => {
     expect(await response.json()).toEqual({ status: 502 });
   });
 
+  it('should still normalize the response when discarding the gateway page fails', async () => {
+    const body = new ReadableStream({
+      cancel() {
+        throw new Error('stream already closed');
+      },
+    });
+    answerWith(new Response(body, { status: 503, headers: { 'Content-Type': 'text/html' } }));
+
+    const response = await fetchWithGatewayErrorsNormalized('/api/x', {});
+
+    expect(response.headers.get('Content-Type')).toBe('application/problem+json');
+    expect(await response.json()).toEqual({ status: 503 });
+  });
+
   it('should keep the headers of the original response apart from the body descriptors', async () => {
     answerWith(new Response('<h1>x</h1>', {
       status: 503,
